@@ -1,20 +1,20 @@
 const USER_IMAGE = document.getElementById("userImage");
 const ORIGINAL_IMAGE = document.getElementById("originalImage");
-const FILE_READER = new FileReader(),ORIGINAL_2D = ORIGINAL_IMAGE.getContext("2d");
+const fileReader = new FileReader(),original2D = ORIGINAL_IMAGE.getContext("2d");
 function readImage() {
-    FILE_READER.readAsDataURL(USER_IMAGE.files[0]);
+    fileReader.readAsDataURL(USER_IMAGE.files[0]);
 }
 function loadImage() {
-    const IMAGE = new Image();
-    IMAGE.src = FILE_READER.result.toString();
-    IMAGE.onload = function() {
-        ORIGINAL_IMAGE.width = IMAGE.width;
-        ORIGINAL_IMAGE.height = IMAGE.height;
-        ORIGINAL_2D.drawImage(IMAGE, 0, 0, IMAGE.width, IMAGE.height);
+    const image = new Image();
+    image.src = fileReader.result.toString();
+    image.onload = function() {
+        ORIGINAL_IMAGE.width = image.width;
+        ORIGINAL_IMAGE.height = image.height;
+        original2D.drawImage(image, 0, 0, image.width, image.height);
     };
 }
 USER_IMAGE.addEventListener("change", readImage);
-FILE_READER.addEventListener("load", loadImage);
+fileReader.addEventListener("load", loadImage);
 function imageInverse() {
     let inverseResult = document.getElementById("invertResult");
     inverseResult.width = ORIGINAL_IMAGE.width;
