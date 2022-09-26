@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>負片處理</title>
+    <meta name="description" content="資工三A_影像處理_回家作業(負片處理)">
+    <link rel="stylesheet" href="styles/iphw.css">
+ <script defer src="scripts/iphw.js"></script>
+</head>
+<body>
+<h3>負片處理</h3>
+    <div class="3 col">
+            <div class="button-wrap">
+                <label class ="new-button" for="userImage">選擇圖片(JPG/PNG)</label>
+                    <input type="file" id="userImage" name="userImage" accept="image/png, image/jpeg">
+            </div>
+    </div>
+    <div class="3 col">
+    <button class="btn primary" onclick="imageInverse()" id="change">負片處理</button>
+    </div>
+<div class="row">
+<div class="card col">
+    <canvas id="originalImage" class="w-100" ></canvas>
+    <h4>原始圖片</h4>
+</div>
+<div class="card col">
+<canvas id="invertResult" class="w-100"></canvas>
+    <h4>負片效果</h4>
+</div>
+</div>
+</body>
+</html>
