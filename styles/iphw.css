@@ -70,11 +70,7 @@ a{
     color:#fa0;
     text-decoration:none
 }
-.btn.primary{
-    color:#fff;
-    background:#fa0;
-    border:solid #fa0
-}
+
 pre{
     overflow:auto
 }
