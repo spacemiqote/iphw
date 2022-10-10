@@ -4,10 +4,6 @@ const originalImage = document.getElementById('originalImage');
 const allowMultipleFilterOn = document.getElementById('allowMultipleFilterOn');
 const fileReader = new FileReader(),
     original2D = originalImage.getContext('2d', {willReadFrequently: !0});
-<<<<<<< HEAD
-=======
-let backupImage;
->>>>>>> main
 let filterResult = document.getElementById('filterResult');
 let backupImage = filterResult;
 let filter2D = filterResult.getContext('2d', {willReadFrequently: !0});
