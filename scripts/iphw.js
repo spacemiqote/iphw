@@ -135,7 +135,7 @@ function imageFilter(filter) {
         );
     }
 
-    filter2D.drawImage(originalImage, 0, 0);
+    //filter2D.drawImage(originalImage, 0, 0);
 
     if (filter === 'hsi') {
         customH = parseFloat(document.getElementById('customH').value);
@@ -202,7 +202,7 @@ function imageFilter(filter) {
         }
         if (exitOperation) break;
     }
-    if (stepCount !== 0 && filter !== "cancelFilter")
+    if (stepCount >= 0 && filter !== "cancelFilter")
         filter2D.putImageData(filterResult, 0, 0);
     stepCount++;
 }
