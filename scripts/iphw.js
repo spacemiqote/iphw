@@ -4,14 +4,14 @@ const originalImage = document.getElementById('originalImage');
 const allowMultipleFilterOn = document.getElementById('allowMultipleFilterOn');
 const fileReader = new FileReader(),
     original2D = originalImage.getContext('2d', {willReadFrequently: !0});
-let backupImage;
 let filterResult = document.getElementById('filterResult');
+let backupImage = filterResult;
 let filter2D = filterResult.getContext('2d', {willReadFrequently: !0});
 let stepCount = 0;
 
 function backupImageLoop() {
     backupImage = filterResult;
-    setTimeout(backupImageLoop, 5000);
+    setTimeout(backupImageLoop, 3500);
 }
 
 function readImage() {
@@ -187,7 +187,7 @@ function imageFilter(filter) {
                 break;
             }
             case 'revertImage': {
-                if (backupImage !== filterResult)
+                if (backupImage.constructor === filterResult.constructor)
                     filterResult = backupImage;
                 exitOperation = true;
                 break;
