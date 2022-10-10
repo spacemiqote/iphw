@@ -143,7 +143,6 @@ function imageFilter(filter) {
         customI = parseFloat(document.getElementById('customI').value);
     }
     let exitOperation = false;
-    //if (enableMultipleFilter)
 
     for (let a = 0; a < filterResult.data.length; a += 4) {
         const red = filterResult.data[a];
