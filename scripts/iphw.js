@@ -4,13 +4,9 @@ const originalImage = document.getElementById('originalImage');
 const allowMultipleFilterOn = document.getElementById('allowMultipleFilterOn');
 const fileReader = new FileReader(),
     original2D = originalImage.getContext('2d', {willReadFrequently: !0});
-<<<<<<< HEAD
-=======
-let backupImage;
->>>>>>> main
 let filterResult = document.getElementById('filterResult');
+const filter2D = filterResult.getContext('2d', {willReadFrequently: !0});
 let backupImage = filterResult;
-let filter2D = filterResult.getContext('2d', {willReadFrequently: !0});
 let stepCount = 0;
 
 function backupImageLoop() {
@@ -110,13 +106,13 @@ function RGBHSIConversion(command, x, y, z) {
         g *= 255;
         b *= 255;
         return [r, g, b];
-    } else
-        return false;
+    }
+    return false;
 }
 
 function imageFilter(filter) {
     let enableMultipleFilter = allowMultipleFilterOn.checked;
-    let customH, customS, customI;
+    let customH, customS, customI = 0;
     filterResult.width = originalImage.width;
     filterResult.height = originalImage.height;
     filterResult = filter2D.getImageData(
@@ -207,8 +203,8 @@ function imageFilter(filter) {
     stepCount++;
 }
 
-let range = document.querySelectorAll('.inputRange');
-let field = document.querySelectorAll('.inputNumber');
+const range = document.querySelectorAll('.inputRange');
+const field = document.querySelectorAll('.inputNumber');
 for (let i = 0; i < range.length; i++) {
     range[i].addEventListener('input', function (e) {
         field[i].value = e.target.value;
