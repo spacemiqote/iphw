@@ -123,7 +123,7 @@ function imageFilter(filter) {
     );
     if (enableMultipleFilter && stepCount > 0 && filter !== "cancelFilter") {
         filter2D.putImageData(filterResult, 0, 0);
-    } else if (!enableMultipleFilter) {
+    } else if (!enableMultipleFilter || stepCount == 0) {
         filter2D.drawImage(originalImage, 0, 0);
         filterResult = filter2D.getImageData(
             0,
