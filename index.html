@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,6 +7,7 @@
     <meta name="description" content="資工三A_影像處理_回家作業(照片處理)">
     <link rel="stylesheet" href="styles/iphw.css">
  <script defer src="scripts/iphw.js"></script>
+
 </head>
 <body>
 <h3>照片處理</h3>
@@ -16,18 +17,51 @@
                     <input type="file" id="userImage" name="userImage" accept="image/png, image/jpeg">
             </div>
     </div>
-    <button class="btn" onclick="imageInverse('inverse')" id="inverseImage">負片處理</button>
-    <button class="btn" onclick="imageInverse('grayscale')" id="grayscaleImage">灰階處理</button>
-    <button class="btn" onclick="imageInverse('sepia')" id="sepiaImage">復古處理</button>
-<div class="row">
-<div class="card col">
-    <canvas id="originalImage" class="w-100" ></canvas>
-    <h4>原始圖片</h4>
+<div class='row'>
+	<div class='5 col'>
+    <button class="btn" onclick="imageFilter('inverse')" id="inverseImage">負片處理</button>
+    <button class="btn" onclick="imageFilter('grayscale')" id="grayscaleImage">灰階處理</button>
+    <button class="btn" onclick="imageFilter('sepia')" id="sepiaImage">復古處理</button>
+        </div>
+        <div class = '2 col'>
+    <button class="btn" onclick="imageFilter('revertImage')" id="revertImage">上一步</button>
+        <button class="btn" onclick="imageFilter('cancelFilter')" id="cancelFilter">取消濾鏡</button>
+        </div>
+
+	<div class='5 col'>
+<fieldset>
+    <legend>擴充選項:</legend>
+
+    <div>
+      <input type="checkbox" id="allowMultipleFilterOn" name="allowMultipleFilterOn" checked>
+      <label for="allowMultipleFilterOn">允許濾鏡覆蓋</label>
+    </div>
+</fieldset>
+
 </div>
+</div>
+<hr>
+<div class="card row">
+    HSI濾鏡<br>
+    色相(Hue) <input type="range" id="hue" class="inputRange" value="0" min="0" max="360" onChange="imageFilter('hsi');"o>
+    <input type="text" id="customH" class="inputNumber" value="0" onChange="imageFilter('hsi');"><br>
+    飽和度(Saturation)<input type="range" id="saturation" class="inputRange" value="0" min="-100" max="100" onChange="imageFilter('hsi');">
+    <input type="text" id="customS" class="inputNumber" value="0" onChange="imageFilter('hsi');"><br>
+    明度(Intensity) <input type="range" id="intensity" class="inputRange" value="0" min="-100" max="100" onChange="imageFilter('hsi');">
+    <input type="text" id="customI" class="inputNumber" value="0" onChange="imageFilter('hsi');"><br>
+</div>
+
+<div class="row">
+
 <div class="card col">
 <canvas id="filterResult" class="w-100"></canvas>
     <h4>濾鏡效果</h4>
 </div>
+<div class="card col">
+    <canvas id="originalImage" class="w-100" ></canvas>
+    <h4>原始圖片</h4>
+</div>
+
 </div>
 </body>
 </html>
