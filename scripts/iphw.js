@@ -4,14 +4,13 @@ const originalImage = document.getElementById('originalImage');
 const allowMultipleFilterOn = document.getElementById('allowMultipleFilterOn');
 const fileReader = new FileReader(),
     original2D = originalImage.getContext('2d', {willReadFrequently: !0});
-let restoreImage, backupImage;
+let backupImage;
 let filterResult = document.getElementById('filterResult');
 let filter2D = filterResult.getContext('2d', {willReadFrequently: !0});
 let stepCount = 0;
 
 function backupImageLoop() {
     backupImage = filterResult;
-    console.log('Backup image');
     setTimeout(backupImageLoop, 5000);
 }
 
@@ -124,7 +123,6 @@ function imageFilter(filter) {
     );
     if (enableMultipleFilter && stepCount > 0 && filter !== "cancelFilter") {
         filter2D.putImageData(filterResult, 0, 0);
-        restoreImage = filterResult;
     } else if (!enableMultipleFilter) {
         filter2D.drawImage(originalImage, 0, 0);
         filterResult = filter2D.getImageData(
@@ -135,14 +133,13 @@ function imageFilter(filter) {
         );
     }
 
-    //filter2D.drawImage(originalImage, 0, 0);
-
     if (filter === 'hsi') {
         customH = parseFloat(document.getElementById('customH').value);
         customS = parseFloat(document.getElementById('customS').value);
         customI = parseFloat(document.getElementById('customI').value);
     }
     let exitOperation = false;
+    //if (enableMultipleFilter)
 
     for (let a = 0; a < filterResult.data.length; a += 4) {
         const red = filterResult.data[a];
