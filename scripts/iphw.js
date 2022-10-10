@@ -111,7 +111,7 @@ function RGBHSIConversion(command, x, y, z) {
 }
 
 function imageFilter(filter) {
-    let enableMultipleFilter = allowMultipleFilterOn.checked;
+    const enableMultipleFilter = allowMultipleFilterOn.checked;
     let customH, customS, customI = 0;
     filterResult.width = originalImage.width;
     filterResult.height = originalImage.height;
@@ -139,7 +139,6 @@ function imageFilter(filter) {
         customI = parseFloat(document.getElementById('customI').value);
     }
     let exitOperation = false;
-    //if (enableMultipleFilter)
 
     for (let a = 0; a < filterResult.data.length; a += 4) {
         const red = filterResult.data[a];
