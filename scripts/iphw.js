@@ -6,10 +6,14 @@ const fileReader = new FileReader(),
     original2D = originalImage.getContext('2d', {
         willReadFrequently: !0
     });
+<<<<<<< HEAD
 const range = document.querySelectorAll('.inputRange');
 const field = document.querySelectorAll('.inputNumber');
 let filterResult = document.getElementById('filterResult');
 let coll = document.getElementsByClassName("collapse");
+=======
+let filterResult = document.getElementById('filterResult');
+>>>>>>> main
 const filter2D = filterResult.getContext('2d', {
     willReadFrequently: !0
 });
@@ -38,7 +42,7 @@ function loadImage() {
     });
     const image = new Image();
     image.src = fileReader.result.toString();
-    image.onload = function () {
+    image.onload = function() {
         originalImage.width = image.width;
         originalImage.height = image.height;
         cResult.width = image.width;
@@ -72,6 +76,7 @@ function RGBHSIConversion(command, x, y, z) {
                 Math.sqrt(red ** 2 + green ** 2 + blue ** 2 - red * green - red * blue - green * blue)
             );
         else
+<<<<<<< HEAD
             Hue =
                 2 * Math.PI -
                 Math.acos(
@@ -83,6 +88,19 @@ function RGBHSIConversion(command, x, y, z) {
         Saturation = (1 - 3 * Math.min(red, green, blue)) * 100;
         Intensity = (x + y + z) / (3 * 255);
         return [Hue, Saturation, Intensity];
+=======
+            H =
+            2 * Math.PI -
+            Math.acos(
+                (r - g / 2 - b / 2) /
+                Math.sqrt(r ** 2 + g ** 2 + b ** 2 - r * g - r * b - g * b)
+            );
+        if (Number.isNaN(H)) H = 0;
+        H = (H * 180) / Math.PI;
+        S = (1 - 3 * Math.min(r, g, b)) * 100;
+        I = (x + y + z) / (3 * 255);
+        return [H, S, I];
+>>>>>>> main
     } else if (command === 'h2r') {
         Hue = (x * Math.PI) / 180;
         Saturation = y / 100;
@@ -123,12 +141,17 @@ function RGBHSIConversion(command, x, y, z) {
 
 function imageFilter(filter) {
     const enableMultipleFilter = allowMultipleFilterOn.checked;
+<<<<<<< HEAD
     let customH = 0;
     let customS = 0;
     let customI = 0;
     let customR = 0;
     let customG = 0;
     let customB = 0;
+=======
+    let customH = 0;let customS = 0;let customI = 0;
+	let customR = 0;let customG = 0;let customB = 0;
+>>>>>>> main
     filterResult.width = originalImage.width;
     filterResult.height = originalImage.height;
     filterResult = filter2D.getImageData(
@@ -202,6 +225,7 @@ function imageFilter(filter) {
             }
             case 'colorbalance': {
                 if (red < 128)
+<<<<<<< HEAD
                     red = red * (customR / 300);
                 else
                     red = (255 - red) * (customR / 300);
@@ -211,6 +235,17 @@ function imageFilter(filter) {
                     green = (255 - green) * (customG / 300);
                 if (blue < 128)
                     blue = blue * (customB / 300);
+=======
+                    red += red * (customR / 300);
+                else
+                    red += (255 - red) * (customR / 300);
+                if (green < 128)
+                    green += green * (customG / 300);
+                else
+                    green += (255 - green) * (customG / 300);
+                if (blue < 128)
+                    blue += blue * (customB / 300);
+>>>>>>> main
                 else
                     blue += (255 - blue) * (customB / 300);
                 filterResult.data[a] += red - (green / 2) - (blue / 2);
@@ -243,6 +278,7 @@ function imageFilter(filter) {
     stepCount++;
 }
 
+<<<<<<< HEAD
 function valueSync(value) {
     for (let i = 0; i < range.length; i++) {
         if (value === true) {
@@ -276,3 +312,17 @@ function valueSync(value) {
     valueSync(true);
     userImage.addEventListener('change', readImage);
     fileReader.addEventListener('load', loadImage);
+=======
+const range = document.querySelectorAll('.inputRange');
+const field = document.querySelectorAll('.inputNumber');
+for (let i = 0; i < range.length; i++) {
+    range[i].addEventListener('input', function(e) {
+        field[i].value = e.target.value;
+    });
+    field[i].addEventListener('input', function(e) {
+        range[i].value = e.target.value;
+    });
+}
+userImage.addEventListener('change', readImage);
+fileReader.addEventListener('load', loadImage);
+>>>>>>> main
