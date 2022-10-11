@@ -179,9 +179,9 @@
 }
  input[type="range"] {
      -webkit-appearance: none;
-     width: 160px;
+     width: 250px;
      height: 20px;
-     margin: 10px 50px;
+     margin: 10px 20px;
      background-size: 150px 10px;
      background: linear-gradient(to right, #9A2720 0%, #9A2720 100%) no-repeat center;
      overflow: hidden;
