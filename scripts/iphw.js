@@ -3,9 +3,13 @@ const userImage = document.getElementById('userImage');
 const originalImage = document.getElementById('originalImage');
 const allowMultipleFilterOn = document.getElementById('allowMultipleFilterOn');
 const fileReader = new FileReader(),
-    original2D = originalImage.getContext('2d', {willReadFrequently: !0});
+    original2D = originalImage.getContext('2d', {
+        willReadFrequently: !0
+    });
 let filterResult = document.getElementById('filterResult');
-const filter2D = filterResult.getContext('2d', {willReadFrequently: !0});
+const filter2D = filterResult.getContext('2d', {
+    willReadFrequently: !0
+});
 let backupImage = filterResult;
 let stepCount = 0;
 
@@ -24,10 +28,12 @@ function readImage() {
 
 function loadImage() {
     let cResult = document.getElementById('filterResult');
-    const c2D = cResult.getContext('2d', {willReadFrequently: !0});
+    const c2D = cResult.getContext('2d', {
+        willReadFrequently: !0
+    });
     const image = new Image();
     image.src = fileReader.result.toString();
-    image.onload = function () {
+    image.onload = function() {
         originalImage.width = image.width;
         originalImage.height = image.height;
         cResult.width = image.width;
@@ -62,11 +68,11 @@ function RGBHSIConversion(command, x, y, z) {
             );
         else
             H =
-                2 * Math.PI -
-                Math.acos(
-                    (r - g / 2 - b / 2) /
-                    Math.sqrt(r ** 2 + g ** 2 + b ** 2 - r * g - r * b - g * b)
-                );
+            2 * Math.PI -
+            Math.acos(
+                (r - g / 2 - b / 2) /
+                Math.sqrt(r ** 2 + g ** 2 + b ** 2 - r * g - r * b - g * b)
+            );
         if (Number.isNaN(H)) H = 0;
         H = (H * 180) / Math.PI;
         S = (1 - 3 * Math.min(r, g, b)) * 100;
@@ -137,13 +143,17 @@ function imageFilter(filter) {
         customH = parseFloat(document.getElementById('customH').value);
         customS = parseFloat(document.getElementById('customS').value);
         customI = parseFloat(document.getElementById('customI').value);
+    } else if (filter === 'colorbalance') {
+        customR = parseFloat(document.getElementById('customR').value);
+        customG = parseFloat(document.getElementById('customG').value);
+        customB = parseFloat(document.getElementById('customB').value);
     }
     let exitOperation = false;
 
     for (let a = 0; a < filterResult.data.length; a += 4) {
-        const red = filterResult.data[a];
-        const green = filterResult.data[a + 1];
-        const blue = filterResult.data[a + 2];
+        let red = filterResult.data[a];
+        let green = filterResult.data[a + 1];
+        let blue = filterResult.data[a + 2];
         switch (filter) {
             case 'inverse': {
                 filterResult.data[a] = 255 - red;
@@ -169,7 +179,7 @@ function imageFilter(filter) {
             }
             case 'hsi': {
                 const hsi = RGBHSIConversion('r2h', red, green, blue);
-                hsi[0] = (hsi[0] + parseFloat(customH) + 360) % 360;
+                hsi[0] = (hsi[0] + customH + 360) % 360;
                 if (customS >= 0) hsi[1] = hsi[1] - (1 - hsi[1]) * (customS / 100);
                 else hsi[1] = hsi[1] + hsi[1] * (customS / 100);
                 if (customI >= 0) hsi[2] = hsi[2] + hsi[2] * (customI / 100);
@@ -178,6 +188,24 @@ function imageFilter(filter) {
                 filterResult.data[a] = rgb[0];
                 filterResult.data[a + 1] = rgb[1];
                 filterResult.data[a + 2] = rgb[2];
+                break;
+            }
+            case 'colorbalance': {
+                if (red < 128)
+                    red += red * (customR / 300);
+                else
+                    red += (255 - red) * (customR / 300);
+                if (green < 128)
+                    green += green * (customG / 300);
+                else
+                    green += (255 - green) * (customG / 300);
+                if (blue < 128)
+                    blue += blue * (customB / 300);
+                else
+                    blue += (255 - blue) * (customB / 300);
+                filterResult.data[a] += red - (green / 2) - (blue / 2);
+                filterResult.data[a + 1] += green - (red / 2) - (blue / 2);
+                filterResult.data[a + 2] += blue - (red / 2) - (green / 2);
                 break;
             }
             case 'cancelFilter': {
@@ -205,10 +233,10 @@ function imageFilter(filter) {
 const range = document.querySelectorAll('.inputRange');
 const field = document.querySelectorAll('.inputNumber');
 for (let i = 0; i < range.length; i++) {
-    range[i].addEventListener('input', function (e) {
+    range[i].addEventListener('input', function(e) {
         field[i].value = e.target.value;
     });
-    field[i].addEventListener('input', function (e) {
+    field[i].addEventListener('input', function(e) {
         range[i].value = e.target.value;
     });
 }
