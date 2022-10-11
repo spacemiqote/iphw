@@ -9,13 +9,43 @@ const fileReader = new FileReader(),
 const range = document.querySelectorAll('.inputRange');
 const field = document.querySelectorAll('.inputNumber');
 let filterResult = document.getElementById('filterResult');
-let coll = document.getElementsByClassName("collapse");
+const coll = document.getElementsByClassName("collapse");
 const filter2D = filterResult.getContext('2d', {
     willReadFrequently: !0
 });
 let backupImage = filterResult;
 let stepCount = 0;
 let loaded = false;
+
+function valueSync(value) {
+    for (let i = 0; i < range.length; i++) {
+        if (value === true) {
+            range[i].addEventListener('input', function (e) {
+                field[i].value = e.target.value;
+            });
+            field[i].addEventListener('input', function (e) {
+                range[i].value = e.target.value;
+            });
+        } else {
+            field[i].value = 0;
+            range[i].value = 0;
+        }
+    }
+    if (!loaded) {
+        for (const i of coll) {
+            i.addEventListener("click", function () {
+                i.classList.toggle("active");
+                const content = i.nextElementSibling;
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = `${content.scrollHeight}px`;
+                }
+            });
+        }
+        loaded = true;
+    }
+}
 
 function backupImageLoop() {
     backupImage = filterResult;
@@ -243,36 +273,6 @@ function imageFilter(filter) {
     stepCount++;
 }
 
-function valueSync(value) {
-    for (let i = 0; i < range.length; i++) {
-        if (value === true) {
-            range[i].addEventListener('input', function (e) {
-                field[i].value = e.target.value;
-            });
-            field[i].addEventListener('input', function (e) {
-                range[i].value = e.target.value;
-            });
-        } else {
-            field[i].value = 0;
-            range[i].value = 0;
-        }
-    }
-    if (!loaded) {
-        for (let i of coll) {
-            i.addEventListener("click", function () {
-                this.classList.toggle("active");
-                let content = this.nextElementSibling;
-                if (content.style.maxHeight) {
-                    content.style.maxHeight = null;
-                } else {
-                    content.style.maxHeight = content.scrollHeight + "px";
-                }
-            });
-        }
-        loaded = true;
-    }
-}
-
-    valueSync(true);
-    userImage.addEventListener('change', readImage);
-    fileReader.addEventListener('load', loadImage);
+valueSync(true);
+userImage.addEventListener('change', readImage);
+fileReader.addEventListener('load', loadImage);
