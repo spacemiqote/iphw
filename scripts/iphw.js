@@ -3,11 +3,19 @@ const userImage = document.getElementById('userImage');
 const originalImage = document.getElementById('originalImage');
 const allowMultipleFilterOn = document.getElementById('allowMultipleFilterOn');
 const fileReader = new FileReader(),
-    original2D = originalImage.getContext('2d', {willReadFrequently: !0});
+    original2D = originalImage.getContext('2d', {
+        willReadFrequently: !0
+    });
+const range = document.querySelectorAll('.inputRange');
+const field = document.querySelectorAll('.inputNumber');
 let filterResult = document.getElementById('filterResult');
-const filter2D = filterResult.getContext('2d', {willReadFrequently: !0});
+let coll = document.getElementsByClassName("collapse");
+const filter2D = filterResult.getContext('2d', {
+    willReadFrequently: !0
+});
 let backupImage = filterResult;
 let stepCount = 0;
+let loaded = false;
 
 function backupImageLoop() {
     backupImage = filterResult;
@@ -19,12 +27,15 @@ function readImage() {
         fileReader.readAsDataURL(userImage.files[0]);
         backupImageLoop();
         stepCount = 0;
+        valueSync(false);
     }
 }
 
 function loadImage() {
     let cResult = document.getElementById('filterResult');
-    const c2D = cResult.getContext('2d', {willReadFrequently: !0});
+    const c2D = cResult.getContext('2d', {
+        willReadFrequently: !0
+    });
     const image = new Image();
     image.src = fileReader.result.toString();
     image.onload = function () {
@@ -44,75 +55,80 @@ function loadImage() {
 }
 
 function RGBHSIConversion(command, x, y, z) {
-    let r, g, b, H, h, S, I = 0;
+    let red, green, blue, Hue, Saturation, Intensity = 0;
     if (command === 'r2h') {
         if (x + y + z > 0) {
-            r = x / (x + y + z);
-            g = y / (x + y + z);
-            b = z / (x + y + z);
+            red = x / (x + y + z);
+            green = y / (x + y + z);
+            blue = z / (x + y + z);
         } else {
-            r = g = b = 0;
+            red = green = blue = 0;
         }
         if (x === y && y === z) {
-            H = S = 0;
-        } else if (b <= g)
-            H = Math.acos(
-                (r - g / 2 - b / 2) /
-                Math.sqrt(r ** 2 + g ** 2 + b ** 2 - r * g - r * b - g * b)
+            Hue = Saturation = 0;
+        } else if (blue <= green)
+            Hue = Math.acos(
+                (red - green / 2 - blue / 2) /
+                Math.sqrt(red ** 2 + green ** 2 + blue ** 2 - red * green - red * blue - green * blue)
             );
         else
-            H =
+            Hue =
                 2 * Math.PI -
                 Math.acos(
-                    (r - g / 2 - b / 2) /
-                    Math.sqrt(r ** 2 + g ** 2 + b ** 2 - r * g - r * b - g * b)
+                    (red - green / 2 - blue / 2) /
+                    Math.sqrt(red ** 2 + green ** 2 + blue ** 2 - red * green - red * blue - green * blue)
                 );
-        if (Number.isNaN(H)) H = 0;
-        H = (H * 180) / Math.PI;
-        S = (1 - 3 * Math.min(r, g, b)) * 100;
-        I = (x + y + z) / (3 * 255);
-        return [H, S, I];
+        if (Number.isNaN(Hue)) Hue = 0;
+        Hue = (Hue * 180) / Math.PI;
+        Saturation = (1 - 3 * Math.min(red, green, blue)) * 100;
+        Intensity = (x + y + z) / (3 * 255);
+        return [Hue, Saturation, Intensity];
     } else if (command === 'h2r') {
-        h = (x * Math.PI) / 180;
-        S = y / 100;
+        Hue = (x * Math.PI) / 180;
+        Saturation = y / 100;
         if (x === 0) {
-            r = z + 2 * z * S;
-            g = z - z * S;
-            b = z - z * S;
+            red = z + 2 * z * Saturation;
+            green = z - z * Saturation;
+            blue = z - z * Saturation;
         } else if (x < 120) {
-            b = z - z * S;
-            r = z + (z * S * Math.cos(h)) / Math.cos(Math.PI / 3 - h);
-            g = 3 * z - (b + r);
+            blue = z - z * Saturation;
+            red = z + (z * Saturation * Math.cos(Hue)) / Math.cos(Math.PI / 3 - Hue);
+            green = 3 * z - (blue + red);
         } else if (x === 120) {
-            r = z - z * S;
-            g = z + 2 * z * S;
-            b = z - z * S;
+            red = z - z * Saturation;
+            green = z + 2 * z * Saturation;
+            blue = z - z * Saturation;
         } else if (x < 240) {
-            r = z * (1 - S);
-            g = z * (1 + (S * Math.cos(h - (2 * Math.PI) / 3)) / Math.cos(Math.PI - h));
-            b = 3 * z - (r + g);
+            red = z * (1 - Saturation);
+            green = z * (1 + (Saturation * Math.cos(Hue - (2 * Math.PI) / 3)) / Math.cos(Math.PI - Hue));
+            blue = 3 * z - (red + green);
         } else if (x === 240) {
-            g = z - z * S;
-            b = z + 2 * z * S;
-            r = z - z * S;
+            green = z - z * Saturation;
+            blue = z + 2 * z * Saturation;
+            red = z - z * Saturation;
         } else if (x < 360) {
-            g = z * (1 - S);
-            b = z * (1 + (S * Math.cos(h - (4 * Math.PI) / 3)) / Math.cos((5 * Math.PI) / 3 - h));
-            r = 3 * z - (g + b);
+            green = z * (1 - Saturation);
+            blue = z * (1 + (Saturation * Math.cos(Hue - (4 * Math.PI) / 3)) / Math.cos((5 * Math.PI) / 3 - Hue));
+            red = 3 * z - (green + blue);
         } else {
-            r = g = b = 0;
+            red = green = blue = 0;
         }
-        r *= 255;
-        g *= 255;
-        b *= 255;
-        return [r, g, b];
+        red *= 255;
+        green *= 255;
+        blue *= 255;
+        return [red, green, blue];
     }
     return false;
 }
 
 function imageFilter(filter) {
     const enableMultipleFilter = allowMultipleFilterOn.checked;
-    let customH, customS, customI = 0;
+    let customH = 0;
+    let customS = 0;
+    let customI = 0;
+    let customR = 0;
+    let customG = 0;
+    let customB = 0;
     filterResult.width = originalImage.width;
     filterResult.height = originalImage.height;
     filterResult = filter2D.getImageData(
@@ -137,13 +153,17 @@ function imageFilter(filter) {
         customH = parseFloat(document.getElementById('customH').value);
         customS = parseFloat(document.getElementById('customS').value);
         customI = parseFloat(document.getElementById('customI').value);
+    } else if (filter === 'colorbalance') {
+        customR = parseFloat(document.getElementById('customR').value);
+        customG = parseFloat(document.getElementById('customG').value);
+        customB = parseFloat(document.getElementById('customB').value);
     }
     let exitOperation = false;
 
     for (let a = 0; a < filterResult.data.length; a += 4) {
-        const red = filterResult.data[a];
-        const green = filterResult.data[a + 1];
-        const blue = filterResult.data[a + 2];
+        let red = filterResult.data[a];
+        let green = filterResult.data[a + 1];
+        let blue = filterResult.data[a + 2];
         switch (filter) {
             case 'inverse': {
                 filterResult.data[a] = 255 - red;
@@ -169,7 +189,7 @@ function imageFilter(filter) {
             }
             case 'hsi': {
                 const hsi = RGBHSIConversion('r2h', red, green, blue);
-                hsi[0] = (hsi[0] + parseFloat(customH) + 360) % 360;
+                hsi[0] = (hsi[0] + customH + 360) % 360;
                 if (customS >= 0) hsi[1] = hsi[1] - (1 - hsi[1]) * (customS / 100);
                 else hsi[1] = hsi[1] + hsi[1] * (customS / 100);
                 if (customI >= 0) hsi[2] = hsi[2] + hsi[2] * (customI / 100);
@@ -178,6 +198,24 @@ function imageFilter(filter) {
                 filterResult.data[a] = rgb[0];
                 filterResult.data[a + 1] = rgb[1];
                 filterResult.data[a + 2] = rgb[2];
+                break;
+            }
+            case 'colorbalance': {
+                if (red < 128)
+                    red = red * (customR / 300);
+                else
+                    red = (255 - red) * (customR / 300);
+                if (green < 128)
+                    green = green * (customG / 300);
+                else
+                    green = (255 - green) * (customG / 300);
+                if (blue < 128)
+                    blue = blue * (customB / 300);
+                else
+                    blue += (255 - blue) * (customB / 300);
+                filterResult.data[a] += red - (green / 2) - (blue / 2);
+                filterResult.data[a + 1] += green - (red / 2) - (blue / 2);
+                filterResult.data[a + 2] += blue - (red / 2) - (green / 2);
                 break;
             }
             case 'cancelFilter': {
@@ -195,22 +233,46 @@ function imageFilter(filter) {
                 throw new Error(`Unknown filter: ${filter}`);
             }
         }
-        if (exitOperation) break;
+        if (exitOperation) {
+            valueSync(false);
+            break;
+        }
     }
     if (stepCount >= 0 && filter !== "cancelFilter")
         filter2D.putImageData(filterResult, 0, 0);
     stepCount++;
 }
 
-const range = document.querySelectorAll('.inputRange');
-const field = document.querySelectorAll('.inputNumber');
-for (let i = 0; i < range.length; i++) {
-    range[i].addEventListener('input', function (e) {
-        field[i].value = e.target.value;
-    });
-    field[i].addEventListener('input', function (e) {
-        range[i].value = e.target.value;
-    });
+function valueSync(value) {
+    for (let i = 0; i < range.length; i++) {
+        if (value === true) {
+            range[i].addEventListener('input', function (e) {
+                field[i].value = e.target.value;
+            });
+            field[i].addEventListener('input', function (e) {
+                range[i].value = e.target.value;
+            });
+        } else {
+            field[i].value = 0;
+            range[i].value = 0;
+        }
+    }
+    if (!loaded) {
+        for (let i of coll) {
+            i.addEventListener("click", function () {
+                this.classList.toggle("active");
+                let content = this.nextElementSibling;
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        }
+        loaded = true;
+    }
 }
-userImage.addEventListener('change', readImage);
-fileReader.addEventListener('load', loadImage);
+
+    valueSync(true);
+    userImage.addEventListener('change', readImage);
+    fileReader.addEventListener('load', loadImage);

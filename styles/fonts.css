@@ -1,0 +1,6 @@
+@font-face {
+    font-family: 'Cubic';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Cubic'), url('../fonts/Cubic.woff2') format('woff2');
+  }

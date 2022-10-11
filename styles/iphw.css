@@ -2,7 +2,8 @@
     background: #2E3440 !important;
     color: white;
     box-sizing: border-box;
-    margin: .5em 0
+    margin: .5em 0;
+    font-family: Cubic !important;
 }
 
 @media (min-width: 35em) {
@@ -10,23 +11,23 @@
         display: table-cell
     }
 
-    .\31 {
+    .\31  {
         width: 5%
     }
 
-    .\33 {
+    .\33  {
         width: 22%
     }
 
-    .\34 {
+    .\34  {
         width: 30%
     }
 
-    .\35 {
+    .\35  {
         width: 40%
     }
 
-    .\32 {
+    .\32  {
         width: 15%
     }
 
@@ -38,7 +39,6 @@
 
 .row, .w-100 {
     width: 100%
-
 }
 
 .card:focus, hr {
@@ -59,31 +59,31 @@
     max-width: 60em;
     padding: 1em;
     margin: auto;
-    font: 1em/1.6 nunito
+    font: 1em/1.6 Cubic
 }
 
 h6 {
-    font: 300 1em nunito
+    font: 300 1em Cubic
 }
 
 h5 {
-    font: 300 1.2em nunito
+    font: 300 1.2em Cubic
 }
 
 h3 {
-    font: 300 2em nunito
+    font: 300 2em Cubic
 }
 
 h4 {
-    font: 300 1.5em nunito
+    font: 300 1.5em Cubic
 }
 
 h2 {
-    font: 300 2.2em nunito
+    font: 300 2.2em Cubic
 }
 
 h1 {
-    font: 300 2.5em nunito
+    font: 300 2.5em Cubic
 }
 
 a {
@@ -115,7 +115,7 @@ td, th {
     border: solid;
     border-color: #FFF !important;
     color: #FFF !important;
-    font: .7em nunito
+    font: .7em Cubic
 }
 
 .container {
@@ -144,27 +144,41 @@ input[type="file"] {
     padding: 8px 12px;
     cursor: pointer;
     border-radius: 4px;
-    background-color: #9c27b0;
     font-size: 16px;
     color: #fff;
+    text-align: center;
+    width: -webkit-fill-available;
+    width: -moz-available;
 }
 
 img {
     max-width: 100%;
     height: auto;
-    width: auto \9; /* ie8 */
+    width: auto \9;
+    /* ie8 */
 }
 
 input[type="range"] {
-    -webkit-appearance: none; /* Override default CSS styles */
+    -webkit-appearance: none;
     width: 300px;
     height: 15px;
-    outline: none; /* Remove outline */
+    outline: none;
 }
 
-input[type="text"] {
-    width: 35px;
-    height: 15px;
+input[type=text] {
+    width: 100%;
+    border: 2px solid #aaa;
+    border-radius: 4px;
+    margin: 8px 0;
+    outline: none;
+    padding: 8px;
+    box-sizing: border-box;
+    transition: .3s;
+}
+
+input[type=text]:focus {
+    border-color: dodgerBlue;
+    box-shadow: 0 0 8px 0 dodgerBlue;
 }
 
 #hue {
@@ -179,6 +193,18 @@ input[type="text"] {
     background: linear-gradient(to right, hsl(0, 50%, 0%), hsl(0, 50%, 100%)) !important;
 }
 
+#Red {
+    background: linear-gradient(to right, cyan, red) !important;
+}
+
+#Green {
+    background: linear-gradient(to right, magenta, green) !important;
+}
+
+#Blue {
+    background: linear-gradient(to right, yellow, blue) !important;
+}
+
 form {
     width: 260px;
     height: 260px;
@@ -187,9 +213,9 @@ form {
 
 input[type="range"] {
     -webkit-appearance: none;
-    width: 160px;
+    width: 300px;
     height: 20px;
-    margin: 10px 50px;
+    margin: 10px 20px;
     background-size: 150px 10px;
     background: linear-gradient(to right, #9A2720 0%, #9A2720 100%) no-repeat center;
     overflow: hidden;
@@ -226,7 +252,53 @@ p {
     width: 100%;
     text-align: center;
     color: white;
-    font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', Roboto, Arial, Sans-serif;
     font-size: 32px;
     margin-top: 30px;
+}
+
+.collapse {
+    background-color: transparent;
+    color: #FFFFFF;
+    cursor: pointer;
+    padding: 18px;
+    width: -webkit-fill-available;
+    width: -moz-available;
+    border: none;
+    text-align: center;
+    outline: none;
+    font-size: 15px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom: 1px solid #101010;
+    transition: all 0.3 ease-in-out;
+}
+
+.active, .collapse:hover {
+    background-color: transparent;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    color: #FFFFFF;
+}
+
+.collapse:after {
+    font-family: "Cubic";
+    content: ">";
+    color: #FFFFFF;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+}
+
+.content {
+    padding: 0 18px;
+    max-height: 0;
+    overflow: hidden;
+    width: -webkit-fill-available;
+    width: -moz-available;
+    transition: max-height 0.2s ease-out;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    text-align: center;
+    transition: all 0.6s ease-in-out;
+    object-fit: cover;
 }
