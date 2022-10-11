@@ -118,7 +118,8 @@ function RGBHSIConversion(command, x, y, z) {
 
 function imageFilter(filter) {
     const enableMultipleFilter = allowMultipleFilterOn.checked;
-    let customH, customS, customI, customR, customG, customB = 0;
+    let customH = 0;let customS = 0;let customI = 0;
+	let customR = 0;let customG = 0;let customB = 0;
     filterResult.width = originalImage.width;
     filterResult.height = originalImage.height;
     filterResult = filter2D.getImageData(
