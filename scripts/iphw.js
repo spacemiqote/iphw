@@ -8,6 +8,7 @@ const fileReader = new FileReader(),
     });
 const range = document.querySelectorAll('.inputRange');
 const field = document.querySelectorAll('.inputNumber');
+const dmatrix = [[0, 128, 32, 160], [192, 64, 224, 96], [48, 176, 16, 144], [240, 112, 208, 80]];
 let filterResult = document.getElementById('filterResult');
 const coll = document.getElementsByClassName("collapse");
 const filter2D = filterResult.getContext('2d', {
@@ -16,6 +17,23 @@ const filter2D = filterResult.getContext('2d', {
 let backupImage = filterResult;
 let stepCount = 0;
 let loaded = false;
+
+function goFullScreen() {
+    const canvas = document.getElementById("filterResult");
+    if (canvas.requestFullScreen)
+        canvas.requestFullScreen();
+    else if (canvas.webkitRequestFullScreen)
+        canvas.webkitRequestFullScreen();
+    else if (canvas.mozRequestFullScreen)
+        canvas.mozRequestFullScreen();
+}
+
+function download() {
+    let link = document.createElement('a');
+    link.download = 'download.png';
+    link.href = document.getElementById('filterResult').toDataURL()
+    link.click();
+}
 
 function valueSync(value) {
     for (let i = 0; i < range.length; i++) {
@@ -178,7 +196,6 @@ function imageFilter(filter) {
             originalImage.height
         );
     }
-
     if (filter === 'hsi') {
         customH = parseFloat(document.getElementById('customH').value);
         customS = parseFloat(document.getElementById('customS').value);
@@ -189,11 +206,13 @@ function imageFilter(filter) {
         customB = parseFloat(document.getElementById('customB').value);
     }
     let exitOperation = false;
-
     for (let a = 0; a < filterResult.data.length; a += 4) {
+        const height = filterResult.height;
+        const width = filterResult.width;
         let red = filterResult.data[a];
         let green = filterResult.data[a + 1];
         let blue = filterResult.data[a + 2];
+        let pixel = filterResult.data;
         switch (filter) {
             case 'inverse': {
                 filterResult.data[a] = 255 - red;
@@ -215,6 +234,69 @@ function imageFilter(filter) {
                 filterResult.data[a] = red * 0.393 + green * 0.769 + blue * 0.189;
                 filterResult.data[a + 1] = red * 0.349 + green * 0.686 + blue * 0.168;
                 filterResult.data[a + 2] = red * 0.272 + green * 0.534 + blue * 0.131;
+                break;
+            }
+            case 'binary': {
+                let gray = 0.299 * red + 0.587 * green + 0.114 * blue;
+                if (gray >= 128) gray = 255;
+                else gray = 0;
+                filterResult.data[a] = gray;
+                filterResult.data[a + 1] = gray;
+                filterResult.data[a + 2] = gray;
+                break;
+            }
+            case 'floyd': {
+                let graph = Array.from(Array(filterResult.height), () => new Array(filterResult.width));
+                for (let y = 0; y < height; y++) {
+                    for (let x = 0; x < width; x++) {
+                        const currentPixel = (y * 4 * width + 4 * x);
+                        const red = filterResult.data[currentPixel];
+                        const green = filterResult.data[currentPixel + 1];
+                        const blue = filterResult.data[currentPixel + 2];
+                        graph[y][x] = 0.299 * red + 0.587 * green + 0.114 * blue;
+                    }
+                }
+                for (let y = 0; y < height; y++) {
+                    for (let x = 0; x < width; x++) {
+                        const currentPixel = y * 4 * width + 4 * x;
+                        let gray = 0;
+                        if (graph[y][x] >= 128)
+                            gray = 255;
+                        pixel [currentPixel] = gray;
+                        pixel [currentPixel + 1] = gray;
+                        pixel [currentPixel + 2] = gray;
+                        let error = graph[y][x] - gray;
+                        let left = x - 1;
+                        if (left < 0)
+                            left = 0;
+                        let right = x + 1;
+                        if (right > width - 1)
+                            right = width - 1;
+                        let down = y + 1;
+                        if (down > height - 1)
+                            down = height - 1;
+                        graph[y][right] = graph[y][right] + 7 / 16 * error;
+                        graph[down][left] = graph[down][left] + 3 / 16 * error;
+                        graph[down][x] = graph[down][x] + 5 / 16 * error;
+                        graph[down][right] = graph[down][right] + 1 / 16 * error;
+                    }
+                }
+                exitOperation = true;
+                break;
+            }
+            case 'dither': {
+                for (let y = 0; y < height; y++) {
+                    for (let x = 0; x < width; x++) {
+                        let i = y * 4 * width + 4 * x;
+                        let gray = pixel[i] * 0.299 + pixel[i + 1] * 0.587 + pixel[i + 2] * 0.114;
+                        if (gray >= dmatrix[y % 4][x % 4]) gray = 255;
+                        else gray = 0;
+                        pixel[i + 0] = gray;
+                        pixel[i + 1] = gray;
+                        pixel[i + 2] = gray;
+                    }
+                }
+                exitOperation = true;
                 break;
             }
             case 'hsi': {
@@ -242,7 +324,7 @@ function imageFilter(filter) {
                 if (blue < 128)
                     blue = blue * (customB / 300);
                 else
-                    blue += (255 - blue) * (customB / 300);
+                    blue = (255 - blue) * (customB / 300);
                 filterResult.data[a] += red - (green / 2) - (blue / 2);
                 filterResult.data[a + 1] += green - (red / 2) - (blue / 2);
                 filterResult.data[a + 2] += blue - (red / 2) - (green / 2);

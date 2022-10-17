@@ -22,10 +22,15 @@
         <button class="btn" onclick="imageFilter('inverse')" id="inverseImage">負片處理</button>
         <button class="btn" onclick="imageFilter('grayscale')" id="grayscaleImage">灰階處理</button>
         <button class="btn" onclick="imageFilter('sepia')" id="sepiaImage">復古處理</button>
+        <button class="btn" onclick="imageFilter('binary')" id="binary">Binary</button>
+        <button class="btn" onclick="imageFilter('dither')" id="dither">Dither</button>
+        <button class="btn" onclick="imageFilter('floyd')" id="floyd">Floyd-Steinberg</button>
     </div>
     <div class='2 col'>
         <button class="btn" onclick="imageFilter('revertImage')" id="revertImage">上一步</button>
         <button class="btn" onclick="imageFilter('cancelFilter')" id="cancelFilter">取消濾鏡</button>
+        <button class="btn" onclick="goFullScreen()" >全螢幕顯示</button>
+        <button class="btn" onclick="download()">下載圖片</button>
     </div>
     <div class='4 col'>
         <fieldset>
