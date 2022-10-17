@@ -176,6 +176,7 @@ function RGBHSIConversion(command, x, y, z) {
 
 function imageFilter(filter) {
     const enableMultipleFilter = allowMultipleFilterOn.checked;
+    const graph = Array.from(Array(filterResult.height), () => new Array(filterResult.width));
     let customH = 0;
     let customS = 0;
     let customI = 0;
@@ -251,7 +252,6 @@ function imageFilter(filter) {
                 break;
             }
             case 'floyd': {
-                const graph = Array.from(Array(filterResult.height), () => new Array(filterResult.width));
                 for (let y = 0; y < height; y++) {
                     for (let x = 0; x < width; x++) {
                         const currentPixel = (y * 4 * width + 4 * x);
