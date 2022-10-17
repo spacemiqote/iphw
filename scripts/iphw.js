@@ -255,10 +255,7 @@ function imageFilter(filter) {
                 for (let y = 0; y < height; y++) {
                     for (let x = 0; x < width; x++) {
                         const currentPixel = (y * 4 * width + 4 * x);
-                        const red = filterResult.data[currentPixel];
-                        const green = filterResult.data[currentPixel + 1];
-                        const blue = filterResult.data[currentPixel + 2];
-                        graph[y][x] = 0.299 * red + 0.587 * green + 0.114 * blue;
+                        graph[y][x] = 0.299 * filterResult.data[currentPixel] + 0.587 * filterResult.data[currentPixel + 1] + 0.114 * filterResult.data[currentPixel + 2];
                     }
                 }
                 for (let y = 0; y < height; y++) {
