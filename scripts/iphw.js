@@ -8,7 +8,12 @@ const fileReader = new FileReader(),
     });
 const range = document.querySelectorAll('.inputRange');
 const field = document.querySelectorAll('.inputNumber');
-const dmatrix = [[0, 128, 32, 160], [192, 64, 224, 96], [48, 176, 16, 144], [240, 112, 208, 80]];
+const dmatrix = [
+    [0, 128, 32, 160],
+    [192, 64, 224, 96],
+    [48, 176, 16, 144],
+    [240, 112, 208, 80]
+];
 let filterResult = document.getElementById('filterResult');
 const coll = document.getElementsByClassName("collapse");
 const filter2D = filterResult.getContext('2d', {
@@ -29,7 +34,7 @@ function goFullScreen() {
 }
 
 function download() {
-    let link = document.createElement('a');
+    const link = document.createElement('a');
     link.download = 'download.png';
     link.href = document.getElementById('filterResult').toDataURL()
     link.click();
@@ -38,10 +43,10 @@ function download() {
 function valueSync(value) {
     for (let i = 0; i < range.length; i++) {
         if (value === true) {
-            range[i].addEventListener('input', function (e) {
+            range[i].addEventListener('input', function(e) {
                 field[i].value = e.target.value;
             });
-            field[i].addEventListener('input', function (e) {
+            field[i].addEventListener('input', function(e) {
                 range[i].value = e.target.value;
             });
         } else {
@@ -51,7 +56,7 @@ function valueSync(value) {
     }
     if (!loaded) {
         for (const i of coll) {
-            i.addEventListener("click", function () {
+            i.addEventListener("click", function() {
                 i.classList.toggle("active");
                 const content = i.nextElementSibling;
                 if (content.style.maxHeight) {
@@ -86,7 +91,7 @@ function loadImage() {
     });
     const image = new Image();
     image.src = fileReader.result.toString();
-    image.onload = function () {
+    image.onload = function() {
         originalImage.width = image.width;
         originalImage.height = image.height;
         cResult.width = image.width;
@@ -121,11 +126,11 @@ function RGBHSIConversion(command, x, y, z) {
             );
         else
             Hue =
-                2 * Math.PI -
-                Math.acos(
-                    (red - green / 2 - blue / 2) /
-                    Math.sqrt(red ** 2 + green ** 2 + blue ** 2 - red * green - red * blue - green * blue)
-                );
+            2 * Math.PI -
+            Math.acos(
+                (red - green / 2 - blue / 2) /
+                Math.sqrt(red ** 2 + green ** 2 + blue ** 2 - red * green - red * blue - green * blue)
+            );
         if (Number.isNaN(Hue)) Hue = 0;
         Hue = (Hue * 180) / Math.PI;
         Saturation = (1 - 3 * Math.min(red, green, blue)) * 100;
@@ -212,7 +217,7 @@ function imageFilter(filter) {
         let red = filterResult.data[a];
         let green = filterResult.data[a + 1];
         let blue = filterResult.data[a + 2];
-        let pixel = filterResult.data;
+        const pixel = filterResult.data;
         switch (filter) {
             case 'inverse': {
                 filterResult.data[a] = 255 - red;
@@ -246,7 +251,7 @@ function imageFilter(filter) {
                 break;
             }
             case 'floyd': {
-                let graph = Array.from(Array(filterResult.height), () => new Array(filterResult.width));
+                const graph = Array.from(Array(filterResult.height), () => new Array(filterResult.width));
                 for (let y = 0; y < height; y++) {
                     for (let x = 0; x < width; x++) {
                         const currentPixel = (y * 4 * width + 4 * x);
@@ -262,10 +267,10 @@ function imageFilter(filter) {
                         let gray = 0;
                         if (graph[y][x] >= 128)
                             gray = 255;
-                        pixel [currentPixel] = gray;
-                        pixel [currentPixel + 1] = gray;
-                        pixel [currentPixel + 2] = gray;
-                        let error = graph[y][x] - gray;
+                        pixel[currentPixel] = gray;
+                        pixel[currentPixel + 1] = gray;
+                        pixel[currentPixel + 2] = gray;
+                        const error = graph[y][x] - gray;
                         let left = x - 1;
                         if (left < 0)
                             left = 0;
@@ -287,13 +292,13 @@ function imageFilter(filter) {
             case 'dither': {
                 for (let y = 0; y < height; y++) {
                     for (let x = 0; x < width; x++) {
-                        let i = y * 4 * width + 4 * x;
-                        let gray = pixel[i] * 0.299 + pixel[i + 1] * 0.587 + pixel[i + 2] * 0.114;
+                        const currentPixel = y * 4 * width + 4 * x;
+                        let gray = pixel[currentPixel] * 0.299 + pixel[currentPixel + 1] * 0.587 + pixel[currentPixel + 2] * 0.114;
                         if (gray >= dmatrix[y % 4][x % 4]) gray = 255;
                         else gray = 0;
-                        pixel[i + 0] = gray;
-                        pixel[i + 1] = gray;
-                        pixel[i + 2] = gray;
+                        pixel[currentPixel] = gray;
+                        pixel[currentPixel + 1] = gray;
+                        pixel[currentPixel + 2] = gray;
                     }
                 }
                 exitOperation = true;
