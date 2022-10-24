@@ -42,21 +42,21 @@ function download() {
 
 function valueSync(value) {
     for (let i = 0; i < range.length; i++) {
-        if (value === true ) {
-            range[i].addEventListener('input', function (e) {
+        if (value === true) {
+            range[i].addEventListener('input', function(e) {
                 field[i].value = e.target.value;
             });
-            field[i].addEventListener('input', function (e) {
+            field[i].addEventListener('input', function(e) {
                 range[i].value = e.target.value;
             });
-        } else if (!range[i].classList.contains('noSync')){
+        } else if (!range[i].classList.contains('noSync')) {
             field[i].value = 0;
             range[i].value = 0;
         }
     }
     if (!loaded) {
         for (const i of coll) {
-            i.addEventListener("click", function () {
+            i.addEventListener("click", function() {
                 i.classList.toggle("active");
                 const content = i.nextElementSibling;
                 if (content.style.maxHeight) {
@@ -91,7 +91,7 @@ function loadImage() {
     });
     const image = new Image();
     image.src = fileReader.result.toString();
-    image.onload = function () {
+    image.onload = function() {
         originalImage.width = image.width;
         originalImage.height = image.height;
         cResult.width = image.width;
@@ -361,7 +361,7 @@ function imageFilter(filter) {
             }
             case 'impulseNoise': {
                 const impulseNoise = Math.random();
-                if (0 <= impulseNoise && impulseNoise <= customP / 2) {
+                if (0 <= impulseNoise && impulseNoise <= (customP / 2)) {
                     pixel[a] = 0;
                     pixel[a + 1] = 0;
                     pixel[a + 2] = 0;
