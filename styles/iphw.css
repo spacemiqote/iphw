@@ -1,6 +1,6 @@
 * + * {
     background: #2E3440 !important;
-    color: white;
+    color: hsl(300deg 100% 50%);
     box-sizing: border-box;
     margin: .5em 0;
     font-family: Cubic !important;
@@ -71,7 +71,8 @@ h5 {
 }
 
 h3 {
-    font: 300 2em Cubic
+    font: 300 2em Cubic;
+    text-align: center;
 }
 
 h4 {
@@ -114,7 +115,7 @@ td, th {
     text-transform: uppercase;
     border: solid;
     border-color: #FFF !important;
-    color: #FFF !important;
+    color: hsl(90deg 100% 50%) !important;
     font: .7em Cubic
 }
 
@@ -204,6 +205,10 @@ input[type=text]:focus {
 
 #Blue {
     background: linear-gradient(to right, yellow, blue) !important;
+}
+
+.noSync {
+    background: linear-gradient(to right, black, white) !important;
 }
 
 form {

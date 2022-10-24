@@ -25,6 +25,11 @@
         <button class="btn" onclick="imageFilter('binary')" id="binary">Binary</button>
         <button class="btn" onclick="imageFilter('dither')" id="dither">Dither</button>
         <button class="btn" onclick="imageFilter('floyd')" id="floyd">Floyd-Steinberg</button>
+        <br>
+        <button class="btn" onclick="imageFilter('uniformNoise')" id="uniformNoise">均衡雜訊</button>
+        <button class="btn" onclick="imageFilter('gaussianNoise')" id="gaussianNoise">高斯雜訊</button>
+        <button class="btn" onclick="imageFilter('exponentialNoise')" id="exponentialNoise">指數雜訊</button>
+        <button class="btn" onclick="imageFilter('impulseNoise')" id="impulseNoise">脈衝雜訊</button>
     </div>
     <div class='2 col'>
         <button class="btn" onclick="imageFilter('revertImage')" id="revertImage">上一步</button>
@@ -82,7 +87,18 @@
             <input type="text" id="customB" class="inputNumber" value="0" onChange="imageFilter('colorbalance');"><br>
         </div>
     </div>
-
+    <div class='3 row'>
+        <button class="collapse btn">雜訊參數</button>
+        <div class="content">
+            <br>
+            <input type="range" id="Scale" class="inputRange noSync" value="40" min="1" max="255">
+            <br>Scale
+            <input type="text" id="customScale" class="inputNumber noSync" value="40">
+            <hr> P
+            <input type="text" id="Pps" class="noSync" value="0.05">
+            <br>
+        </div>
+    </div>
     <div class="6 row">
         <div class="card col">
             <canvas id="filterResult" class="w-100"></canvas>

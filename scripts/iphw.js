@@ -42,21 +42,21 @@ function download() {
 
 function valueSync(value) {
     for (let i = 0; i < range.length; i++) {
-        if (value === true) {
-            range[i].addEventListener('input', function(e) {
+        if (value === true ) {
+            range[i].addEventListener('input', function (e) {
                 field[i].value = e.target.value;
             });
-            field[i].addEventListener('input', function(e) {
+            field[i].addEventListener('input', function (e) {
                 range[i].value = e.target.value;
             });
-        } else {
+        } else if (!range[i].classList.contains('noSync')){
             field[i].value = 0;
             range[i].value = 0;
         }
     }
     if (!loaded) {
         for (const i of coll) {
-            i.addEventListener("click", function() {
+            i.addEventListener("click", function () {
                 i.classList.toggle("active");
                 const content = i.nextElementSibling;
                 if (content.style.maxHeight) {
@@ -91,7 +91,7 @@ function loadImage() {
     });
     const image = new Image();
     image.src = fileReader.result.toString();
-    image.onload = function() {
+    image.onload = function () {
         originalImage.width = image.width;
         originalImage.height = image.height;
         cResult.width = image.width;
@@ -126,11 +126,11 @@ function RGBHSIConversion(command, x, y, z) {
             );
         else
             Hue =
-            2 * Math.PI -
-            Math.acos(
-                (red - green / 2 - blue / 2) /
-                Math.sqrt(red ** 2 + green ** 2 + blue ** 2 - red * green - red * blue - green * blue)
-            );
+                2 * Math.PI -
+                Math.acos(
+                    (red - green / 2 - blue / 2) /
+                    Math.sqrt(red ** 2 + green ** 2 + blue ** 2 - red * green - red * blue - green * blue)
+                );
         if (Number.isNaN(Hue)) Hue = 0;
         Hue = (Hue * 180) / Math.PI;
         Saturation = (1 - 3 * Math.min(red, green, blue)) * 100;
@@ -183,6 +183,8 @@ function imageFilter(filter) {
     let customR = 0;
     let customG = 0;
     let customB = 0;
+    let customP = 0;
+    let customScale = 0;
     filterResult.width = originalImage.width;
     filterResult.height = originalImage.height;
     filterResult = filter2D.getImageData(
@@ -210,6 +212,10 @@ function imageFilter(filter) {
         customR = parseFloat(document.getElementById('customR').value);
         customG = parseFloat(document.getElementById('customG').value);
         customB = parseFloat(document.getElementById('customB').value);
+    } else if (filter === 'uniformNoise' || filter === 'gaussianNoise' || filter === 'exponentialNoise') {
+        customScale = parseFloat(document.getElementById('customScale').value);
+    } else if (filter === 'impulseNoise') {
+        customP = parseFloat(document.getElementById('Pps').value);
     }
     let exitOperation = false;
     for (let a = 0; a < filterResult.data.length; a += 4) {
@@ -221,9 +227,9 @@ function imageFilter(filter) {
         const pixel = filterResult.data;
         switch (filter) {
             case 'inverse': {
-                filterResult.data[a] = 255 - red;
-                filterResult.data[a + 1] = 255 - green;
-                filterResult.data[a + 2] = 255 - blue;
+                pixel[a] = 255 - red;
+                pixel[a + 1] = 255 - green;
+                pixel[a + 2] = 255 - blue;
                 break;
             }
             case 'grayscale': {
@@ -231,31 +237,31 @@ function imageFilter(filter) {
                     0.2126 * red +
                     0.7152 * green +
                     0.0722 * blue;
-                filterResult.data[a] = luminance;
-                filterResult.data[a + 1] = luminance;
-                filterResult.data[a + 2] = luminance;
+                pixel[a] = luminance;
+                pixel[a + 1] = luminance;
+                pixel[a + 2] = luminance;
                 break;
             }
             case 'sepia': {
-                filterResult.data[a] = red * 0.393 + green * 0.769 + blue * 0.189;
-                filterResult.data[a + 1] = red * 0.349 + green * 0.686 + blue * 0.168;
-                filterResult.data[a + 2] = red * 0.272 + green * 0.534 + blue * 0.131;
+                pixel[a] = red * 0.393 + green * 0.769 + blue * 0.189;
+                pixel[a + 1] = red * 0.349 + green * 0.686 + blue * 0.168;
+                pixel[a + 2] = red * 0.272 + green * 0.534 + blue * 0.131;
                 break;
             }
             case 'binary': {
                 let gray = 0.299 * red + 0.587 * green + 0.114 * blue;
                 if (gray >= 128) gray = 255;
                 else gray = 0;
-                filterResult.data[a] = gray;
-                filterResult.data[a + 1] = gray;
-                filterResult.data[a + 2] = gray;
+                pixel[a] = gray;
+                pixel[a + 1] = gray;
+                pixel[a + 2] = gray;
                 break;
             }
             case 'floyd': {
                 for (let y = 0; y < height; y++) {
                     for (let x = 0; x < width; x++) {
                         const currentPixel = (y * 4 * width + 4 * x);
-                        graph[y][x] = 0.299 * filterResult.data[currentPixel] + 0.587 * filterResult.data[currentPixel + 1] + 0.114 * filterResult.data[currentPixel + 2];
+                        graph[y][x] = 0.299 * pixel[currentPixel] + 0.587 * pixel[currentPixel + 1] + 0.114 * pixel[currentPixel + 2];
                     }
                 }
                 for (let y = 0; y < height; y++) {
@@ -309,9 +315,9 @@ function imageFilter(filter) {
                 if (customI >= 0) hsi[2] = hsi[2] + hsi[2] * (customI / 100);
                 else hsi[2] = hsi[2] - (1 - hsi[2]) * (customI / 100);
                 const rgb = RGBHSIConversion('h2r', hsi[0], hsi[1], hsi[2]);
-                filterResult.data[a] = rgb[0];
-                filterResult.data[a + 1] = rgb[1];
-                filterResult.data[a + 2] = rgb[2];
+                pixel[a] = rgb[0];
+                pixel[a + 1] = rgb[1];
+                pixel[a + 2] = rgb[2];
                 break;
             }
             case 'colorbalance': {
@@ -327,9 +333,43 @@ function imageFilter(filter) {
                     blue = blue * (customB / 300);
                 else
                     blue = (255 - blue) * (customB / 300);
-                filterResult.data[a] += red - (green / 2) - (blue / 2);
-                filterResult.data[a + 1] += green - (red / 2) - (blue / 2);
-                filterResult.data[a + 2] += blue - (red / 2) - (green / 2);
+                pixel[a] += red - (green / 2) - (blue / 2);
+                pixel[a + 1] += green - (red / 2) - (blue / 2);
+                pixel[a + 2] += blue - (red / 2) - (green / 2);
+                break;
+            }
+            case 'uniformNoise': {
+                const noise = Math.floor(Math.random() * customScale);
+                pixel[a] += noise;
+                pixel[a + 1] += noise;
+                pixel[a + 2] += noise;
+                break;
+            }
+            case 'gaussianNoise': {
+                const gaussianNoise = customScale * ((Math.random() + Math.random() + Math.random()) / 3);
+                pixel[a] += gaussianNoise;
+                pixel[a + 1] += gaussianNoise;
+                pixel[a + 2] += gaussianNoise;
+                break;
+            }
+            case 'exponentialNoise': {
+                const exponentialNoise = customScale * (-1 * Math.log(1 - Math.random()) / 2);
+                pixel[a] += exponentialNoise;
+                pixel[a + 1] += exponentialNoise;
+                pixel[a + 2] += exponentialNoise;
+                break;
+            }
+            case 'impulseNoise': {
+                const impulseNoise = Math.random();
+                if (0 <= impulseNoise && impulseNoise <= customP / 2) {
+                    pixel[a] = 0;
+                    pixel[a + 1] = 0;
+                    pixel[a + 2] = 0;
+                } else if (customP / 2 < impulseNoise && impulseNoise <= customP) {
+                    pixel[a] = 255;
+                    pixel[a + 1] = 255;
+                    pixel[a + 2] = 255;
+                }
                 break;
             }
             case 'cancelFilter': {
