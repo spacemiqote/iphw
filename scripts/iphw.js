@@ -14,6 +14,7 @@ const dmatrix = [
     [48, 176, 16, 144],
     [240, 112, 208, 80]
 ];
+
 let filterResult = document.getElementById('filterResult');
 const coll = document.getElementsByClassName("collapse");
 const filter2D = filterResult.getContext('2d', {
@@ -185,6 +186,7 @@ function imageFilter(filter) {
     let customB = 0;
     let customP = 0;
     let customScale = 0;
+    let customWhitening = 0;
     filterResult.width = originalImage.width;
     filterResult.height = originalImage.height;
     filterResult = filter2D.getImageData(
@@ -216,6 +218,8 @@ function imageFilter(filter) {
         customScale = parseFloat(document.getElementById('customScale').value);
     } else if (filter === 'impulseNoise') {
         customP = parseFloat(document.getElementById('Pps').value);
+    } else if (filter === "skinWhitening") {
+        customWhitening = parseFloat(document.getElementById('customWhitening').value);
     }
     let exitOperation = false;
     for (let a = 0; a < filterResult.data.length; a += 4) {
@@ -369,6 +373,34 @@ function imageFilter(filter) {
                     pixel[a] = 255;
                     pixel[a + 1] = 255;
                     pixel[a + 2] = 255;
+                }
+                break;
+            }
+            case 'showSkinArea':{
+                const Y = 0.299 * red + 0.587 * green + 0.114 * blue;
+                const cB = -0.168736 * red - 0.331264 * green + 0.5 * blue + 128;
+                const cR = 0.499813 * red - 0.418531 * green - 0.081282 * blue + 128;
+                if (Y > 80 && cB > 85 && cB < 135 && cR > 135 && cR < 180){
+                    pixel[a] = 255;
+                    pixel[a + 1] = 255;
+                    pixel[a + 2] = 255;
+                }
+                else{
+                    pixel[a] = 0;
+                    pixel[a + 1] = 0;
+                    pixel[a + 2] = 0;
+                }
+                break;
+            }
+            case 'skinWhitening':{
+                let Y = 0.299 * red + 0.587 * green + 0.114 * blue;
+                const cB = -0.168736 * red - 0.331264 * green + 0.5 * blue + 128;
+                const cR = 0.499813 * red - 0.418531 * green - 0.081282 * blue + 128;
+                if (Y > 80 && cB > 85 && cB < 135 && cR > 135 && cR < 180){
+                    Y *= customWhitening;
+                    pixel[a] = Y + 1.402 * (cR - 128);
+                    pixel[a + 1] = Y - 0.34414 * (cB - 128) - 0.71414 * (cR - 128);
+                    pixel[a + 2] = Y + 1.772 * (cB - 128);
                 }
                 break;
             }

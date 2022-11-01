@@ -50,7 +50,7 @@
         </button>
         <button class="btn" onclick="imageFilter('cancelFilter')" id="cancelFilter">取消濾鏡
         </button>
-        <button class="btn" onclick="goFullScreen()" >全螢幕顯示
+        <button class="btn" onclick="goFullScreen()">全螢幕顯示
         </button>
         <button class="btn" onclick="download()">下載圖片
         </button>
@@ -119,9 +119,25 @@
             <input type="range" id="Scale" class="inputRange noSync" value="40" min="1" max="255">
             <br>Scale
             <input type="text" id="customScale" class="inputNumber noSync" value="40">
-            <hr> P
-            <input type="text" id="Pps" class="noSync" value="0.05">
+            <hr>
+            <input type="range" class="inputRange noSync"  value="0.05" min="0.01" max="1" step="0.01">
+            <br>P
+            <input type="text" id="Pps" class="inputNumber noSync" value="0.05">
             <br>
+        </div>
+    </div>
+    <div class='3 row'>
+        <button class="collapse btn">皮膚美白
+        </button>
+        <div class="content">
+            <input type="range" class="inputRange noSync" value="1.26" min="0.1" max="2" step="0.01">
+            <br>美白程度
+            <input type="text" id="customWhitening" class="inputNumber" value="1.26" min="0.1" max="2">
+            <br>
+            <button class="btn" onclick="imageFilter('showSkinArea')" id="showSkinArea">顯示皮膚區域
+            </button>
+            <button class="btn" onclick="imageFilter('skinWhitening')" id="skinWhitening">人臉美白
+            </button>
         </div>
     </div>
     <div class="6 row">
