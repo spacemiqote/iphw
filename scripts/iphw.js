@@ -365,7 +365,7 @@ function imageFilter(filter) {
             }
             case 'impulseNoise': {
                 const impulseNoise = Math.random();
-                if (0 <= impulseNoise && impulseNoise <= (customP / 2)) {
+                if (impulseNoise >= 0 && impulseNoise <= (customP / 2)) {
                     pixel[a] = 0;
                     pixel[a + 1] = 0;
                     pixel[a + 2] = 0;
@@ -377,10 +377,10 @@ function imageFilter(filter) {
                 break;
             }
             case 'showSkinArea':{
-                const Y = 0.299 * red + 0.587 * green + 0.114 * blue;
+                const Yvar = 0.299 * red + 0.587 * green + 0.114 * blue;
                 const cB = -0.168736 * red - 0.331264 * green + 0.5 * blue + 128;
                 const cR = 0.499813 * red - 0.418531 * green - 0.081282 * blue + 128;
-                if (Y > 80 && cB > 85 && cB < 135 && cR > 135 && cR < 180){
+                if (Yvar > 80 && cB > 85 && cB < 135 && cR > 135 && cR < 180){
                     pixel[a] = 255;
                     pixel[a + 1] = 255;
                     pixel[a + 2] = 255;
@@ -393,14 +393,14 @@ function imageFilter(filter) {
                 break;
             }
             case 'skinWhitening':{
-                let Y = 0.299 * red + 0.587 * green + 0.114 * blue;
+                let Yvar = 0.299 * red + 0.587 * green + 0.114 * blue;
                 const cB = -0.168736 * red - 0.331264 * green + 0.5 * blue + 128;
                 const cR = 0.499813 * red - 0.418531 * green - 0.081282 * blue + 128;
-                if (Y > 80 && cB > 85 && cB < 135 && cR > 135 && cR < 180){
-                    Y *= customWhitening;
-                    pixel[a] = Y + 1.402 * (cR - 128);
-                    pixel[a + 1] = Y - 0.34414 * (cB - 128) - 0.71414 * (cR - 128);
-                    pixel[a + 2] = Y + 1.772 * (cB - 128);
+                if (Yvar > 80 && cB > 85 && cB < 135 && cR > 135 && cR < 180){
+                    Yvar *= customWhitening;
+                    pixel[a] = Yvar + 1.402 * (cR - 128);
+                    pixel[a + 1] = Yvar - 0.34414 * (cB - 128) - 0.71414 * (cR - 128);
+                    pixel[a + 2] = Yvar + 1.772 * (cB - 128);
                 }
                 break;
             }
