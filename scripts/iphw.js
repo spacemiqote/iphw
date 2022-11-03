@@ -317,7 +317,7 @@ function imageFilter(filter) {
                 if (customS >= 0) hsi[1] = hsi[1] - (1 - hsi[1]) * (customS / 100);
                 else hsi[1] = hsi[1] + hsi[1] * (customS / 100);
                 if (customI >= 0) hsi[2] = hsi[2] + hsi[2] * (customI / 100); 
-                else hsi[2] = hsi[2] - (255 - hsi[2]) * (customI / 100); 
+                else hsi[2] = hsi[2] + (1 - hsi[2]) * (customI / 100); 
                 const rgb = RGBHSIConversion('h2r', hsi[0], hsi[1], hsi[2]);
                 pixel[a] = rgb[0];
                 pixel[a + 1] = rgb[1];
