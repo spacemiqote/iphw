@@ -101,12 +101,12 @@ function loadImage() {
 }
 
 function RGBHSIConversion(command, x, y, z) {
-    let red,
-        green,
-        blue,
-        Hue,
-        Saturation,
-        Intensity = 0;
+    let red = 0;
+    let green = 0;
+    let blue = 0;
+    let Hue = 0;
+    let Saturation = 0;
+    let Intensity = 0;
     if (command === "r2h") {
         if (x + y + z > 0) {
             red = x / (x + y + z);
