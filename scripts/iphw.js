@@ -340,8 +340,7 @@ function imageFilter(filter) {
                 }
                 break;
             }
-            case "validateYCbCr": {
-            }
+            case "validateYCbCr":
             case "skinWhitening": {
                 let Yvar = 0.299 * red + 0.587 * green + 0.114 * blue;
                 const cB = -0.168736 * red - 0.331264 * green + 0.5 * blue + 128;
