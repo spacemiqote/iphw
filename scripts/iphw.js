@@ -14,6 +14,41 @@ const dmatrix = [
     [48, 176, 16, 144],
     [240, 112, 208, 80],
 ];
+const identity = [
+    [0,0,0],
+    [0,1,0],
+    [0,0,0],
+];
+const boxBlur = [
+    [1/9,1/9,1/9],
+    [1/9,1/9,1/9],
+    [1/9,1/9,1/9],
+];
+
+const sharpen = [
+    [0,-1,0],
+    [-1,5,-1],
+    [0,-1,0],
+];
+
+const gaussianBlur = [
+    [0.045,0.122,0.045],
+    [0.122,0.332,0.122],
+    [0.045,0.122,0.045],
+];
+
+//https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-image-processing-continued.html
+const unsharp = [
+    [-1,-1,-1],
+    [-1,9,-1],
+    [-1,-1,-1],
+];
+
+const emboss = [
+    [-2,-1,0],
+    [-1,1,1],
+    [0,1,2],
+];
 
 let filterResult = document.getElementById("filterResult");
 const coll = document.getElementsByClassName("collapse");
@@ -162,9 +197,12 @@ function RGBHSIConversion(command, x, y, z) {
     return false;
 }
 
+
+
 function imageFilter(filter) {
     const enableMultipleFilter = allowMultipleFilterOn.checked;
     const graph = Array.from(Array(filterResult.height), () => new Array(filterResult.width));
+
     let customH = 0;
     let customS = 0;
     let customI = 0;
@@ -177,6 +215,7 @@ function imageFilter(filter) {
     filterResult.width = originalImage.width;
     filterResult.height = originalImage.height;
     filterResult = filter2D.getImageData(0, 0, originalImage.width, originalImage.height);
+
     if (enableMultipleFilter && stepCount > 0 && filter !== "cancelFilter") {
         filter2D.putImageData(filterResult, 0, 0);
     } else if (!enableMultipleFilter || stepCount === 0) {
@@ -197,15 +236,25 @@ function imageFilter(filter) {
         customP = parseFloat(document.getElementById("Pps").value);
     } else if (filter === "skinWhitening") {
         customWhitening = parseFloat(document.getElementById("customWhitening").value);
+    } else if (filter ==="medianBlurFilter" || filter ==="floyd") {
+        for (let y = 0; y < filterResult.height; y++) {
+            for (let x = 0; x < filterResult.width; x++) {
+                const currentPixel = y * 4 * filterResult.width + 4 * x;
+                graph[y][x] = 0.299 * filterResult.data[currentPixel] + 0.587 * filterResult.data[currentPixel + 1] + 0.114 * filterResult.data[currentPixel + 2];
+                if(filter ==="medianBlurFilter")
+                    graph[y][x] = 3 * filterResult.data[currentPixel] + 6 * filterResult.data[currentPixel + 1] + 1 * filterResult.data[currentPixel + 2];
+            }
+        }
     }
     let exitOperation = false;
     for (let a = 0; a < filterResult.data.length; a += 4) {
-        const height = filterResult.height;
-        const width = filterResult.width;
         let red = filterResult.data[a];
         let green = filterResult.data[a + 1];
         let blue = filterResult.data[a + 2];
+        const height = filterResult.height;
+        const width = filterResult.width;
         const pixel = filterResult.data;
+
         switch (filter) {
             case "inverse": {
                 pixel[a] = 255 - red;
@@ -236,12 +285,6 @@ function imageFilter(filter) {
                 break;
             }
             case "floyd": {
-                for (let y = 0; y < height; y++) {
-                    for (let x = 0; x < width; x++) {
-                        const currentPixel = y * 4 * width + 4 * x;
-                        graph[y][x] = 0.299 * pixel[currentPixel] + 0.587 * pixel[currentPixel + 1] + 0.114 * pixel[currentPixel + 2];
-                    }
-                }
                 for (let y = 0; y < height; y++) {
                     for (let x = 0; x < width; x++) {
                         const currentPixel = y * 4 * width + 4 * x;
@@ -318,6 +361,100 @@ function imageFilter(filter) {
                 pixel[a] += gaussianNoise;
                 pixel[a + 1] += gaussianNoise;
                 pixel[a + 2] += gaussianNoise;
+                break;
+            }
+            case "unsharpFilter":
+            case "embossFilter":
+            case "sharpenFilter":
+            case "gaussianBlurFilter":
+            case "medianBlurFilter":
+            case "boxBlurFilter": {
+                let Red = [];
+                let Green = [];
+                let Blue = [];
+                for (let y = 0; y < height; y++) {
+                    Red[y] = [];
+                    Green[y] = [];
+                    Blue[y] = [];
+                    for (let x = 0; x < width; ++x) {
+                        const currentPixel = y * 4 * width + 4 * x;
+                        Red[y][x] = pixel[currentPixel];
+                        Green[y][x] = pixel[currentPixel + 1];
+                        Blue[y][x] = pixel[currentPixel + 2];
+                    }
+                }
+                for (let y = 0; y < height; y++) {
+                    for (let x = 0; x < width; x++) {
+                        let left = x - 1;
+                        if (left < 0) left = 0;
+                        let right = x + 1;
+                        if (right > width - 1) right = width - 1;
+                        let up = y - 1;
+                        if (up < 0) up = 0;
+                        let down = y + 1;
+                        if (down > height - 1) down = height - 1;
+                        const currentPixel = y * 4 * width + 4 * x;
+
+                        if (filter === "medianBlurFilter") {
+                            let ggg = new Int32Array([graph[up][left], graph[up][x], graph[up][right], graph[y][left], graph[y][x], graph[y][right], graph[down][left], graph[down][x], graph[down][right]]);
+                            ggg = ggg.sort();
+                            let m = x;
+                            let n = y;
+                            let h = ggg[4];
+                            if(h == graph[up][left]) {
+                                    m = up;
+                                    n = left;
+                            }else if (h==graph[up][x]) {
+                                m = up;
+                                n = x;
+                            }else if(h==graph[up][right]) {
+                                m = up;
+                                n = right;
+                            }else if(h==graph[y][left]) {
+                                m = y;
+                                n = left;
+                            }else if(h==graph[y][x]) {
+                                m = y;
+                                n = x;
+                            }else if(h==graph[y][right]) {
+                                m = y;
+                                n = right;
+                            }else if(h==graph[down][left]) {
+                                m = down;
+                                n = left;
+                            }else if(h==graph[down][x]) {
+                                m = down;
+                                n = x;
+                            }else if(h==graph[down][right]){
+                                    m = down;
+                                    n = right;
+                            }
+                            pixel[currentPixel] = Red[m][n];
+                            pixel[currentPixel + 1] = Green[m][n];
+                            pixel[currentPixel + 2] = Blue[m][n];
+                        } else {
+                                    let filterKernel = boxBlur;
+                                    if (filter === "gaussianBlurFilter")
+                                        filterKernel = gaussianBlur;
+                                    else if(filter === "sharpenFilter")
+                                        filterKernel=sharpen;
+                                    else if(filter === "embossFilter")
+                                        filterKernel=emboss;
+                                    else if(filter ==="unsharpFilter")
+                                        filterKernel=unsharp;
+                                    pixel[currentPixel] = Red[up][left] * filterKernel[0][0] + Red[up][x] * filterKernel[0][1] + Red[up][right] * filterKernel[0][2] +
+                                        Red[y][left] * filterKernel[1][0] + Red[y][x] * filterKernel[1][1] + Red[y][right] * filterKernel[1][2] +
+                                        Red[down][left] * filterKernel[2][0] + Red[down][x] * filterKernel[2][1] + Red[down][right] * filterKernel[2][2];
+                                    pixel[currentPixel + 1] = Green[up][left] * filterKernel[0][0] + Green[up][x] * filterKernel[0][1] + Green[up][right] * filterKernel[0][2] +
+                                        Green[y][left] * filterKernel[1][0] + Green[y][x] * filterKernel[1][1] + Green[y][right] * filterKernel[1][2] +
+                                        Green[down][left] * filterKernel[2][0] + Green[down][x] * filterKernel[2][1] + Green[down][right] * filterKernel[2][2];
+                                    pixel[currentPixel + 2] = Blue[up][left] * filterKernel[0][0] + Blue[up][x] * filterKernel[0][1] + Blue[up][right] * filterKernel[0][2] +
+                                        Blue[y][left] * filterKernel[1][0] + Blue[y][x] * filterKernel[1][1] + Blue[y][right] * filterKernel[1][2] +
+                                        Blue[down][left] * filterKernel[2][0] + Blue[down][x] * filterKernel[2][1] + Blue[down][right] * filterKernel[2][2];
+                        }
+                    }
+                }
+                exitOperation=true;
                 break;
             }
             case "exponentialNoise": {
