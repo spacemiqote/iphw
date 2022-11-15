@@ -24,17 +24,25 @@ const boxBlur = [
     [1 / 9, 1 / 9, 1 / 9],
     [1 / 9, 1 / 9, 1 / 9],
 ];
-
 const sharpen = [
     [0, -1, 0],
     [-1, 5, -1],
     [0, -1, 0],
 ];
-
 const gaussianBlur = [
     [0.045, 0.122, 0.045],
     [0.122, 0.332, 0.122],
     [0.045, 0.122, 0.045],
+];
+const sobelFilterX = [
+    [1,0,-1],
+    [2,0,-2],
+    [1,0,-1],
+];
+const sobelFilterY = [
+    [1,2,1],
+    [0,0,0],
+    [-1,-2,-1],
 ];
 
 //https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-image-processing-continued.html
@@ -363,6 +371,7 @@ function imageFilter(filter) {
                 pixel[a + 2] += gaussianNoise;
                 break;
             }
+            case "sobelFilter":
             case "unsharpFilter":
             case "embossFilter":
             case "sharpenFilter":
@@ -394,7 +403,6 @@ function imageFilter(filter) {
                         let down = y + 1;
                         if (down > height - 1) down = height - 1;
                         const currentPixel = y * 4 * width + 4 * x;
-
                         if (filter === "medianBlurFilter") {
                             let medianMask = new Int32Array([graph[up][left], graph[up][x], graph[up][right], graph[y][left], graph[y][x], graph[y][right], graph[down][left], graph[down][x], graph[down][right]]);
                             medianMask = medianMask.sort();
@@ -432,7 +440,46 @@ function imageFilter(filter) {
                             pixel[currentPixel] = Red[ypos][xpos];
                             pixel[currentPixel + 1] = Green[ypos][xpos];
                             pixel[currentPixel + 2] = Blue[ypos][xpos];
-                        } else {
+                        }
+                        else if(filter === "sobelFilter"){
+                            let R_Gx = (sobelFilterX[0][0]*Red[up][left]+Red[up][x] * sobelFilterX[0][1] + Red[up][right] * sobelFilterX[0][2] +
+                                Red[y][left] * sobelFilterX[1][0] + Red[y][x] * sobelFilterX[1][1] + Red[y][right] * sobelFilterX[1][2] +
+                                Red[down][left] * sobelFilterX[2][0] + Red[down][x] * sobelFilterX[2][1] + Red[down][right] * sobelFilterX[2][2]);
+                            let R_Gy = (sobelFilterY[0][0]*Red[up][left]+Red[up][x] * sobelFilterY[0][1] + Red[up][right] * sobelFilterY[0][2] +
+                                Red[y][left] * sobelFilterY[1][0] + Red[y][x] * sobelFilterY[1][1] + Red[y][right] * sobelFilterY[1][2] +
+                                Red[down][left] * sobelFilterY[2][0] + Red[down][x] * sobelFilterY[2][1] + Red[down][right] * sobelFilterY[2][2]);
+                            let sobelR = Math.sqrt(R_Gx**2+R_Gy**2);
+                            if (sobelR<0)
+                                sobelR = 0;
+                            if (sobelR>255)
+                                sobelR = 255;
+                            let G_Gx = (sobelFilterX[0][0]*Green[up][left]+Green[up][x] * sobelFilterX[0][1] + Green[up][right] * sobelFilterX[0][2] +
+                                Green[y][left] * sobelFilterX[1][0] + Green[y][x] * sobelFilterX[1][1] + Green[y][right] * sobelFilterX[1][2] +
+                                Green[down][left] * sobelFilterX[2][0] + Green[down][x] * sobelFilterX[2][1] + Green[down][right] * sobelFilterX[2][2]);
+                            let G_Gy = (sobelFilterY[0][0]*Green[up][left]+Green[up][x] * sobelFilterY[0][1] + Green[up][right] * sobelFilterY[0][2] +
+                                Green[y][left] * sobelFilterY[1][0] + Green[y][x] * sobelFilterY[1][1] + Green[y][right] * sobelFilterY[1][2] +
+                                Green[down][left] * sobelFilterY[2][0] + Green[down][x] * sobelFilterY[2][1] + Green[down][right] * sobelFilterY[2][2]);
+                            let sobelG = Math.sqrt(G_Gx**2+G_Gy**2);
+                            if (sobelG<0)
+                                sobelG = 0;
+                            if (sobelG>255)
+                                sobelG = 255;
+                            let B_Gx = (sobelFilterX[0][0]*Blue[up][left]+Blue[up][x] * sobelFilterX[0][1] + Blue[up][right] * sobelFilterX[0][2] +
+                                Blue[y][left] * sobelFilterX[1][0] + Blue[y][x] * sobelFilterX[1][1] + Blue[y][right] * sobelFilterX[1][2] +
+                                Blue[down][left] * sobelFilterX[2][0] + Blue[down][x] * sobelFilterX[2][1] + Blue[down][right] * sobelFilterX[2][2]);
+                            let B_Gy = (sobelFilterY[0][0]*Blue[up][left]+Blue[up][x] * sobelFilterY[0][1] + Blue[up][right] * sobelFilterY[0][2] +
+                                Blue[y][left] * sobelFilterY[1][0] + Blue[y][x] * sobelFilterY[1][1] + Blue[y][right] * sobelFilterY[1][2] +
+                                Blue[down][left] * sobelFilterY[2][0] + Blue[down][x] * sobelFilterY[2][1] + Blue[down][right] * sobelFilterY[2][2]);
+                            let sobelB = Math.sqrt(B_Gx**2+B_Gy**2);
+                            if (sobelB<0)
+                                sobelB = 0;
+                            if (sobelB>255)
+                                sobelB = 255;
+                            pixel[currentPixel] = sobelR;
+                            pixel[currentPixel+1] = sobelG;
+                            pixel[currentPixel+2] = sobelB;
+                        }
+                        else {
                             let filterKernel = boxBlur;
                             if (filter === "gaussianBlurFilter")
                                 filterKernel = gaussianBlur;
