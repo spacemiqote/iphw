@@ -235,9 +235,6 @@ function draw() {
 
 function detect() {
     objectDetector.detect(filter2D, function (err, results) {
-        if (err) {
-            return
-        }
         objects = results;
         if (objects) {
             draw();
