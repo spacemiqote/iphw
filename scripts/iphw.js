@@ -67,7 +67,7 @@ const emboss = [
 
 let filterResult = document.getElementById("filterResult");
 const coll = document.getElementsByClassName("collapse");
-let filter2D = filterResult.getContext("2d", {
+const filter2D = filterResult.getContext("2d", {
     willReadFrequently: !0,
 });
 let backupImage = filterResult;
@@ -236,35 +236,14 @@ function draw() {
 function detect() {
     objectDetector.detect(filter2D, function (err, results) {
         if (err) {
-            console.log(err);
             return
         }
         objects = results;
-
         if (objects) {
             draw();
         }
     });
 }
-
-function imageDataToCanvas(imageData, x, y) {
-    // console.log(raws, x, y)
-    const arr = Array.from(imageData)
-    const canvas = document.createElement('canvas'); // Consider using offScreenCanvas when it is ready?
-    const ctx = canvas.getContext('2d');
-
-    canvas.width = x;
-    canvas.height = y;
-
-    const imgData = ctx.createImageData(x, y);
-    const { data } = imgData;
-
-    for (let i = 0; i < x * y * 4; i += 1 ) data[i] = arr[i];
-    ctx.putImageData(imgData, 0, 0);
-
-    return ctx.canvas;
-}
-
 
 async function imageFilter(filter) {
     const enableMultipleFilter = allowMultipleFilterOn.checked;
@@ -611,7 +590,7 @@ async function imageFilter(filter) {
                 break;
             }
             case "objectDetection" : {
-                let models = document.getElementById("models");
+                const models = document.getElementById("models");
                 if(models.value === "CocoSsd"){
                     objectDetector = await ml5.objectDetector('cocossd', detect);
                 }
@@ -629,6 +608,11 @@ async function imageFilter(filter) {
             case "revertImage": {
                 if (backupImage.constructor === filterResult.constructor) filterResult = backupImage;
                 exitOperation = true;
+                break;
+            }
+            case "loadSave" :{
+                filterResult=savepointImage;
+                exitOperation=true;
                 break;
             }
             default: {
