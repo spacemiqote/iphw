@@ -66,7 +66,7 @@ const filter2D = filterResult.getContext("2d", {
 let backupImage = filterResult;
 let stepCount = 0;
 let loaded = false;
-
+7
 function goFullScreen() {
     const canvas = document.getElementById("filterResult");
     if (canvas.requestFullScreen) canvas.requestFullScreen();
@@ -442,10 +442,10 @@ function imageFilter(filter) {
                             pixel[currentPixel + 2] = Blue[ypos][xpos];
                         }
                         else if(filter === "sobelFilter"){
-                            let R_Gx = (sobelFilterX[0][0]*Red[up][left]+Red[up][x] * sobelFilterX[0][1] + Red[up][right] * sobelFilterX[0][2] +
+                            const R_Gx = (sobelFilterX[0][0]*Red[up][left]+Red[up][x] * sobelFilterX[0][1] + Red[up][right] * sobelFilterX[0][2] +
                                 Red[y][left] * sobelFilterX[1][0] + Red[y][x] * sobelFilterX[1][1] + Red[y][right] * sobelFilterX[1][2] +
                                 Red[down][left] * sobelFilterX[2][0] + Red[down][x] * sobelFilterX[2][1] + Red[down][right] * sobelFilterX[2][2]);
-                            let R_Gy = (sobelFilterY[0][0]*Red[up][left]+Red[up][x] * sobelFilterY[0][1] + Red[up][right] * sobelFilterY[0][2] +
+                            const R_Gy = (sobelFilterY[0][0]*Red[up][left]+Red[up][x] * sobelFilterY[0][1] + Red[up][right] * sobelFilterY[0][2] +
                                 Red[y][left] * sobelFilterY[1][0] + Red[y][x] * sobelFilterY[1][1] + Red[y][right] * sobelFilterY[1][2] +
                                 Red[down][left] * sobelFilterY[2][0] + Red[down][x] * sobelFilterY[2][1] + Red[down][right] * sobelFilterY[2][2]);
                             let sobelR = Math.sqrt(R_Gx**2+R_Gy**2);
@@ -453,10 +453,10 @@ function imageFilter(filter) {
                                 sobelR = 0;
                             if (sobelR>255)
                                 sobelR = 255;
-                            let G_Gx = (sobelFilterX[0][0]*Green[up][left]+Green[up][x] * sobelFilterX[0][1] + Green[up][right] * sobelFilterX[0][2] +
+                            const G_Gx = (sobelFilterX[0][0]*Green[up][left]+Green[up][x] * sobelFilterX[0][1] + Green[up][right] * sobelFilterX[0][2] +
                                 Green[y][left] * sobelFilterX[1][0] + Green[y][x] * sobelFilterX[1][1] + Green[y][right] * sobelFilterX[1][2] +
                                 Green[down][left] * sobelFilterX[2][0] + Green[down][x] * sobelFilterX[2][1] + Green[down][right] * sobelFilterX[2][2]);
-                            let G_Gy = (sobelFilterY[0][0]*Green[up][left]+Green[up][x] * sobelFilterY[0][1] + Green[up][right] * sobelFilterY[0][2] +
+                            const G_Gy = (sobelFilterY[0][0]*Green[up][left]+Green[up][x] * sobelFilterY[0][1] + Green[up][right] * sobelFilterY[0][2] +
                                 Green[y][left] * sobelFilterY[1][0] + Green[y][x] * sobelFilterY[1][1] + Green[y][right] * sobelFilterY[1][2] +
                                 Green[down][left] * sobelFilterY[2][0] + Green[down][x] * sobelFilterY[2][1] + Green[down][right] * sobelFilterY[2][2]);
                             let sobelG = Math.sqrt(G_Gx**2+G_Gy**2);
@@ -464,10 +464,10 @@ function imageFilter(filter) {
                                 sobelG = 0;
                             if (sobelG>255)
                                 sobelG = 255;
-                            let B_Gx = (sobelFilterX[0][0]*Blue[up][left]+Blue[up][x] * sobelFilterX[0][1] + Blue[up][right] * sobelFilterX[0][2] +
+                            const B_Gx = (sobelFilterX[0][0]*Blue[up][left]+Blue[up][x] * sobelFilterX[0][1] + Blue[up][right] * sobelFilterX[0][2] +
                                 Blue[y][left] * sobelFilterX[1][0] + Blue[y][x] * sobelFilterX[1][1] + Blue[y][right] * sobelFilterX[1][2] +
                                 Blue[down][left] * sobelFilterX[2][0] + Blue[down][x] * sobelFilterX[2][1] + Blue[down][right] * sobelFilterX[2][2]);
-                            let B_Gy = (sobelFilterY[0][0]*Blue[up][left]+Blue[up][x] * sobelFilterY[0][1] + Blue[up][right] * sobelFilterY[0][2] +
+                            const B_Gy = (sobelFilterY[0][0]*Blue[up][left]+Blue[up][x] * sobelFilterY[0][1] + Blue[up][right] * sobelFilterY[0][2] +
                                 Blue[y][left] * sobelFilterY[1][0] + Blue[y][x] * sobelFilterY[1][1] + Blue[y][right] * sobelFilterY[1][2] +
                                 Blue[down][left] * sobelFilterY[2][0] + Blue[down][x] * sobelFilterY[2][1] + Blue[down][right] * sobelFilterY[2][2]);
                             let sobelB = Math.sqrt(B_Gx**2+B_Gy**2);
