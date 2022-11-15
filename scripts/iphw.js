@@ -1,4 +1,6 @@
 /*jshint esversion: 6 */
+/*global someFunction, a*/
+/*eslint no-undef: "error"*/
 let objectDetector;
 const userImage = document.getElementById("userImage");
 const originalImage = document.getElementById("originalImage");
@@ -14,11 +16,6 @@ const dmatrix = [
     [192, 64, 224, 96],
     [48, 176, 16, 144],
     [240, 112, 208, 80],
-];
-const identity = [
-    [0, 0, 0],
-    [0, 1, 0],
-    [0, 0, 0],
 ];
 const laplacian =[
   [0,-1,0],
