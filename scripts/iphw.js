@@ -1,5 +1,7 @@
 /*jshint esversion: 6 */
-/*global someFunction, a*/
+/*global ml5, ml5*/
+/*global objects, objects*/
+/*global object, object*/
 /*eslint no-undef: "error"*/
 let objectDetector;
 const userImage = document.getElementById("userImage");
