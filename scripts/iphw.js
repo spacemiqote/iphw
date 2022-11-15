@@ -1,4 +1,5 @@
 /*jshint esversion: 6 */
+let objectDetector;
 const userImage = document.getElementById("userImage");
 const originalImage = document.getElementById("originalImage");
 const allowMultipleFilterOn = document.getElementById("allowMultipleFilterOn");
@@ -19,11 +20,17 @@ const identity = [
     [0, 1, 0],
     [0, 0, 0],
 ];
+const laplacian =[
+  [0,-1,0],
+  [-1,4.1,-1],
+  [0,-1,0],
+];
 const boxBlur = [
     [1 / 9, 1 / 9, 1 / 9],
     [1 / 9, 1 / 9, 1 / 9],
     [1 / 9, 1 / 9, 1 / 9],
 ];
+// 銳化濾波器
 const sharpen = [
     [0, -1, 0],
     [-1, 5, -1],
@@ -60,13 +67,14 @@ const emboss = [
 
 let filterResult = document.getElementById("filterResult");
 const coll = document.getElementsByClassName("collapse");
-const filter2D = filterResult.getContext("2d", {
+let filter2D = filterResult.getContext("2d", {
     willReadFrequently: !0,
 });
 let backupImage = filterResult;
+let savepointImage = filterResult;
 let stepCount = 0;
 let loaded = false;
-7
+
 function goFullScreen() {
     const canvas = document.getElementById("filterResult");
     if (canvas.requestFullScreen) canvas.requestFullScreen();
@@ -114,6 +122,10 @@ function valueSync(value) {
 function backupImageLoop() {
     backupImage = filterResult;
     setTimeout(backupImageLoop, 3500);
+}
+
+function savepoint(){
+    savepointImage=filterResult;
 }
 
 function readImage() {
@@ -205,9 +217,56 @@ function RGBHSIConversion(command, x, y, z) {
     return false;
 }
 
+function draw() {
+    filter2D.fillStyle = "#000000";
+    filter2D.fillRect(0, 0, filterResult.width, filterResult.height);
+    filter2D.putImageData(filterResult, 0, 0);
+    for (let i = 0; i < objects.length; i += 1) {
+        filter2D.font = "20px consolas";
+        filter2D.fillStyle = "green";
+        filter2D.fillText(objects[i].label, objects[i].x + 4, objects[i].y + 16);
+        filter2D.beginPath();
+        filter2D.rect(objects[i].x, objects[i].y, objects[i].width, objects[i].height);
+        filter2D.strokeStyle = "green";
+        filter2D.stroke();
+        filter2D.closePath();
+    }
+}
+
+function detect() {
+    objectDetector.detect(filter2D, function (err, results) {
+        if (err) {
+            console.log(err);
+            return
+        }
+        objects = results;
+
+        if (objects) {
+            draw();
+        }
+    });
+}
+
+function imageDataToCanvas(imageData, x, y) {
+    // console.log(raws, x, y)
+    const arr = Array.from(imageData)
+    const canvas = document.createElement('canvas'); // Consider using offScreenCanvas when it is ready?
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = x;
+    canvas.height = y;
+
+    const imgData = ctx.createImageData(x, y);
+    const { data } = imgData;
+
+    for (let i = 0; i < x * y * 4; i += 1 ) data[i] = arr[i];
+    ctx.putImageData(imgData, 0, 0);
+
+    return ctx.canvas;
+}
 
 
-function imageFilter(filter) {
+async function imageFilter(filter) {
     const enableMultipleFilter = allowMultipleFilterOn.checked;
     const graph = Array.from(Array(filterResult.height), () => new Array(filterResult.width));
 
@@ -371,6 +430,7 @@ function imageFilter(filter) {
                 pixel[a + 2] += gaussianNoise;
                 break;
             }
+            case "laplacian":
             case "sobelFilter":
             case "unsharpFilter":
             case "embossFilter":
@@ -440,46 +500,44 @@ function imageFilter(filter) {
                             pixel[currentPixel] = Red[ypos][xpos];
                             pixel[currentPixel + 1] = Green[ypos][xpos];
                             pixel[currentPixel + 2] = Blue[ypos][xpos];
-                        }
-                        else if(filter === "sobelFilter"){
-                            const R_Gx = (sobelFilterX[0][0]*Red[up][left]+Red[up][x] * sobelFilterX[0][1] + Red[up][right] * sobelFilterX[0][2] +
+                        } else if (filter === "sobelFilter") {
+                            const R_Gx = (sobelFilterX[0][0] * Red[up][left] + Red[up][x] * sobelFilterX[0][1] + Red[up][right] * sobelFilterX[0][2] +
                                 Red[y][left] * sobelFilterX[1][0] + Red[y][x] * sobelFilterX[1][1] + Red[y][right] * sobelFilterX[1][2] +
                                 Red[down][left] * sobelFilterX[2][0] + Red[down][x] * sobelFilterX[2][1] + Red[down][right] * sobelFilterX[2][2]);
-                            const R_Gy = (sobelFilterY[0][0]*Red[up][left]+Red[up][x] * sobelFilterY[0][1] + Red[up][right] * sobelFilterY[0][2] +
+                            const R_Gy = (sobelFilterY[0][0] * Red[up][left] + Red[up][x] * sobelFilterY[0][1] + Red[up][right] * sobelFilterY[0][2] +
                                 Red[y][left] * sobelFilterY[1][0] + Red[y][x] * sobelFilterY[1][1] + Red[y][right] * sobelFilterY[1][2] +
                                 Red[down][left] * sobelFilterY[2][0] + Red[down][x] * sobelFilterY[2][1] + Red[down][right] * sobelFilterY[2][2]);
-                            let sobelR = Math.sqrt(R_Gx**2+R_Gy**2);
-                            if (sobelR<0)
+                            let sobelR = Math.sqrt(R_Gx ** 2 + R_Gy ** 2);
+                            if (sobelR < 0)
                                 sobelR = 0;
-                            if (sobelR>255)
+                            if (sobelR > 255)
                                 sobelR = 255;
-                            const G_Gx = (sobelFilterX[0][0]*Green[up][left]+Green[up][x] * sobelFilterX[0][1] + Green[up][right] * sobelFilterX[0][2] +
+                            const G_Gx = (sobelFilterX[0][0] * Green[up][left] + Green[up][x] * sobelFilterX[0][1] + Green[up][right] * sobelFilterX[0][2] +
                                 Green[y][left] * sobelFilterX[1][0] + Green[y][x] * sobelFilterX[1][1] + Green[y][right] * sobelFilterX[1][2] +
                                 Green[down][left] * sobelFilterX[2][0] + Green[down][x] * sobelFilterX[2][1] + Green[down][right] * sobelFilterX[2][2]);
-                            const G_Gy = (sobelFilterY[0][0]*Green[up][left]+Green[up][x] * sobelFilterY[0][1] + Green[up][right] * sobelFilterY[0][2] +
+                            const G_Gy = (sobelFilterY[0][0] * Green[up][left] + Green[up][x] * sobelFilterY[0][1] + Green[up][right] * sobelFilterY[0][2] +
                                 Green[y][left] * sobelFilterY[1][0] + Green[y][x] * sobelFilterY[1][1] + Green[y][right] * sobelFilterY[1][2] +
                                 Green[down][left] * sobelFilterY[2][0] + Green[down][x] * sobelFilterY[2][1] + Green[down][right] * sobelFilterY[2][2]);
-                            let sobelG = Math.sqrt(G_Gx**2+G_Gy**2);
-                            if (sobelG<0)
+                            let sobelG = Math.sqrt(G_Gx ** 2 + G_Gy ** 2);
+                            if (sobelG < 0)
                                 sobelG = 0;
-                            if (sobelG>255)
+                            if (sobelG > 255)
                                 sobelG = 255;
-                            const B_Gx = (sobelFilterX[0][0]*Blue[up][left]+Blue[up][x] * sobelFilterX[0][1] + Blue[up][right] * sobelFilterX[0][2] +
+                            const B_Gx = (sobelFilterX[0][0] * Blue[up][left] + Blue[up][x] * sobelFilterX[0][1] + Blue[up][right] * sobelFilterX[0][2] +
                                 Blue[y][left] * sobelFilterX[1][0] + Blue[y][x] * sobelFilterX[1][1] + Blue[y][right] * sobelFilterX[1][2] +
                                 Blue[down][left] * sobelFilterX[2][0] + Blue[down][x] * sobelFilterX[2][1] + Blue[down][right] * sobelFilterX[2][2]);
-                            const B_Gy = (sobelFilterY[0][0]*Blue[up][left]+Blue[up][x] * sobelFilterY[0][1] + Blue[up][right] * sobelFilterY[0][2] +
+                            const B_Gy = (sobelFilterY[0][0] * Blue[up][left] + Blue[up][x] * sobelFilterY[0][1] + Blue[up][right] * sobelFilterY[0][2] +
                                 Blue[y][left] * sobelFilterY[1][0] + Blue[y][x] * sobelFilterY[1][1] + Blue[y][right] * sobelFilterY[1][2] +
                                 Blue[down][left] * sobelFilterY[2][0] + Blue[down][x] * sobelFilterY[2][1] + Blue[down][right] * sobelFilterY[2][2]);
-                            let sobelB = Math.sqrt(B_Gx**2+B_Gy**2);
-                            if (sobelB<0)
+                            let sobelB = Math.sqrt(B_Gx ** 2 + B_Gy ** 2);
+                            if (sobelB < 0)
                                 sobelB = 0;
-                            if (sobelB>255)
+                            if (sobelB > 255)
                                 sobelB = 255;
                             pixel[currentPixel] = sobelR;
-                            pixel[currentPixel+1] = sobelG;
-                            pixel[currentPixel+2] = sobelB;
-                        }
-                        else {
+                            pixel[currentPixel + 1] = sobelG;
+                            pixel[currentPixel + 2] = sobelB;
+                        } else {
                             let filterKernel = boxBlur;
                             if (filter === "gaussianBlurFilter")
                                 filterKernel = gaussianBlur;
@@ -489,6 +547,8 @@ function imageFilter(filter) {
                                 filterKernel = emboss;
                             else if (filter === "unsharpFilter")
                                 filterKernel = unsharp;
+                            else if (filter === "laplacian")
+                                filterKernel = laplacian;
                             pixel[currentPixel] = Red[up][left] * filterKernel[0][0] + Red[up][x] * filterKernel[0][1] + Red[up][right] * filterKernel[0][2] +
                                 Red[y][left] * filterKernel[1][0] + Red[y][x] * filterKernel[1][1] + Red[y][right] * filterKernel[1][2] +
                                 Red[down][left] * filterKernel[2][0] + Red[down][x] * filterKernel[2][1] + Red[down][right] * filterKernel[2][2];
@@ -550,6 +610,17 @@ function imageFilter(filter) {
                 }
                 break;
             }
+            case "objectDetection" : {
+                let models = document.getElementById("models");
+                if(models.value === "CocoSsd"){
+                    objectDetector = await ml5.objectDetector('cocossd', detect);
+                }
+                else if (models.value === "YOLO"){
+                    objectDetector = await ml5.objectDetector('yolo', detect);
+                }
+                exitOperation = true;
+                break;
+            }
             case "cancelFilter": {
                 filter2D.drawImage(originalImage, 0, 0);
                 exitOperation = true;
@@ -569,10 +640,11 @@ function imageFilter(filter) {
             break;
         }
     }
-    if (stepCount >= 0 && filter !== "cancelFilter") filter2D.putImageData(filterResult, 0, 0);
+    if (stepCount >= 0 && (filter !== "cancelFilter" && filter !== "objectDetection")) filter2D.putImageData(filterResult, 0, 0);
     stepCount++;
 }
 
 valueSync(true);
 userImage.addEventListener("change", readImage);
 fileReader.addEventListener("load", loadImage);
+
