@@ -23,9 +23,9 @@
                 <button class="btn" onclick="imageFilter('inverse')" id="inverseImage">負片處理</button>
                 <button class="btn" onclick="imageFilter('grayscale')" id="grayscaleImage">灰階處理</button>
                 <button class="btn" onclick="imageFilter('sepia')" id="sepiaImage">復古處理</button>
-                <button class="btn" onclick="imageFilter('binary')" id="binary">Binary</button>
-                <button class="btn" onclick="imageFilter('dither')" id="dither">Dither</button>
-                <button class="btn" onclick="imageFilter('floyd')" id="floyd">Floyd-Steinberg</button>
+                <button class="btn" onclick="imageFilter('binary')" id="binary">二元處理</button>
+                <button class="btn" onclick="imageFilter('dither')" id="dither">抖動處理</button>
+                <button class="btn" onclick="imageFilter('floyd')" id="floyd">Floyd-Steinberg抖動</button>
                 <br />
                 <button class="btn" onclick="imageFilter('uniformNoise')" id="uniformNoise">均衡雜訊</button>
                 <button class="btn" onclick="imageFilter('gaussianNoise')" id="gaussianNoise">高斯雜訊</button>
@@ -82,7 +82,7 @@
                 </div>
             </div>
             <div class="3 row">
-                <button class="collapse btn">色彩平衡</button>
+                <button class="collapse btn">色彩平衡濾鏡</button>
                 <div class="content">
                     <br />
                     <input type="range" id="Red" class="inputRange" value="0" min="-100" max="100" onChange="imageFilter('colorbalance');" />
