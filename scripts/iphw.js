@@ -18,10 +18,10 @@ const dmatrix = [
     [48, 176, 16, 144],
     [240, 112, 208, 80],
 ];
-const laplacian =[
-  [0,-1,0],
-  [-1,4.1,-1],
-  [0,-1,0],
+const laplacian = [
+    [0, -1, 0],
+    [-1, 4.1, -1],
+    [0, -1, 0],
 ];
 const boxBlur = [
     [1 / 9, 1 / 9, 1 / 9],
@@ -40,14 +40,14 @@ const gaussianBlur = [
     [0.045, 0.122, 0.045],
 ];
 const sobelFilterX = [
-    [1,0,-1],
-    [2,0,-2],
-    [1,0,-1],
+    [1, 0, -1],
+    [2, 0, -2],
+    [1, 0, -1],
 ];
 const sobelFilterY = [
-    [1,2,1],
-    [0,0,0],
-    [-1,-2,-1],
+    [1, 2, 1],
+    [0, 0, 0],
+    [-1, -2, -1],
 ];
 
 //https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-image-processing-continued.html
@@ -122,8 +122,8 @@ function backupImageLoop() {
     setTimeout(backupImageLoop, 3500);
 }
 
-function savepoint(){
-    savepointImage=filterResult;
+function savepoint() {
+    savepointImage = filterResult;
 }
 
 function readImage() {
@@ -232,7 +232,7 @@ function draw() {
 }
 
 function detect() {
-    objectDetector.detect(filter2D, function (err, results) {
+    objectDetector.detect(filter2D, function(err, results) {
         objects = results;
         if (objects) {
             draw();
@@ -391,14 +391,18 @@ async function imageFilter(filter) {
                 break;
             }
             case "uniformNoise": {
-                const noise = Math.floor(Math.random() * customScale);
+                const crypto = window.crypto || window.msCrypto;
+                let array = new Uint32Array(1);
+                const noise = Math.floor((crypto.getRandomValues(array) / 2 ** 32) * customScale);
                 pixel[a] += noise;
                 pixel[a + 1] += noise;
                 pixel[a + 2] += noise;
                 break;
             }
             case "gaussianNoise": {
-                const gaussianNoise = customScale * ((Math.random() + Math.random() + Math.random()) / 3);
+                const crypto = window.crypto || window.msCrypto;
+                let array = new Uint32Array(1);
+                const gaussianNoise = customScale * (((crypto.getRandomValues(array) / 2 ** 32) + (crypto.getRandomValues(array) / 2 ** 32) + (crypto.getRandomValues(array) / 2 ** 32)) / 3);
                 pixel[a] += gaussianNoise;
                 pixel[a + 1] += gaussianNoise;
                 pixel[a + 2] += gaussianNoise;
@@ -539,14 +543,18 @@ async function imageFilter(filter) {
                 break;
             }
             case "exponentialNoise": {
-                const exponentialNoise = customScale * ((-1 * Math.log(1 - Math.random())) / 2);
+                const crypto = window.crypto || window.msCrypto;
+                let array = new Uint32Array(1);
+                const exponentialNoise = customScale * ((-1 * Math.log(1 - (crypto.getRandomValues(array) / 2 ** 32))) / 2);
                 pixel[a] += exponentialNoise;
                 pixel[a + 1] += exponentialNoise;
                 pixel[a + 2] += exponentialNoise;
                 break;
             }
             case "impulseNoise": {
-                const impulseNoise = Math.random();
+                const crypto = window.crypto || window.msCrypto;
+                let array = new Uint32Array(1);
+                const impulseNoise = (crypto.getRandomValues(array) / 2 ** 32);
                 if (impulseNoise >= 0 && impulseNoise <= customP / 2) {
                     pixel[a] = 0;
                     pixel[a + 1] = 0;
@@ -584,12 +592,11 @@ async function imageFilter(filter) {
                 }
                 break;
             }
-            case "objectDetection" : {
+            case "objectDetection": {
                 const models = document.getElementById("models");
-                if(models.value === "CocoSsd"){
+                if (models.value === "CocoSsd") {
                     objectDetector = await ml5.objectDetector('cocossd', detect);
-                }
-                else if (models.value === "YOLO"){
+                } else if (models.value === "YOLO") {
                     objectDetector = await ml5.objectDetector('yolo', detect);
                 }
                 exitOperation = true;
@@ -605,9 +612,9 @@ async function imageFilter(filter) {
                 exitOperation = true;
                 break;
             }
-            case "loadSave" :{
-                filterResult=savepointImage;
-                exitOperation=true;
+            case "loadSave": {
+                filterResult = savepointImage;
+                exitOperation = true;
                 break;
             }
             default: {
@@ -626,4 +633,3 @@ async function imageFilter(filter) {
 valueSync(true);
 userImage.addEventListener("change", readImage);
 fileReader.addEventListener("load", loadImage);
-
