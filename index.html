@@ -1,158 +1,158 @@
 <!DOCTYPE html>
 <html lang="zh-Hant-TW">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>照片處理</title>
-    <meta name="description" content="資工三A_影像處理_回家作業(照片處理)" />
-    <link rel="stylesheet" type="text/css" href="styles/iphw.css" />
-    <link rel="stylesheet" type="text/css" href="styles/fonts.css" />
-    <script defer src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
-    <script defer src="scripts/iphw.js"></script>
-</head>
-<body>
-<h3>照片處理</h3>
-<div class="card w-100">
-    <div class="button-wrap">
-        <label class="new-button" for="userImage">選擇圖片(JPG/PNG) </label>
-        <input type="file" id="userImage" name="userImage" accept="image/png, image/jpeg" />
-    </div>
-</div>
-<div class="row">
-    <div class="6 col">
-        <button class="btn" onclick="imageFilter('inverse')" id="inverseImage">負片處理</button>
-        <button class="btn" onclick="imageFilter('grayscale')" id="grayscaleImage">灰階處理</button>
-        <button class="btn" onclick="imageFilter('sepia')" id="sepiaImage">復古處理</button>
-        <button class="btn" onclick="imageFilter('binary')" id="binary">Binary</button>
-        <button class="btn" onclick="imageFilter('dither')" id="dither">Dither</button>
-        <button class="btn" onclick="imageFilter('floyd')" id="floyd">Floyd-Steinberg</button>
-        <br />
-        <button class="btn" onclick="imageFilter('uniformNoise')" id="uniformNoise">均衡雜訊</button>
-        <button class="btn" onclick="imageFilter('gaussianNoise')" id="gaussianNoise">高斯雜訊</button>
-        <button class="btn" onclick="imageFilter('exponentialNoise')" id="exponentialNoise">指數雜訊</button>
-        <button class="btn" onclick="imageFilter('impulseNoise')" id="impulseNoise">脈衝雜訊</button>
-        <br />
-        <button class="btn" onclick="imageFilter('laplacian')" id="laplacian">拉普拉斯濾波</button>
-        <button class="btn" onclick="imageFilter('boxBlurFilter')" id="boxBlurFilter">平均濾波</button>
-        <button class="btn" onclick="imageFilter('gaussianBlurFilter')" id="gaussianBlurFilter">高斯濾波</button>
-        <button class="btn" onclick="imageFilter('medianBlurFilter')" id="medianBlurFilter">中值濾波</button>
-        <button class="btn" onclick="imageFilter('sharpenFilter')" id="sharpenFilter">銳化濾波</button>
-        <button class="btn" onclick="imageFilter('unsharpFilter')" id="unsharpFilter">非銳化濾波</button>
-        <button class="btn" onclick="imageFilter('embossFilter')" id="embossFilter">浮雕濾波</button>
-        <button class="btn" onclick="imageFilter('sobelFilter')" id="sobelFilter">索伯濾波</button>
-    </div>
-    <div class="3 col">
-        <button class="btn" onclick="imageFilter('revertImage')" id="revertImage">上一步</button>
-        <button class="btn" onclick="savepoint()">設置保存點</button>
-        <button class="btn" onclick="imageFilter('loadSave')">載入保存點</button>
-        <button class="btn" onclick="imageFilter('cancelFilter')" id="cancelFilter">取消濾鏡</button>
-        <button class="btn" onclick="goFullScreen()">全螢幕顯示</button>
-        <button class="btn" onclick="download()">下載圖片</button>
-    </div>
-    <div class="3 col">
-        <fieldset>
-            <legend>擴充選項:</legend>
-            <div>
-                <input type="checkbox" id="allowMultipleFilterOn" name="allowMultipleFilterOn" />
-                <label for="allowMultipleFilterOn">允許濾鏡覆蓋(testing) </label>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>照片處理</title>
+        <meta name="description" content="資工三A_影像處理_回家作業(照片處理)" />
+        <link rel="stylesheet" type="text/css" href="styles/iphw.css" />
+        <link rel="stylesheet" type="text/css" href="styles/fonts.css" />
+        <script defer src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+        <script defer src="scripts/iphw.js"></script>
+    </head>
+    <body>
+        <h3>照片處理</h3>
+        <div class="card w-100">
+            <div class="button-wrap">
+                <label class="new-button" for="userImage">選擇圖片(JPG/PNG) </label>
+                <input type="file" id="userImage" name="userImage" accept="image/png, image/jpeg" />
             </div>
-        </fieldset>
-    </div>
-</div>
-<div class="row">
-    <div class="3 row">
-        <button class="collapse btn">HSI濾鏡</button>
-        <div class="content">
-            <br />
-            <input type="range" id="hue" class="inputRange" value="0" min="0" max="360" onChange="imageFilter('hsi');" />
-            <br />
-            色相(Hue)
-            <input type="text" id="customH" class="inputNumber" value="0" onChange="imageFilter('hsi');" />
-            <br />
-            <input type="range" id="saturation" class="inputRange" value="0" min="-100" max="100" onChange="imageFilter('hsi');" />
-            <br />
-            飽和度(Saturation)
-            <input type="text" id="customS" class="inputNumber" value="0" onChange="imageFilter('hsi');" />
-            <br />
-            <input type="range" id="intensity" class="inputRange" value="0" min="-100" max="100" onChange="imageFilter('hsi');" />
-            <br />
-            強度(Intensity)
-            <input type="text" id="customI" class="inputNumber" value="0" onChange="imageFilter('hsi');" />
-            <br />
         </div>
-    </div>
-    <div class="3 row">
-        <button class="collapse btn">色彩平衡</button>
-        <div class="content">
-            <br />
-            <input type="range" id="Red" class="inputRange" value="0" min="-100" max="100" onChange="imageFilter('colorbalance');" />
-            <br />
-            青色(Cyan)/紅色(Red)
-            <input type="text" id="customR" class="inputNumber" value="0" onChange="imageFilter('colorbalance');" />
-            <br />
-            <input type="range" id="Green" class="inputRange" value="0" min="-100" max="100" onChange="imageFilter('colorbalance');" />
-            <br />
-            洋紅色(Magenta)/綠色(Green)
-            <input type="text" id="customG" class="inputNumber" value="0" onChange="imageFilter('colorbalance');" />
-            <br />
-            <input type="range" id="Blue" class="inputRange" value="0" min="-100" max="100" onChange="imageFilter('colorbalance');" />
-            <br />
-            黃色(Yellow)/藍色(Blue)
-            <input type="text" id="customB" class="inputNumber" value="0" onChange="imageFilter('colorbalance');" />
-            <br />
+        <div class="row">
+            <div class="6 col">
+                <button class="btn" onclick="imageFilter('inverse')" id="inverseImage">負片處理</button>
+                <button class="btn" onclick="imageFilter('grayscale')" id="grayscaleImage">灰階處理</button>
+                <button class="btn" onclick="imageFilter('sepia')" id="sepiaImage">復古處理</button>
+                <button class="btn" onclick="imageFilter('binary')" id="binary">Binary</button>
+                <button class="btn" onclick="imageFilter('dither')" id="dither">Dither</button>
+                <button class="btn" onclick="imageFilter('floyd')" id="floyd">Floyd-Steinberg</button>
+                <br />
+                <button class="btn" onclick="imageFilter('uniformNoise')" id="uniformNoise">均衡雜訊</button>
+                <button class="btn" onclick="imageFilter('gaussianNoise')" id="gaussianNoise">高斯雜訊</button>
+                <button class="btn" onclick="imageFilter('exponentialNoise')" id="exponentialNoise">指數雜訊</button>
+                <button class="btn" onclick="imageFilter('impulseNoise')" id="impulseNoise">脈衝雜訊</button>
+                <br />
+                <button class="btn" onclick="imageFilter('laplacian')" id="laplacian">拉普拉斯濾波</button>
+                <button class="btn" onclick="imageFilter('boxBlurFilter')" id="boxBlurFilter">平均濾波</button>
+                <button class="btn" onclick="imageFilter('gaussianBlurFilter')" id="gaussianBlurFilter">高斯濾波</button>
+                <button class="btn" onclick="imageFilter('medianBlurFilter')" id="medianBlurFilter">中值濾波</button>
+                <button class="btn" onclick="imageFilter('sharpenFilter')" id="sharpenFilter">銳化濾波</button>
+                <button class="btn" onclick="imageFilter('unsharpFilter')" id="unsharpFilter">非銳化濾波</button>
+                <button class="btn" onclick="imageFilter('embossFilter')" id="embossFilter">浮雕濾波</button>
+                <button class="btn" onclick="imageFilter('sobelFilter')" id="sobelFilter">索伯濾波</button>
+            </div>
+            <div class="3 col">
+                <button class="btn" onclick="imageFilter('revertImage')" id="revertImage">上一步</button>
+                <button class="btn" onclick="savepoint()">設置保存點</button>
+                <button class="btn" onclick="imageFilter('loadSave')">載入保存點</button>
+                <button class="btn" onclick="imageFilter('cancelFilter')" id="cancelFilter">取消濾鏡</button>
+                <button class="btn" onclick="goFullScreen()">全螢幕顯示</button>
+                <button class="btn" onclick="download()">下載圖片</button>
+            </div>
+            <div class="3 col">
+                <fieldset>
+                    <legend>擴充選項:</legend>
+                    <div>
+                        <input type="checkbox" id="allowMultipleFilterOn" name="allowMultipleFilterOn" />
+                        <label for="allowMultipleFilterOn">允許濾鏡覆蓋(testing) </label>
+                    </div>
+                </fieldset>
+            </div>
         </div>
-    </div>
-    <div class="3 row">
-        <button class="collapse btn">雜訊參數</button>
-        <div class="content">
-            <br />
-            <input type="range" id="Scale" class="inputRange noSync" value="40" min="1" max="255" />
-            <br />
-            Scale
-            <input type="text" id="customScale" class="inputNumber noSync" value="40" />
-            <hr />
-            <input type="range" class="inputRange noSync" value="0.05" min="0.01" max="1" step="0.01" />
-            <br />
-            P
-            <input type="text" id="Pps" class="inputNumber noSync" value="0.05" />
-            <br />
+        <div class="row">
+            <div class="3 row">
+                <button class="collapse btn">HSI濾鏡</button>
+                <div class="content">
+                    <br />
+                    <input type="range" id="hue" class="inputRange" value="0" min="0" max="360" onChange="imageFilter('hsi');" />
+                    <br />
+                    色相(Hue)
+                    <input type="text" id="customH" class="inputNumber" value="0" onChange="imageFilter('hsi');" />
+                    <br />
+                    <input type="range" id="saturation" class="inputRange" value="0" min="-100" max="100" onChange="imageFilter('hsi');" />
+                    <br />
+                    飽和度(Saturation)
+                    <input type="text" id="customS" class="inputNumber" value="0" onChange="imageFilter('hsi');" />
+                    <br />
+                    <input type="range" id="intensity" class="inputRange" value="0" min="-100" max="100" onChange="imageFilter('hsi');" />
+                    <br />
+                    強度(Intensity)
+                    <input type="text" id="customI" class="inputNumber" value="0" onChange="imageFilter('hsi');" />
+                    <br />
+                </div>
+            </div>
+            <div class="3 row">
+                <button class="collapse btn">色彩平衡</button>
+                <div class="content">
+                    <br />
+                    <input type="range" id="Red" class="inputRange" value="0" min="-100" max="100" onChange="imageFilter('colorbalance');" />
+                    <br />
+                    青色(Cyan)/紅色(Red)
+                    <input type="text" id="customR" class="inputNumber" value="0" onChange="imageFilter('colorbalance');" />
+                    <br />
+                    <input type="range" id="Green" class="inputRange" value="0" min="-100" max="100" onChange="imageFilter('colorbalance');" />
+                    <br />
+                    洋紅色(Magenta)/綠色(Green)
+                    <input type="text" id="customG" class="inputNumber" value="0" onChange="imageFilter('colorbalance');" />
+                    <br />
+                    <input type="range" id="Blue" class="inputRange" value="0" min="-100" max="100" onChange="imageFilter('colorbalance');" />
+                    <br />
+                    黃色(Yellow)/藍色(Blue)
+                    <input type="text" id="customB" class="inputNumber" value="0" onChange="imageFilter('colorbalance');" />
+                    <br />
+                </div>
+            </div>
+            <div class="3 row">
+                <button class="collapse btn">雜訊參數</button>
+                <div class="content">
+                    <br />
+                    <input type="range" id="Scale" class="inputRange noSync" value="40" min="1" max="255" />
+                    <br />
+                    Scale
+                    <input type="text" id="customScale" class="inputNumber noSync" value="40" />
+                    <hr />
+                    <input type="range" class="inputRange noSync" value="0.05" min="0.01" max="1" step="0.01" />
+                    <br />
+                    P
+                    <input type="text" id="Pps" class="inputNumber noSync" value="0.05" />
+                    <br />
+                </div>
+            </div>
+            <div class="3 row">
+                <button class="collapse btn">皮膚美白</button>
+                <div class="content">
+                    <input type="range" class="inputRange noSync" value="1.26" min="0.1" max="2" step="0.01" />
+                    <br />
+                    美白程度
+                    <input type="text" id="customWhitening" class="inputNumber" value="1.26" min="0.1" max="2" />
+                    <br />
+                    <button class="btn" onclick="imageFilter('validateYCbCr')" id="validateYCbCr">顯示原圖(逆算法)</button>
+                    <button class="btn" onclick="imageFilter('showSkinArea')" id="showSkinArea">顯示皮膚偵測區域</button>
+                    <button class="btn" onclick="imageFilter('skinWhitening')" id="skinWhitening">顯示皮膚美白效果</button>
+                </div>
+            </div>
+            <div class="3 row">
+                <button class="collapse btn">CNN</button>
+                <div class="content">
+                    <label for="models">選擇模型 :</label>
+                    <select name="models" id="models">
+                        <option value="YOLO">YOLO模型</option>
+                        <option value="CocoSsd">CocoSsd模型</option>
+                    </select>
+                    <br />
+                    <button class="btn" onclick="imageFilter('objectDetection')" id="objectDetection">啟動偵測</button>
+                </div>
+            </div>
+            <div class="6 row">
+                <div class="card col">
+                    <canvas id="filterResult" class="w-100"> </canvas>
+                    <h4>濾鏡效果</h4>
+                </div>
+                <div class="card col">
+                    <canvas id="originalImage" class="w-100"> </canvas>
+                    <h4>原始圖片</h4>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="3 row">
-        <button class="collapse btn">皮膚美白</button>
-        <div class="content">
-            <input type="range" class="inputRange noSync" value="1.26" min="0.1" max="2" step="0.01" />
-            <br />
-            美白程度
-            <input type="text" id="customWhitening" class="inputNumber" value="1.26" min="0.1" max="2" />
-            <br />
-            <button class="btn" onclick="imageFilter('validateYCbCr')" id="validateYCbCr">顯示原圖(逆算法)</button>
-            <button class="btn" onclick="imageFilter('showSkinArea')" id="showSkinArea">顯示皮膚偵測區域</button>
-            <button class="btn" onclick="imageFilter('skinWhitening')" id="skinWhitening">顯示皮膚美白效果</button>
-        </div>
-    </div>
-    <div class="3 row">
-        <button class="collapse btn">CNN</button>
-        <div class="content">
-            <label for="models">選擇模型 :</label>
-            <select name="models" id="models">
-                <option value="YOLO">YOLO模型</option>
-                <option value="CocoSsd">CocoSsd模型</option>
-            </select><br />
-            <button class="btn" onclick="imageFilter('objectDetection')" id="objectDetection">啟動偵測</button>
-        </div>
-    </div>
-    <div class="6 row">
-        <div class="card col">
-
-            <canvas id="filterResult" class="w-100"> </canvas>
-            <h4>濾鏡效果</h4>
-        </div>
-        <div class="card col">
-            <canvas id="originalImage" class="w-100"> </canvas>
-            <h4>原始圖片</h4>
-        </div>
-    </div>
-</div>
-</body>
+    </body>
 </html>
