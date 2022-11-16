@@ -3,7 +3,7 @@
     color: hsl(300deg 100% 50%);
     box-sizing: border-box;
     margin: .5em 0;
-    font-family: Cubic !important;
+    font-family: Cubic, sans-serif !important;
 }
 
 @media (min-width: 35em) {
@@ -59,47 +59,47 @@
     max-width: 60em;
     padding: 1em;
     margin: auto;
-    font: 1em/1.6 Cubic
+    font: 1em/1.6 Cubic, sans-serif;
 }
 
 h6 {
-    font: 300 1em Cubic
+    font: 300 1em Cubic, sans-serif;
 }
 
 h5 {
-    font: 300 1.2em Cubic
+    font: 300 1.2em Cubic, sans-serif;
 }
 
 h3 {
-    font: 300 2em Cubic;
+    font: 300 2em Cubic, sans-serif;
     text-align: center;
 }
 
 h4 {
-    font: 300 1.5em Cubic
+    font: 300 1.5em Cubic, sans-serif;
 }
 
 h2 {
-    font: 300 2.2em Cubic
+    font: 300 2.2em Cubic, sans-serif;
 }
 
 h1 {
-    font: 300 2.5em Cubic
+    font: 300 2.5em Cubic, sans-serif;
 }
 
 a {
     color: #fa0;
-    text-decoration: none
+    text-decoration: none;
 }
 
 pre {
-    overflow: auto
+    overflow: auto;
 }
 
 td, th {
     padding: 1em;
     text-align: left;
-    border-bottom: solid #eee
+    border-bottom: solid #eee;
 }
 
 .btn.primary {
@@ -116,7 +116,7 @@ td, th {
     border: solid;
     border-color: #FFF !important;
     color: hsl(90deg 100% 50%) !important;
-    font: .7em Cubic
+    font: .7em Cubic, sans-serif;
 }
 
 .container {
@@ -157,13 +157,6 @@ img {
     height: auto;
     width: auto \9;
     /* ie8 */
-}
-
-input[type="range"] {
-    -webkit-appearance: none;
-    width: 300px;
-    height: 15px;
-    outline: none;
 }
 
 input[type=text] {
@@ -222,7 +215,6 @@ input[type="range"] {
     width: 300px;
     height: 20px;
     margin: 10px 20px;
-    background-size: 150px 10px;
     background: linear-gradient(to right, #9A2720 0%, #9A2720 100%) no-repeat center;
     overflow: hidden;
     outline: none;
@@ -287,7 +279,7 @@ p {
 }
 
 .collapse:after {
-    font-family: "Cubic";
+    font-family: "Cubic", sans-serif;
     content: ">";
     color: #FFFFFF;
     font-weight: bold;
@@ -305,7 +297,6 @@ p {
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     text-align: center;
-    transition: all 0.6s ease-in-out;
     object-fit: cover;
 }
 
