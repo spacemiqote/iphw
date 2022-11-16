@@ -392,7 +392,7 @@ async function imageFilter(filter) {
             }
             case "uniformNoise": {
                 const crypto = window.crypto || window.msCrypto;
-                let array = new Uint32Array(1);
+                const array = new Uint32Array(1);
                 const noise = Math.floor((crypto.getRandomValues(array) / 2 ** 32) * customScale);
                 pixel[a] += noise;
                 pixel[a + 1] += noise;
@@ -401,7 +401,7 @@ async function imageFilter(filter) {
             }
             case "gaussianNoise": {
                 const crypto = window.crypto || window.msCrypto;
-                let array = new Uint32Array(1);
+                const array = new Uint32Array(1);
                 const gaussianNoise = customScale * (((crypto.getRandomValues(array) / 2 ** 32) + (crypto.getRandomValues(array) / 2 ** 32) + (crypto.getRandomValues(array) / 2 ** 32)) / 3);
                 pixel[a] += gaussianNoise;
                 pixel[a + 1] += gaussianNoise;
@@ -544,7 +544,7 @@ async function imageFilter(filter) {
             }
             case "exponentialNoise": {
                 const crypto = window.crypto || window.msCrypto;
-                let array = new Uint32Array(1);
+                const array = new Uint32Array(1);
                 const exponentialNoise = customScale * ((-1 * Math.log(1 - (crypto.getRandomValues(array) / 2 ** 32))) / 2);
                 pixel[a] += exponentialNoise;
                 pixel[a + 1] += exponentialNoise;
@@ -553,7 +553,7 @@ async function imageFilter(filter) {
             }
             case "impulseNoise": {
                 const crypto = window.crypto || window.msCrypto;
-                let array = new Uint32Array(1);
+                const array = new Uint32Array(1);
                 const impulseNoise = (crypto.getRandomValues(array) / 2 ** 32);
                 if (impulseNoise >= 0 && impulseNoise <= customP / 2) {
                     pixel[a] = 0;
