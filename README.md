@@ -1,4 +1,4 @@
-### 原始程式碼 [bsod.me](https://bsod.me/)
+### [bsod.me](https://bsod.me/)的原始程式碼  
 **大齡小學生三年級，數學不好，不太會寫程式。**  
 **第一次用[Github](https://github.com/)，看到原始碼的時候請笑小聲一點。**  
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)
