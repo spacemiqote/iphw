@@ -1,6 +1,6 @@
 ### [bsod.me](https://bsod.me/)的原始程式碼  
 **資工三A(Department of Computer Science and Information Engineering)**  
-**形式數學(Formal Mathematics)和一階邏輯(First-order logic)不好，所以不太會寫程式(Coding:Success,Programming:Failure)**  
+**形式系統(Formal System)和一階邏輯(First-order logic)不好，所以不太會寫程式(Coding:Success,Programming:Failure)**  
 **第一次用[Github](https://github.com/)，看到原始碼的時候請笑小聲一點。**:sob:	  
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)
