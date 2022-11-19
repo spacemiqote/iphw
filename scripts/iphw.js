@@ -10,6 +10,7 @@ const modelLoadStatus = document.getElementById("modelLoadStatus");
 const allowMultipleFilterOn = document.getElementById("allowMultipleFilterOn");
 const displayOriginalImage = document.getElementById("displayOriginalImage");
 const focusMode = document.getElementById("focusMode");
+const specialShit = document.getElementById("specialShit");
 const filterBox = document.getElementById("filterBox");
 const originalBox = document.getElementById("originalBox");
 const fileReader = new FileReader(),
@@ -688,34 +689,19 @@ function getCaptcha(canv) {
         })
 }
 async function fuckCAPTCHA() {
+    const special = specialShit.checked;
+    if(special){
     document.getElementById("allowMultipleFilterOn").checked = true;
     await imageFilter("medianBlurFilter");
     document.getElementById("customH").value = 0;
     document.getElementById("customS").value = 0;
-    document.getElementById("customI").value = 60;
+    document.getElementById("customI").value = -97;
     await imageFilter("hsi");
     document.getElementById("customH").value = 0;
     document.getElementById("customS").value = 0;
-    document.getElementById("customI").value = -58;
+    document.getElementById("customI").value = 96;
     await imageFilter("hsi");
-    document.getElementById("customH").value = 0;
-    document.getElementById("customS").value = 0;
-    document.getElementById("customI").value = -45;
-    await imageFilter("hsi");
-    document.getElementById("customH").value = 0;
-    document.getElementById("customS").value = 0;
-    document.getElementById("customI").value = -30;
-    await imageFilter("hsi");
-    document.getElementById("customH").value = 0;
-    document.getElementById("customS").value = 0;
-    document.getElementById("customI").value = -25;
-    await imageFilter("hsi");
-    await imageFilter("medianBlurFilter");
-    await imageFilter("sharpenFilter");
-    await imageFilter("gaussianBlurFilter");
-    await imageFilter("inverse");
-    await imageFilter("sharpenFilter");
-    await imageFilter("inverse");
+    }
     await getCaptcha(document.getElementById("filterResult").toDataURL());
 }
 
