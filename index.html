@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-Hant-TW">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -11,7 +10,6 @@
     <script defer src="scripts/ml5.min.js"></script>
     <script defer src="scripts/iphw.js"></script>
 </head>
-
 <body>
 <h3>圖像處理</h3>
 <div class="card w-100">
@@ -101,9 +99,6 @@
                 <br /> 黃色(Yellow)/藍色(Blue)
                 <input type="text" id="customB" class="inputNumber" value="0" onChange="imageFilter('colorbalance');" />
                 <br /> </div>
-        </div>
-        <div class="3 row"> </div>
-        <div class="3 row">
             <button class="collapse btn">雜訊參數</button>
             <div class="content">
                 <br />
@@ -115,8 +110,6 @@
                 <br /> P
                 <input type="text" id="Pps" class="inputNumber noSync" value="0.05" />
                 <br /> </div>
-        </div>
-        <div class="3 row">
             <button class="collapse btn">皮膚美白</button>
             <div class="content">
                 <input type="range" class="inputRange noSync" value="1.26" min="0.1" max="2" step="0.01" />
@@ -127,8 +120,6 @@
                 <button class="btn" onclick="imageFilter('showSkinArea')" id="showSkinArea">顯示皮膚偵測區域</button>
                 <button class="btn" onclick="imageFilter('skinWhitening')" id="skinWhitening">顯示皮膚美白效果</button>
             </div>
-        </div>
-        <div class="3 row">
             <button class="collapse btn">卷積神經網路</button>
             <div class="content">
                 <label for="models">選擇預先訓練好的模型 :</label>
@@ -139,7 +130,6 @@
                 <br /> <span class="content" id="modelLoadStatus">模型尚未加載</span>
                 <button class="btn" onclick="imageFilter('objectDetection')" id="objectDetection">啟動偵測</button>
             </div>
-            <div class="6 row"> </div>
         </div>
     </div>
     <div class="7 col">
@@ -157,5 +147,4 @@
     </div>
 </div>
 </body>
-
 </html>
