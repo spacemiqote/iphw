@@ -90,21 +90,23 @@ function download() {
     link.href = document.getElementById("filterResult").toDataURL();
     link.click();
 }
-function checkFocusMode(){
-    const enableFocusMode = focusMode.checked;
-    if(enableFocusMode){
-        focusEditing();
-    }
-    setTimeout(checkFocusMode, 1000);
-}
 
-function focusEditing(){
+function focusEditing() {
     document.getElementById("extraOptions").scrollIntoView({
         behavior: "smooth",
         block: "start",
         inline: "end",
     });
 }
+
+function checkFocusMode() {
+    const enableFocusMode = focusMode.checked;
+    if (enableFocusMode) {
+        focusEditing();
+    }
+    setTimeout(checkFocusMode, 1000);
+}
+
 function valueSync(value) {
     for (let i = 0; i < range.length; i++) {
         if (value === true) {
@@ -134,19 +136,19 @@ function valueSync(value) {
         loaded = true;
     }
 }
-function setViewLoop(){
+
+function setViewLoop() {
     const enableShowOriginalImage = displayOriginalImage.checked;
-    if(enableShowOriginalImage){
+    if (enableShowOriginalImage) {
         originalBox.classList.add("card");
         originalBox.classList.add("col");
-        originalBox.style.height="auto";
-        originalImage.parentElement.style.visibility="visible";
-    }
-    else {
+        originalBox.style.height = "auto";
+        originalImage.parentElement.style.visibility = "visible";
+    } else {
         filterBox.classList.remove("col");
         originalBox.classList.remove("card");
         originalBox.classList.remove("col");
-        originalBox.style.height="0px";
+        originalBox.style.height = "0px";
         originalImage.parentElement.style.visibility = "hidden";
     }
     setTimeout(setViewLoop, 1000);
@@ -166,6 +168,7 @@ function readImage() {
         fileReader.readAsDataURL(userImage.files[0]);
         backupImageLoop();
         setViewLoop();
+        checkFocusMode();
         stepCount = 0;
         valueSync(false);
     }
@@ -270,7 +273,7 @@ function draw() {
 }
 
 function detect() {
-    modelLoadStatus.textContent= `${models.value}模型已加載`;
+    modelLoadStatus.textContent = `${models.value}模型已加載`;
     objectDetector.detect(filter2D, function(err, results) {
         objects = results;
         if (objects) {
