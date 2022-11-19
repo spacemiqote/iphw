@@ -12,3 +12,4 @@
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=bugs)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)  
+![Creative Commons License](https://i.creativecommons.org/l/by-sa/4.0/80x15.png)
