@@ -49,17 +49,26 @@
                 <button class="btn" onclick="goFullScreen()">全螢幕顯示</button>
                 <button class="btn" onclick="download()">下載圖片</button>
             </div>
-            <div class="3 col">
+            <div class="3 col" id="extraOptions">
                 <fieldset>
                     <legend>擴充選項:</legend>
                     <div>
                         <input type="checkbox" id="allowMultipleFilterOn" name="allowMultipleFilterOn" />
-                        <label for="allowMultipleFilterOn">允許濾鏡覆蓋(testing)</label>
+                        <label for="allowMultipleFilterOn">允許濾鏡覆蓋</label>
+                    </div>
+                    <div>
+                    <input type="checkbox" id="displayOriginalImage" name="displayOriginalImage" />
+                    <label for="displayOriginalImage" onclick="focusEditing()">顯示原圖</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="focusMode" name="focusMode" />
+                        <label for="focusMode" onclick="checkFocusMode()">專注模式</label>
                     </div>
                 </fieldset>
             </div>
         </div>
         <div class="row">
+            <div class= "5 col">
             <div class="3 row">
                 <button class="collapse btn">HSI濾鏡</button>
                 <div class="content">
@@ -80,8 +89,7 @@
                     <input type="text" id="customI" class="inputNumber" value="0" onChange="imageFilter('hsi');" />
                     <br />
                 </div>
-            </div>
-            <div class="3 row">
+
                 <button class="collapse btn">色彩平衡濾鏡</button>
                 <div class="content">
                     <br />
@@ -101,6 +109,9 @@
                     <input type="text" id="customB" class="inputNumber" value="0" onChange="imageFilter('colorbalance');" />
                     <br />
                 </div>
+            </div>
+            <div class="3 row">
+
             </div>
             <div class="3 row">
                 <button class="collapse btn">雜訊參數</button>
@@ -140,19 +151,34 @@
                         <option value="CocoSsd">CocoSsd模型</option>
                     </select>
                     <br />
+                    <span class="content" id="modelLoadStatus">模型尚未加載</span>
                     <button class="btn" onclick="imageFilter('objectDetection')" id="objectDetection">啟動偵測</button>
                 </div>
-            </div>
+
             <div class="6 row">
-                <div class="card col">
+                <!-- <div class="card col">
                     <canvas id="filterResult" class="w-100"> </canvas>
                     <h4>濾鏡效果</h4>
                 </div>
-                <div class="card col">
-                    <canvas id="originalImage" class="w-100"> </canvas>
+                -->
+
+            </div>
+        </div>
+            </div>
+        <div class="7 col">
+            <div class="row">
+            <div class="card col" id="filterBox"><!-- class="8 col"-->
+                <h4>濾鏡效果</h4>
+                <canvas id="filterResult" class="w-100"> </canvas>
+            </div>
+                <div id="originalBox" style="visibility: hidden;">
                     <h4>原始圖片</h4>
+                    <canvas id="originalImage" class="w-100"> </canvas>
                 </div>
             </div>
         </div>
+    </div>
+
     </body>
+
 </html>

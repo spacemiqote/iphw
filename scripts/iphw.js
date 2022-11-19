@@ -5,7 +5,13 @@
 let objectDetector;
 const userImage = document.getElementById("userImage");
 const originalImage = document.getElementById("originalImage");
+const models = document.getElementById("models");
+const modelLoadStatus = document.getElementById("modelLoadStatus");
 const allowMultipleFilterOn = document.getElementById("allowMultipleFilterOn");
+const displayOriginalImage = document.getElementById("displayOriginalImage");
+const focusMode = document.getElementById("focusMode");
+const filterBox = document.getElementById("filterBox");
+const originalBox = document.getElementById("originalBox");
 const fileReader = new FileReader(),
     original2D = originalImage.getContext("2d", {
         willReadFrequently: !0,
@@ -49,7 +55,6 @@ const sobelFilterY = [
     [-1, -2, -1],
 ];
 
-//https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-image-processing-continued.html
 const unsharp = [
     [-1, -1, -1],
     [-1, 9, -1],
@@ -85,7 +90,21 @@ function download() {
     link.href = document.getElementById("filterResult").toDataURL();
     link.click();
 }
+function checkFocusMode(){
+    const enableFocusMode = focusMode.checked;
+    if(enableFocusMode){
+        focusEditing();
+    }
+    setTimeout(checkFocusMode, 1000);
+}
 
+function focusEditing(){
+    document.getElementById("extraOptions").scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "end",
+    });
+}
 function valueSync(value) {
     for (let i = 0; i < range.length; i++) {
         if (value === true) {
@@ -115,6 +134,23 @@ function valueSync(value) {
         loaded = true;
     }
 }
+function setViewLoop(){
+    const enableShowOriginalImage = displayOriginalImage.checked;
+    if(enableShowOriginalImage){
+        originalBox.classList.add("card");
+        originalBox.classList.add("col");
+        originalBox.style.height="auto";
+        originalImage.parentElement.style.visibility="visible";
+    }
+    else {
+        filterBox.classList.remove("col");
+        originalBox.classList.remove("card");
+        originalBox.classList.remove("col");
+        originalBox.style.height="0px";
+        originalImage.parentElement.style.visibility = "hidden";
+    }
+    setTimeout(setViewLoop, 1000);
+}
 
 function backupImageLoop() {
     backupImage = filterResult;
@@ -129,6 +165,7 @@ function readImage() {
     if (userImage.files[0]) {
         fileReader.readAsDataURL(userImage.files[0]);
         backupImageLoop();
+        setViewLoop();
         stepCount = 0;
         valueSync(false);
     }
@@ -149,6 +186,7 @@ function loadImage() {
         original2D.drawImage(image, 0, 0);
         cResult = original2D.getImageData(0, 0, originalImage.width, originalImage.height);
         c2D.putImageData(cResult, 0, 0);
+        focusEditing();
     };
 }
 
@@ -219,18 +257,20 @@ function draw() {
     filter2D.fillRect(0, 0, filterResult.width, filterResult.height);
     filter2D.putImageData(filterResult, 0, 0);
     for (let i = 0; i < objects.length; i += 1) {
-        filter2D.font = "20px consolas";
+        filter2D.font = "bold 25px consolas";
         filter2D.fillStyle = "green";
-        filter2D.fillText(objects[i].label, objects[i].x + 4, objects[i].y + 16);
+        filter2D.fillText(objects[i].label, objects[i].x + 6, objects[i].y + 24);
         filter2D.beginPath();
         filter2D.rect(objects[i].x, objects[i].y, objects[i].width, objects[i].height);
         filter2D.strokeStyle = "green";
+        filter2D.lineWidth = 8;
         filter2D.stroke();
         filter2D.closePath();
     }
 }
 
 function detect() {
+    modelLoadStatus.textContent= `${models.value}模型已加載`;
     objectDetector.detect(filter2D, function(err, results) {
         objects = results;
         if (objects) {
@@ -592,7 +632,6 @@ async function imageFilter(filter) {
                 break;
             }
             case "objectDetection": {
-                const models = document.getElementById("models");
                 if (models.value === "CocoSsd") {
                     objectDetector = await ml5.objectDetector('cocossd', detect);
                 } else if (models.value === "YOLO") {
