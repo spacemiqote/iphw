@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="styles/iphw.css" />
     <link rel="stylesheet" type="text/css" href="styles/fonts.css" />
     <script defer src="scripts/ml5.min.js"></script>
+    <script defer src="scripts/tesseract.min.js"></script>
     <script defer src="scripts/iphw.js"></script>
 </head>
 <body>
@@ -49,13 +50,18 @@
     </div>
     <div class="3 col">
         <fieldset>
-            <legend>介面功能:</legend>
+        <legend>介面功能:</legend>
         <button class="btn" onclick="imageFilter('revertImage')" id="revertImage">上一步</button>
         <button class="btn" onclick="savepoint()">設置保存點</button>
         <button class="btn" onclick="imageFilter('loadSave')">載入保存點</button>
         <button class="btn" onclick="imageFilter('cancelFilter')" id="cancelFilter">取消濾鏡</button>
         <button class="btn" onclick="goFullScreen()">全螢幕顯示</button>
         <button class="btn" onclick="download()">下載圖片</button>
+        </fieldset>
+        <fieldset>
+            <legend>變態功能:</legend>
+            <button class="btn" onclick="fuckCAPTCHA()">幹驗證碼</button>
+            <span class="c" id="captcha">驗證碼為:None</span>
         </fieldset>
     </div>
     <div class="3 col" id="extraOptions">

@@ -171,6 +171,7 @@ function readImage() {
         checkFocusMode();
         stepCount = 0;
         valueSync(false);
+
     }
 }
 
@@ -181,7 +182,7 @@ function loadImage() {
     });
     const image = new Image();
     image.src = fileReader.result.toString();
-    image.onload = function() {
+    image.onload = function () {
         originalImage.width = image.width;
         originalImage.height = image.height;
         cResult.width = image.width;
@@ -190,6 +191,7 @@ function loadImage() {
         cResult = original2D.getImageData(0, 0, originalImage.width, originalImage.height);
         c2D.putImageData(cResult, 0, 0);
         focusEditing();
+
     };
 }
 
@@ -285,7 +287,6 @@ function detect() {
 async function imageFilter(filter) {
     const enableMultipleFilter = allowMultipleFilterOn.checked;
     const graph = Array.from(Array(filterResult.height), () => new Array(filterResult.width));
-
     let customH = 0;
     let customS = 0;
     let customI = 0;
@@ -669,6 +670,53 @@ async function imageFilter(filter) {
     }
     if (stepCount >= 0 && (filter !== "cancelFilter" && filter !== "objectDetection")) filter2D.putImageData(filterResult, 0, 0);
     stepCount++;
+}
+async function getCaptcha(canv){
+    const corePath = window.navigator.userAgent.indexOf("Edge") > -1
+        ? 'scripts/tesseract-core.asm.js'
+        : 'scripts/tesseract-core.wasm.js';
+    const worker = new Tesseract.TesseractWorker({
+        corePath,
+    });
+    worker.recognize(canv,
+        "eng"
+    )
+        .progress(function(packet){
+        })
+        .then(function(data){
+            document.getElementById("captcha").textContent = `驗證碼為: ${data.text}`;
+        })
+}
+async function fuckCAPTCHA() {
+          document.getElementById("allowMultipleFilterOn").checked = true;
+          let stepOne = await imageFilter("medianBlurFilter");
+          document.getElementById("customH").value = 0;
+          document.getElementById("customS").value = 0;
+          document.getElementById("customI").value = 60;
+          let stepTwo = await imageFilter("hsi");
+          document.getElementById("customH").value = 0;
+          document.getElementById("customS").value = 0;
+          document.getElementById("customI").value = -58;
+          let stepThree = await imageFilter("hsi");
+          document.getElementById("customH").value = 0;
+          document.getElementById("customS").value = 0;
+          document.getElementById("customI").value = -45;
+          let stepFour = await imageFilter("hsi");
+          document.getElementById("customH").value = 0;
+          document.getElementById("customS").value = 0;
+          document.getElementById("customI").value = -30;
+          let stepFive = await imageFilter("hsi");
+        document.getElementById("customH").value = 0;
+        document.getElementById("customS").value = 0;
+        document.getElementById("customI").value = -25;
+        let stepSix = await imageFilter("hsi");
+        let steSeven = await imageFilter("medianBlurFilter");
+    let stepEight = await imageFilter("sharpenFilter");
+    let stepNine = await imageFilter("gaussianBlurFilter");
+    let stepTen = await imageFilter("inverse");
+    let stepEleven = await imageFilter("sharpenFilter");
+    let stepTwelve = await imageFilter("inverse");
+    let finalStep = await getCaptcha(document.getElementById("filterResult").toDataURL());
 }
 
 valueSync(true);
