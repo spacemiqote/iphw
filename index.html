@@ -19,18 +19,24 @@
 </div>
 <div class="row">
     <div class="6 col">
+        <fieldset>
+        <legend>簡易處理:</legend>
         <button class="btn" onclick="imageFilter('inverse')" id="inverseImage">負片處理</button>
         <button class="btn" onclick="imageFilter('grayscale')" id="grayscaleImage">灰階處理</button>
         <button class="btn" onclick="imageFilter('sepia')" id="sepiaImage">復古處理</button>
         <button class="btn" onclick="imageFilter('binary')" id="binary">二元處理</button>
         <button class="btn" onclick="imageFilter('dither')" id="dither">抖動處理</button>
         <button class="btn" onclick="imageFilter('floyd')" id="floyd">Floyd-Steinberg抖動</button>
-        <br />
+        </fieldset>
+        <fieldset>
+        <legend>雜訊功能:</legend>
         <button class="btn" onclick="imageFilter('uniformNoise')" id="uniformNoise">均衡雜訊</button>
         <button class="btn" onclick="imageFilter('gaussianNoise')" id="gaussianNoise">高斯雜訊</button>
         <button class="btn" onclick="imageFilter('exponentialNoise')" id="exponentialNoise">指數雜訊</button>
         <button class="btn" onclick="imageFilter('impulseNoise')" id="impulseNoise">脈衝雜訊</button>
-        <br />
+        </fieldset>
+        <fieldset>
+        <legend>濾波功能:</legend>
         <button class="btn" onclick="imageFilter('laplacian')" id="laplacian">拉普拉斯濾波</button>
         <button class="btn" onclick="imageFilter('boxBlurFilter')" id="boxBlurFilter">平均濾波</button>
         <button class="btn" onclick="imageFilter('gaussianBlurFilter')" id="gaussianBlurFilter">高斯濾波</button>
@@ -39,14 +45,18 @@
         <button class="btn" onclick="imageFilter('unsharpFilter')" id="unsharpFilter">非銳化濾波</button>
         <button class="btn" onclick="imageFilter('embossFilter')" id="embossFilter">浮雕濾波</button>
         <button class="btn" onclick="imageFilter('sobelFilter')" id="sobelFilter">索伯濾波</button>
+        </fieldset>
     </div>
     <div class="3 col">
+        <fieldset>
+            <legend>介面功能:</legend>
         <button class="btn" onclick="imageFilter('revertImage')" id="revertImage">上一步</button>
         <button class="btn" onclick="savepoint()">設置保存點</button>
         <button class="btn" onclick="imageFilter('loadSave')">載入保存點</button>
         <button class="btn" onclick="imageFilter('cancelFilter')" id="cancelFilter">取消濾鏡</button>
         <button class="btn" onclick="goFullScreen()">全螢幕顯示</button>
         <button class="btn" onclick="download()">下載圖片</button>
+        </fieldset>
     </div>
     <div class="3 col" id="extraOptions">
         <fieldset>
@@ -61,14 +71,16 @@
             </div>
             <div>
                 <input type="checkbox" id="focusMode" name="focusMode" />
-                <label for="focusMode">專注模式</label>
+                <label for="focusMode">專注模式(僅限桌面端)</label>
             </div>
         </fieldset>
     </div>
 </div>
 <div class="row">
     <div class="5 col">
-        <div class="3 row">
+        <fieldset>
+            <legend>選項設置</legend>
+            <div class="3 row">
             <button class="collapse btn">HSI濾鏡</button>
             <div class="content">
                 <br />
@@ -131,11 +143,11 @@
                 <button class="btn" onclick="imageFilter('objectDetection')" id="objectDetection">啟動偵測</button>
             </div>
         </div>
+        </fieldset>
     </div>
     <div class="7 col">
         <div class="row">
             <div class="card col" id="filterBox">
-                <!-- class="8 col"-->
                 <h4>濾鏡效果</h4>
                 <canvas id="filterResult" class="w-100"> </canvas>
             </div>
