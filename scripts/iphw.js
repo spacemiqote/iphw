@@ -685,23 +685,32 @@ function getCaptcha(canv) {
     )
         .progress()
         .then(function(data) {
-            document.getElementById("captcha").textContent = `驗證碼為: ${data.text}`;
+            let shit = data.text;
+            shit = shit.replace(/[^a-zA-Z0-9]+/g, '');
+            shit = shit.replace(/0/i, 'o');
+            shit = (shit.length > 5) ? shit.slice(0, 5) : shit;
+            shit = shit.toLowerCase();
+            document.getElementById("captcha").textContent = `驗證碼為: ${shit}`;
         })
 }
 async function fuckCAPTCHA() {
     const special = specialShit.checked;
-    if(special){
+    if (special) {
+        document.getElementById("allowMultipleFilterOn").checked = true;
         await imageFilter("grayscale");
-    document.getElementById("allowMultipleFilterOn").checked = true;
-    await imageFilter("medianBlurFilter");
-    document.getElementById("customH").value = 0;
-    document.getElementById("customS").value = 0;
-    document.getElementById("customI").value = -88;
-    await imageFilter("hsi");
-    document.getElementById("customH").value = 0;
-    document.getElementById("customS").value = 0;
-    document.getElementById("customI").value = 87;
-    await imageFilter("hsi");
+        await imageFilter("medianBlurFilter");
+        document.getElementById("customH").value = 0;
+        document.getElementById("customS").value = 0;
+        document.getElementById("customI").value = -88;
+        await imageFilter("hsi");
+        document.getElementById("customH").value = 0;
+        document.getElementById("customS").value = 0;
+        document.getElementById("customI").value = 87;
+        await imageFilter("hsi");
+        document.getElementById("customH").value = 0;
+        document.getElementById("customS").value = 0;
+        document.getElementById("customI").value = 52;
+        await imageFilter("hsi");
     }
     await getCaptcha(document.getElementById("filterResult").toDataURL());
 }
