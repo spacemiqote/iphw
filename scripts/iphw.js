@@ -2,6 +2,8 @@
 /*global ml5, ml5*/
 /*global objects, objects*/
 /*eslint no-undef: "error"*/
+/*eslint no-empty-function: "error"*/
+
 let objectDetector;
 const userImage = document.getElementById("userImage");
 const originalImage = document.getElementById("originalImage");
@@ -673,8 +675,8 @@ async function imageFilter(filter) {
     stepCount++;
 }
 
-function specialCheck(detect){
-    let shit = detect.text;
+function specialCheck(detectText){
+    let shit = detectText.text;
     shit = shit.replace(/[^a-zA-Z0-9]+/g, '');
     shit = shit.replace(/0/i, 'o');
     shit = (shit.length > 5) ? shit.slice(0, 5) : shit;
@@ -688,7 +690,7 @@ function getCaptcha(canv) {
     const worker = new Tesseract.TesseractWorker({
         corePath,
     });
-    worker.recognize(canv,"eng").progress(function(packet){let simpleCheck = packet;/*validate Packet */}).then(function(data) {document.getElementById("captcha").textContent = `驗證碼為: ${specialCheck(data)}`;})
+    worker.recognize(canv,"eng").progress(function(packet){/*validate Packet */}).then(function(data) {document.getElementById("captcha").textContent = `驗證碼為: ${specialCheck(data)}`;})
 }
 async function fuckCAPTCHA() {
     const special = specialShit.checked;
