@@ -701,7 +701,7 @@ async function fuckCAPTCHA() {
         await imageFilter("gaussianBlurFilter");
         await imageFilter("sharpenFilter");
         document.getElementById("customH").value = 0;
-        document.getElementById("customS").value = 0; 
+        document.getElementById("customS").value = 0;
         document.getElementById("customI").value = -81;
         await imageFilter("hsi");
         document.getElementById("customH").value = 0;
