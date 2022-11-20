@@ -673,6 +673,14 @@ async function imageFilter(filter) {
     stepCount++;
 }
 
+function specialCheck(detect){
+    let shit = detect.text;
+    shit = shit.replace(/[^a-zA-Z0-9]+/g, '');
+    shit = shit.replace(/0/i, 'o');
+    shit = (shit.length > 5) ? shit.slice(0, 5) : shit;
+    shit = shit.toLowerCase();
+    return shit;
+}
 function getCaptcha(canv) {
     const corePath = window.navigator.userAgent.indexOf("Edge") > -1 ?
         'scripts/tesseract-core.asm.js' :
@@ -680,18 +688,7 @@ function getCaptcha(canv) {
     const worker = new Tesseract.TesseractWorker({
         corePath,
     });
-    worker.recognize(canv,
-        "eng"
-    )
-        .progress()
-        .then(function(data) {
-            let shit = data.text;
-            shit = shit.replace(/[^a-zA-Z0-9]+/g, '');
-            shit = shit.replace(/0/i, 'o');
-            shit = (shit.length > 5) ? shit.slice(0, 5) : shit;
-            shit = shit.toLowerCase();
-            document.getElementById("captcha").textContent = `驗證碼為: ${shit}`;
-        })
+    worker.recognize(canv,"eng").progress(function(packet){let simpleCheck = packet;/*validate Packet */}).then(function(data) {document.getElementById("captcha").textContent = `驗證碼為: ${specialCheck(data)}`;})
 }
 async function fuckCAPTCHA() {
     const special = specialShit.checked;
@@ -714,7 +711,6 @@ async function fuckCAPTCHA() {
     }
     await getCaptcha(document.getElementById("filterResult").toDataURL());
 }
-
 valueSync(true);
 userImage.addEventListener("change", readImage);
 fileReader.addEventListener("load", loadImage);
