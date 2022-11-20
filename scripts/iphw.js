@@ -680,6 +680,8 @@ function specialCheck(detectText){
     shit = shit.replace(/0/i, 'o');
     shit = (shit.length > 5) ? shit.slice(0, 5) : shit;
     shit = shit.toLowerCase();
+    if(shit.length < 5)
+        shit = "無法辨識";
     return shit;
 }
 function getCaptcha(canv) {
