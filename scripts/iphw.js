@@ -697,17 +697,19 @@ async function fuckCAPTCHA() {
         document.getElementById("allowMultipleFilterOn").checked = true;
         await imageFilter("grayscale");
         await imageFilter("medianBlurFilter");
+        await imageFilter("gaussianBlurFilter");
+        await imageFilter("sharpenFilter");
         document.getElementById("customH").value = 0;
-        document.getElementById("customS").value = 0;
-        document.getElementById("customI").value = -88;
+        document.getElementById("customS").value = 0; 
+        document.getElementById("customI").value = -81;
         await imageFilter("hsi");
         document.getElementById("customH").value = 0;
         document.getElementById("customS").value = 0;
-        document.getElementById("customI").value = 87;
+        document.getElementById("customI").value = 82;
         await imageFilter("hsi");
         document.getElementById("customH").value = 0;
         document.getElementById("customS").value = 0;
-        document.getElementById("customI").value = 52;
+        document.getElementById("customI").value = 18;
         await imageFilter("hsi");
     }
     await getCaptcha(document.getElementById("filterResult").toDataURL());
