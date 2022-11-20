@@ -691,15 +691,16 @@ function getCaptcha(canv) {
 async function fuckCAPTCHA() {
     const special = specialShit.checked;
     if(special){
+        await imageFilter("grayscale");
     document.getElementById("allowMultipleFilterOn").checked = true;
     await imageFilter("medianBlurFilter");
     document.getElementById("customH").value = 0;
     document.getElementById("customS").value = 0;
-    document.getElementById("customI").value = -97;
+    document.getElementById("customI").value = -88;
     await imageFilter("hsi");
     document.getElementById("customH").value = 0;
     document.getElementById("customS").value = 0;
-    document.getElementById("customI").value = 96;
+    document.getElementById("customI").value = 87;
     await imageFilter("hsi");
     }
     await getCaptcha(document.getElementById("filterResult").toDataURL());
