@@ -694,6 +694,7 @@ function getCaptcha(canv) {
 async function fuckCAPTCHA() {
     const special = specialShit.checked;
     if (special) {
+        //what am I doing with my life :hankey:
         document.getElementById("allowMultipleFilterOn").checked = true;
         await imageFilter("grayscale");
         await imageFilter("medianBlurFilter");
