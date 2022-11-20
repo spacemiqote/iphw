@@ -2,7 +2,6 @@
 /*global ml5, ml5*/
 /*global objects, objects*/
 /*eslint no-undef: "error"*/
-/*eslint no-empty-function: "error"*/
 
 let objectDetector;
 const userImage = document.getElementById("userImage");
