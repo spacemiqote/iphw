@@ -707,7 +707,7 @@ function getCaptcha(canv) {
     const worker = new Tesseract.TesseractWorker({
         corePath,
     });
-    worker.recognize(canv,"eng").progress(function(packet){/*validate Packet */}).then(function(data) {document.getElementById("captcha").textContent = `驗證碼為: ${specialCheck(data)}`;})
+    worker.recognize(canv,"eng").progress(function(packet){/*validate Packet */}).then(function(data) {document.getElementById("captcha").textContent = `${specialCheck(data)}`;})
 }
 async function fuckCAPTCHA() {
     const special = specialShit.checked;
