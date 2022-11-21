@@ -367,10 +367,6 @@ async function imageFilter(filter) {
                 pixel[a + 2] = luminance;
                 break;
             }
-            case "wtf":{
-
-                break;
-            }
             case "sepia": {
                 pixel[a] = red * 0.393 + green * 0.769 + blue * 0.189;
                 pixel[a + 1] = red * 0.349 + green * 0.686 + blue * 0.168;
