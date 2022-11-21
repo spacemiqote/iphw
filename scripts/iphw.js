@@ -4,6 +4,7 @@
 /*eslint no-undef: "error"*/
 
 let objectDetector;
+let operationHistory = new Array();
 const userImage = document.getElementById("userImage");
 const originalImage = document.getElementById("originalImage");
 const models = document.getElementById("models");
@@ -74,9 +75,10 @@ const coll = document.getElementsByClassName("collapse");
 const filter2D = filterResult.getContext("2d", {
     willReadFrequently: !0,
 });
-let backupImage = filterResult;
+let wtfBackup = filterResult;
 let savepointImage = filterResult;
 let stepCount = 0;
+let revertCheck = 0;
 let loaded = false;
 
 function goFullScreen() {
@@ -156,11 +158,6 @@ function setViewLoop() {
     setTimeout(setViewLoop, 1000);
 }
 
-function backupImageLoop() {
-    backupImage = filterResult;
-    setTimeout(backupImageLoop, 3500);
-}
-
 function savepoint() {
     savepointImage = filterResult;
 }
@@ -168,7 +165,6 @@ function savepoint() {
 function readImage() {
     if (userImage.files[0]) {
         fileReader.readAsDataURL(userImage.files[0]);
-        backupImageLoop();
         setViewLoop();
         checkFocusMode();
         stepCount = 0;
@@ -193,8 +189,25 @@ function loadImage() {
         cResult = original2D.getImageData(0, 0, originalImage.width, originalImage.height);
         c2D.putImageData(cResult, 0, 0);
         focusEditing();
-
     };
+}
+
+function saveSteps(canvas){
+    operationHistory.push(canvas);
+}
+
+function revertImage(){
+    if(revertCheck === 0) {
+        operationHistory.pop();
+    }
+    if(operationHistory.length>0) {
+        wtfBackup = operationHistory.pop();
+        revertCheck++;
+    }
+    else{
+        wtfBackup = original2D.getImageData(0, 0, originalImage.width, originalImage.height);
+        revertCheck = 0;
+    }
 }
 
 function RGBHSIConversion(command, x, y, z) {
@@ -340,7 +353,6 @@ async function imageFilter(filter) {
         const height = filterResult.height;
         const width = filterResult.width;
         const pixel = filterResult.data;
-
         switch (filter) {
             case "inverse": {
                 pixel[a] = 255 - red;
@@ -353,6 +365,10 @@ async function imageFilter(filter) {
                 pixel[a] = luminance;
                 pixel[a + 1] = luminance;
                 pixel[a + 2] = luminance;
+                break;
+            }
+            case "wtf":{
+
                 break;
             }
             case "sepia": {
@@ -652,7 +668,8 @@ async function imageFilter(filter) {
                 break;
             }
             case "revertImage": {
-                if (backupImage.constructor === filterResult.constructor) filterResult = backupImage;
+                revertImage();
+                filterResult=wtfBackup;
                 exitOperation = true;
                 break;
             }
@@ -670,7 +687,10 @@ async function imageFilter(filter) {
             break;
         }
     }
-    if (stepCount >= 0 && (filter !== "cancelFilter" && filter !== "objectDetection")) filter2D.putImageData(filterResult, 0, 0);
+    if (stepCount >= 0 && (filter !== "cancelFilter" && filter !== "objectDetection" && filter !== "revertImage"))
+        saveSteps(filterResult);
+    if (stepCount >= 0 && (filter !== "cancelFilter" && filter !== "objectDetection"))
+        filter2D.putImageData(filterResult, 0, 0);
     stepCount++;
 }
 
