@@ -4,7 +4,7 @@
 /*eslint no-undef: "error"*/
 
 let objectDetector;
-let operationHistory = new Array();
+const operationHistory = new Array();
 const userImage = document.getElementById("userImage");
 const originalImage = document.getElementById("originalImage");
 const models = document.getElementById("models");
