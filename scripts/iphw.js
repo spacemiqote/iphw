@@ -748,9 +748,7 @@ function getCaptcha(canv) {
     const worker = new Tesseract.TesseractWorker({
         corePath,
     });
-    worker.recognize(canv, "eng").progress(function(packet) {
-        console.info(packet);
-    }).then(function(data) {
+    worker.recognize(canv, "eng").progress(function(packet) {/*packet checking*/}).then(function(data) {
         document.getElementById("captcha").textContent = `${specialCheck(data)}`;
     })
 }
