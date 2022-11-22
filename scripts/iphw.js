@@ -191,8 +191,8 @@ function readImage() {
         setViewLoop();
         checkFocusMode();
         stepCount = 0;
+        operationHistory.length = 0;
         valueSync(false);
-
     }
 }
 
