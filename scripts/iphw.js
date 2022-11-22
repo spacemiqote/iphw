@@ -29,13 +29,23 @@ const dmatrix = [
 ];
 const laplacian = [
     [0, -1, 0],
-    [-1, 4.1, -1],
+    [-1, 5, -1],
     [0, -1, 0],
+];
+const extendLaplacian = [
+    [-1, -1, -1],
+    [-1, 9, -1],
+    [-1, -1, -1],
 ];
 const boxBlur = [
     [1 / 9, 1 / 9, 1 / 9],
     [1 / 9, 1 / 9, 1 / 9],
     [1 / 9, 1 / 9, 1 / 9],
+];
+const highBoxBlur = [
+    [-(1 / 9), -(1 / 9), -(1 / 9)],
+    [-(1 / 9), (17 / 9), -(1 / 9)],
+    [-(1 / 9), -(1 / 9), -(1 / 9)],
 ];
 const sharpen = [
     [0, -1, 0],
@@ -47,6 +57,16 @@ const gaussianBlur = [
     [0.122, 0.332, 0.122],
     [0.045, 0.122, 0.045],
 ];
+const prewittFilterX = [
+    [-1, -1, -1],
+    [0, 0, 0],
+    [1, 1, 1],
+];
+const prewittFilterY = [
+    [-1, 0, 1],
+    [-1, 0, 1],
+    [-1, 0, 1],
+];
 const sobelFilterX = [
     [1, 0, -1],
     [2, 0, -2],
@@ -57,17 +77,20 @@ const sobelFilterY = [
     [0, 0, 0],
     [-1, -2, -1],
 ];
-
 const unsharp = [
     [-1, -1, -1],
     [-1, 9, -1],
     [-1, -1, -1],
 ];
-
-const emboss = [
+const relief = [
     [-2, -1, 0],
     [-1, 1, 1],
     [0, 1, 2],
+];
+const emboss = [
+    [1, 0, 0],
+    [0, 0, 0],
+    [0, 0, -1],
 ];
 
 let filterResult = document.getElementById("filterResult");
@@ -192,19 +215,18 @@ function loadImage() {
     };
 }
 
-function saveSteps(canvas){
+function saveSteps(canvas) {
     operationHistory.push(canvas);
 }
 
-function revertImage(){
-    if(revertCheck === 0) {
+function revertImage() {
+    if (revertCheck === 0) {
         operationHistory.pop();
     }
-    if(operationHistory.length>0) {
+    if (operationHistory.length > 0) {
         wtfBackup = operationHistory.pop();
         revertCheck++;
-    }
-    else{
+    } else {
         wtfBackup = original2D.getImageData(0, 0, originalImage.width, originalImage.height);
         revertCheck = 0;
     }
@@ -465,7 +487,11 @@ async function imageFilter(filter) {
                 pixel[a + 2] += gaussianNoise;
                 break;
             }
-            case "laplacian":
+            case "prewittFilter":
+            case "reliefFilter":
+            case "highBoxBlurFilter":
+            case "extendLaplacianFilter":
+            case "laplacianFilter":
             case "sobelFilter":
             case "unsharpFilter":
             case "embossFilter":
@@ -480,7 +506,7 @@ async function imageFilter(filter) {
                     Red[y] = [];
                     Green[y] = [];
                     Blue[y] = [];
-                    for (let x = 0; x < width; ++x) {
+                    for (let x = 0; x < width; x++) {
                         const currentPixel = y * 4 * width + 4 * x;
                         Red[y][x] = pixel[currentPixel];
                         Green[y][x] = pixel[currentPixel + 1];
@@ -535,35 +561,41 @@ async function imageFilter(filter) {
                             pixel[currentPixel] = Red[ypos][xpos];
                             pixel[currentPixel + 1] = Green[ypos][xpos];
                             pixel[currentPixel + 2] = Blue[ypos][xpos];
-                        } else if (filter === "sobelFilter") {
-                            const R_Gx = (sobelFilterX[0][0] * Red[up][left] + Red[up][x] * sobelFilterX[0][1] + Red[up][right] * sobelFilterX[0][2] +
-                                Red[y][left] * sobelFilterX[1][0] + Red[y][x] * sobelFilterX[1][1] + Red[y][right] * sobelFilterX[1][2] +
-                                Red[down][left] * sobelFilterX[2][0] + Red[down][x] * sobelFilterX[2][1] + Red[down][right] * sobelFilterX[2][2]);
-                            const R_Gy = (sobelFilterY[0][0] * Red[up][left] + Red[up][x] * sobelFilterY[0][1] + Red[up][right] * sobelFilterY[0][2] +
-                                Red[y][left] * sobelFilterY[1][0] + Red[y][x] * sobelFilterY[1][1] + Red[y][right] * sobelFilterY[1][2] +
-                                Red[down][left] * sobelFilterY[2][0] + Red[down][x] * sobelFilterY[2][1] + Red[down][right] * sobelFilterY[2][2]);
+                        } else if (filter === "sobelFilter" || filter === "prewittFilter") {
+                            let filterX = prewittFilterX;
+                            let filterY = prewittFilterY
+                            if (filter === "sobelFilter") {
+                                filterX = sobelFilterX;
+                                filterY = sobelFilterY
+                            }
+                            const R_Gx = (filterX[0][0] * Red[up][left] + Red[up][x] * filterX[0][1] + Red[up][right] * filterX[0][2] +
+                                Red[y][left] * filterX[1][0] + Red[y][x] * filterX[1][1] + Red[y][right] * filterX[1][2] +
+                                Red[down][left] * filterX[2][0] + Red[down][x] * filterX[2][1] + Red[down][right] * filterX[2][2]);
+                            const R_Gy = (filterY[0][0] * Red[up][left] + Red[up][x] * filterY[0][1] + Red[up][right] * filterY[0][2] +
+                                Red[y][left] * filterY[1][0] + Red[y][x] * filterY[1][1] + Red[y][right] * filterY[1][2] +
+                                Red[down][left] * filterY[2][0] + Red[down][x] * filterY[2][1] + Red[down][right] * filterY[2][2]);
                             let sobelR = Math.sqrt(R_Gx ** 2 + R_Gy ** 2);
                             if (sobelR < 0)
                                 sobelR = 0;
                             if (sobelR > 255)
                                 sobelR = 255;
-                            const G_Gx = (sobelFilterX[0][0] * Green[up][left] + Green[up][x] * sobelFilterX[0][1] + Green[up][right] * sobelFilterX[0][2] +
-                                Green[y][left] * sobelFilterX[1][0] + Green[y][x] * sobelFilterX[1][1] + Green[y][right] * sobelFilterX[1][2] +
-                                Green[down][left] * sobelFilterX[2][0] + Green[down][x] * sobelFilterX[2][1] + Green[down][right] * sobelFilterX[2][2]);
-                            const G_Gy = (sobelFilterY[0][0] * Green[up][left] + Green[up][x] * sobelFilterY[0][1] + Green[up][right] * sobelFilterY[0][2] +
-                                Green[y][left] * sobelFilterY[1][0] + Green[y][x] * sobelFilterY[1][1] + Green[y][right] * sobelFilterY[1][2] +
-                                Green[down][left] * sobelFilterY[2][0] + Green[down][x] * sobelFilterY[2][1] + Green[down][right] * sobelFilterY[2][2]);
+                            const G_Gx = (filterX[0][0] * Green[up][left] + Green[up][x] * filterX[0][1] + Green[up][right] * filterX[0][2] +
+                                Green[y][left] * filterX[1][0] + Green[y][x] * filterX[1][1] + Green[y][right] * filterX[1][2] +
+                                Green[down][left] * filterX[2][0] + Green[down][x] * filterX[2][1] + Green[down][right] * filterX[2][2]);
+                            const G_Gy = (filterY[0][0] * Green[up][left] + Green[up][x] * filterY[0][1] + Green[up][right] * filterY[0][2] +
+                                Green[y][left] * filterY[1][0] + Green[y][x] * filterY[1][1] + Green[y][right] * filterY[1][2] +
+                                Green[down][left] * filterY[2][0] + Green[down][x] * filterY[2][1] + Green[down][right] * filterY[2][2]);
                             let sobelG = Math.sqrt(G_Gx ** 2 + G_Gy ** 2);
                             if (sobelG < 0)
                                 sobelG = 0;
                             if (sobelG > 255)
                                 sobelG = 255;
-                            const B_Gx = (sobelFilterX[0][0] * Blue[up][left] + Blue[up][x] * sobelFilterX[0][1] + Blue[up][right] * sobelFilterX[0][2] +
-                                Blue[y][left] * sobelFilterX[1][0] + Blue[y][x] * sobelFilterX[1][1] + Blue[y][right] * sobelFilterX[1][2] +
-                                Blue[down][left] * sobelFilterX[2][0] + Blue[down][x] * sobelFilterX[2][1] + Blue[down][right] * sobelFilterX[2][2]);
-                            const B_Gy = (sobelFilterY[0][0] * Blue[up][left] + Blue[up][x] * sobelFilterY[0][1] + Blue[up][right] * sobelFilterY[0][2] +
-                                Blue[y][left] * sobelFilterY[1][0] + Blue[y][x] * sobelFilterY[1][1] + Blue[y][right] * sobelFilterY[1][2] +
-                                Blue[down][left] * sobelFilterY[2][0] + Blue[down][x] * sobelFilterY[2][1] + Blue[down][right] * sobelFilterY[2][2]);
+                            const B_Gx = (filterX[0][0] * Blue[up][left] + Blue[up][x] * filterX[0][1] + Blue[up][right] * filterX[0][2] +
+                                Blue[y][left] * filterX[1][0] + Blue[y][x] * filterX[1][1] + Blue[y][right] * filterX[1][2] +
+                                Blue[down][left] * filterX[2][0] + Blue[down][x] * filterX[2][1] + Blue[down][right] * filterX[2][2]);
+                            const B_Gy = (filterY[0][0] * Blue[up][left] + Blue[up][x] * filterY[0][1] + Blue[up][right] * filterY[0][2] +
+                                Blue[y][left] * filterY[1][0] + Blue[y][x] * filterY[1][1] + Blue[y][right] * filterY[1][2] +
+                                Blue[down][left] * filterY[2][0] + Blue[down][x] * filterY[2][1] + Blue[down][right] * filterY[2][2]);
                             let sobelB = Math.sqrt(B_Gx ** 2 + B_Gy ** 2);
                             if (sobelB < 0)
                                 sobelB = 0;
@@ -574,25 +606,33 @@ async function imageFilter(filter) {
                             pixel[currentPixel + 2] = sobelB;
                         } else {
                             let filterKernel = boxBlur;
+                            let extraValue = 0;
                             if (filter === "gaussianBlurFilter")
                                 filterKernel = gaussianBlur;
                             else if (filter === "sharpenFilter")
                                 filterKernel = sharpen;
-                            else if (filter === "embossFilter")
+                            else if (filter === "embossFilter") {
                                 filterKernel = emboss;
-                            else if (filter === "unsharpFilter")
+                                extraValue = 128;
+                            } else if (filter === "unsharpFilter")
                                 filterKernel = unsharp;
-                            else if (filter === "laplacian")
+                            else if (filter === "laplacianFilter")
                                 filterKernel = laplacian;
+                            else if (filter === "extendLaplacianFilter")
+                                filterKernel = extendLaplacian;
+                            else if (filter === "highBoxBlurFilter")
+                                filterKernel = highBoxBlur;
+                            else if (filter === "reliefFilter")
+                                filterKernel = relief;
                             pixel[currentPixel] = Red[up][left] * filterKernel[0][0] + Red[up][x] * filterKernel[0][1] + Red[up][right] * filterKernel[0][2] +
                                 Red[y][left] * filterKernel[1][0] + Red[y][x] * filterKernel[1][1] + Red[y][right] * filterKernel[1][2] +
-                                Red[down][left] * filterKernel[2][0] + Red[down][x] * filterKernel[2][1] + Red[down][right] * filterKernel[2][2];
+                                Red[down][left] * filterKernel[2][0] + Red[down][x] * filterKernel[2][1] + Red[down][right] * filterKernel[2][2] + extraValue;
                             pixel[currentPixel + 1] = Green[up][left] * filterKernel[0][0] + Green[up][x] * filterKernel[0][1] + Green[up][right] * filterKernel[0][2] +
                                 Green[y][left] * filterKernel[1][0] + Green[y][x] * filterKernel[1][1] + Green[y][right] * filterKernel[1][2] +
-                                Green[down][left] * filterKernel[2][0] + Green[down][x] * filterKernel[2][1] + Green[down][right] * filterKernel[2][2];
+                                Green[down][left] * filterKernel[2][0] + Green[down][x] * filterKernel[2][1] + Green[down][right] * filterKernel[2][2] + extraValue;
                             pixel[currentPixel + 2] = Blue[up][left] * filterKernel[0][0] + Blue[up][x] * filterKernel[0][1] + Blue[up][right] * filterKernel[0][2] +
                                 Blue[y][left] * filterKernel[1][0] + Blue[y][x] * filterKernel[1][1] + Blue[y][right] * filterKernel[1][2] +
-                                Blue[down][left] * filterKernel[2][0] + Blue[down][x] * filterKernel[2][1] + Blue[down][right] * filterKernel[2][2];
+                                Blue[down][left] * filterKernel[2][0] + Blue[down][x] * filterKernel[2][1] + Blue[down][right] * filterKernel[2][2] + extraValue;
                         }
                     }
                 }
@@ -665,7 +705,7 @@ async function imageFilter(filter) {
             }
             case "revertImage": {
                 revertImage();
-                filterResult=wtfBackup;
+                filterResult = wtfBackup;
                 exitOperation = true;
                 break;
             }
@@ -690,16 +730,17 @@ async function imageFilter(filter) {
     stepCount++;
 }
 
-function specialCheck(detectText){
+function specialCheck(detectText) {
     let shit = detectText.text;
     shit = shit.replace(/[^a-zA-Z0-9]+/g, '');
     shit = shit.replace(/0/i, 'o');
     shit = (shit.length > 5) ? shit.slice(0, 5) : shit;
     shit = shit.toLowerCase();
-    if(shit.length < 5)
+    if (shit.length < 5)
         shit = "無法辨識";
     return shit;
 }
+
 function getCaptcha(canv) {
     const corePath = window.navigator.userAgent.indexOf("Edge") > -1 ?
         'scripts/tesseract-core.asm.js' :
@@ -707,7 +748,11 @@ function getCaptcha(canv) {
     const worker = new Tesseract.TesseractWorker({
         corePath,
     });
-    worker.recognize(canv,"eng").progress(function(packet){/*validate Packet */}).then(function(data) {document.getElementById("captcha").textContent = `${specialCheck(data)}`;})
+    worker.recognize(canv, "eng").progress(function(packet) {
+        console.info(packet);
+    }).then(function(data) {
+        document.getElementById("captcha").textContent = `${specialCheck(data)}`;
+    })
 }
 async function fuckCAPTCHA() {
     const special = specialShit.checked;
