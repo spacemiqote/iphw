@@ -125,6 +125,33 @@ function focusEditing() {
         inline: "end",
     });
 }
+function cyrb128(str) {
+    let h1 = 1779033703, h2 = 3144134277,
+        h3 = 1013904242, h4 = 2773480762;
+    for (let i = 0, k; i < str.length; i++) {
+        k = str.charCodeAt(i);
+        h1 = h2 ^ Math.imul(h1 ^ k, 597399067);
+        h2 = h3 ^ Math.imul(h2 ^ k, 2869860233);
+        h3 = h4 ^ Math.imul(h3 ^ k, 951274213);
+        h4 = h1 ^ Math.imul(h4 ^ k, 2716044179);
+    }
+    h1 = Math.imul(h3 ^ (h1 >>> 18), 597399067);
+    h2 = Math.imul(h4 ^ (h2 >>> 22), 2869860233);
+    h3 = Math.imul(h1 ^ (h3 >>> 17), 951274213);
+    h4 = Math.imul(h2 ^ (h4 >>> 19), 2716044179);
+    return [(h1^h2^h3^h4)>>>0, (h2^h1)>>>0, (h3^h1)>>>0, (h4^h1)>>>0];
+}
+function mulberry32(a) {
+    return function() {
+        let t = a += 0x6D2B79F5;
+        t = Math.imul(t ^ t >>> 15, t | 1);
+        t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    }
+}
+const currentDate = new Date;
+const seed = cyrb128(currentDate.getTime());
+const rand = mulberry32(seed[0]);
 
 function checkFocusMode() {
     const enableFocusMode = focusMode.checked;
@@ -180,11 +207,9 @@ function setViewLoop() {
     }
     setTimeout(setViewLoop, 1000);
 }
-
 function savepoint() {
     savepointImage = filterResult;
 }
-
 function readImage() {
     if (userImage.files[0]) {
         fileReader.readAsDataURL(userImage.files[0]);
@@ -195,7 +220,6 @@ function readImage() {
         valueSync(false);
     }
 }
-
 function loadImage() {
     let cResult = document.getElementById("filterResult");
     const c2D = cResult.getContext("2d", {
@@ -231,7 +255,6 @@ function revertImage() {
         revertCheck = 0;
     }
 }
-
 function RGBHSIConversion(command, x, y, z) {
     let red = 0;
     let green = 0;
@@ -310,7 +333,6 @@ function draw() {
         filter2D.closePath();
     }
 }
-
 function detect() {
     modelLoadStatus.textContent = `${models.value}模型已加載`;
     objectDetector.detect(filter2D, function(err, results) {
@@ -320,7 +342,6 @@ function detect() {
         }
     });
 }
-
 async function imageFilter(filter) {
     const enableMultipleFilter = allowMultipleFilterOn.checked;
     const graph = Array.from(Array(filterResult.height), () => new Array(filterResult.width));
@@ -470,18 +491,15 @@ async function imageFilter(filter) {
                 break;
             }
             case "uniformNoise": {
-                const crypto = window.crypto || window.msCrypto;
-                const array = new Uint32Array(1);
-                const noise = Math.floor((crypto.getRandomValues(array) / 2 ** 32) * customScale);
+
+                const noise = rand() * customScale;
                 pixel[a] += noise;
                 pixel[a + 1] += noise;
                 pixel[a + 2] += noise;
                 break;
             }
             case "gaussianNoise": {
-                const crypto = window.crypto || window.msCrypto;
-                const array = new Uint32Array(1);
-                const gaussianNoise = customScale * (((crypto.getRandomValues(array) / 2 ** 32) + (crypto.getRandomValues(array) / 2 ** 32) + (crypto.getRandomValues(array) / 2 ** 32)) / 3);
+                const gaussianNoise = customScale * (rand() + rand() + rand());
                 pixel[a] += gaussianNoise;
                 pixel[a + 1] += gaussianNoise;
                 pixel[a + 2] += gaussianNoise;
@@ -640,18 +658,14 @@ async function imageFilter(filter) {
                 break;
             }
             case "exponentialNoise": {
-                const crypto = window.crypto || window.msCrypto;
-                const array = new Uint32Array(1);
-                const exponentialNoise = customScale * ((-1 * Math.log(1 - (crypto.getRandomValues(array) / 2 ** 32))) / 2);
+                const exponentialNoise = customScale * ((-1 * Math.log(1 - rand())) / 2);
                 pixel[a] += exponentialNoise;
                 pixel[a + 1] += exponentialNoise;
                 pixel[a + 2] += exponentialNoise;
                 break;
             }
             case "impulseNoise": {
-                const crypto = window.crypto || window.msCrypto;
-                const array = new Uint32Array(1);
-                const impulseNoise = (crypto.getRandomValues(array) / 2 ** 32);
+                const impulseNoise = rand();
                 if (impulseNoise >= 0 && impulseNoise <= customP / 2) {
                     pixel[a] = 0;
                     pixel[a + 1] = 0;
