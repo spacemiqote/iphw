@@ -3,7 +3,6 @@
 /*global objects, objects*/
 /*eslint no-undef: "error"*/
 
-let objectDetector;
 const operationHistory = new Array();
 const userImage = document.getElementById("userImage");
 const originalImage = document.getElementById("originalImage");
@@ -21,6 +20,11 @@ const fileReader = new FileReader(),
     });
 const range = document.querySelectorAll(".inputRange");
 const field = document.querySelectorAll(".inputNumber");
+const coll = document.getElementsByClassName("collapse");
+const currentDate = new Date;
+const seed = cyrb128(currentDate.getTime());
+const rand = mulberry32(seed[0]);
+
 const dmatrix = [
     [0, 128, 32, 160],
     [192, 64, 224, 96],
@@ -92,9 +96,7 @@ const emboss = [
     [0, 0, 0],
     [0, 0, -1],
 ];
-
 let filterResult = document.getElementById("filterResult");
-const coll = document.getElementsByClassName("collapse");
 const filter2D = filterResult.getContext("2d", {
     willReadFrequently: !0,
 });
@@ -102,7 +104,10 @@ let wtfBackup = filterResult;
 let savepointImage = filterResult;
 let stepCount = 0;
 let revertCheck = 0;
+let index = 0;
+let firstcall = 0;
 let loaded = false;
+let objectDetector;
 
 function goFullScreen() {
     const canvas = document.getElementById("filterResult");
@@ -125,9 +130,12 @@ function focusEditing() {
         inline: "end",
     });
 }
+
 function cyrb128(str) {
-    let h1 = 1779033703, h2 = 3144134277,
-        h3 = 1013904242, h4 = 2773480762;
+    let h1 = 1779033703,
+        h2 = 3144134277,
+        h3 = 1013904242,
+        h4 = 2773480762;
     for (let i = 0, k; i < str.length; i++) {
         k = str.charCodeAt(i);
         h1 = h2 ^ Math.imul(h1 ^ k, 597399067);
@@ -139,8 +147,9 @@ function cyrb128(str) {
     h2 = Math.imul(h4 ^ (h2 >>> 22), 2869860233);
     h3 = Math.imul(h1 ^ (h3 >>> 17), 951274213);
     h4 = Math.imul(h2 ^ (h4 >>> 19), 2716044179);
-    return [(h1^h2^h3^h4)>>>0, (h2^h1)>>>0, (h3^h1)>>>0, (h4^h1)>>>0];
+    return [(h1 ^ h2 ^ h3 ^ h4) >>> 0, (h2 ^ h1) >>> 0, (h3 ^ h1) >>> 0, (h4 ^ h1) >>> 0];
 }
+
 function mulberry32(a) {
     return function() {
         let t = a += 0x6D2B79F5;
@@ -149,9 +158,6 @@ function mulberry32(a) {
         return ((t ^ t >>> 14) >>> 0) / 4294967296;
     }
 }
-const currentDate = new Date;
-const seed = cyrb128(currentDate.getTime());
-const rand = mulberry32(seed[0]);
 
 function checkFocusMode() {
     const enableFocusMode = focusMode.checked;
@@ -207,19 +213,29 @@ function setViewLoop() {
     }
     setTimeout(setViewLoop, 1000);
 }
+
 function savepoint() {
     savepointImage = filterResult;
 }
+
+function cleanup() {
+    operationHistory.length = 0;
+    revertCheck = 0;
+    firstcall = 0;
+    index = 0;
+}
+
 function readImage() {
     if (userImage.files[0]) {
         fileReader.readAsDataURL(userImage.files[0]);
         setViewLoop();
         checkFocusMode();
         stepCount = 0;
-        operationHistory.length = 0;
+        cleanup();
         valueSync(false);
     }
 }
+
 function loadImage() {
     let cResult = document.getElementById("filterResult");
     const c2D = cResult.getContext("2d", {
@@ -241,20 +257,27 @@ function loadImage() {
 
 function saveSteps(canvas) {
     operationHistory.push(canvas);
+    index++;
 }
 
 function revertImage() {
-    if (revertCheck === 0) {
-        operationHistory.pop();
+    if (revertCheck === 0 && firstcall === 0)
+        index = operationHistory.length - 2;
+    else if (revertCheck === 0) {
+        index = operationHistory.length - 1;
     }
-    if (operationHistory.length > 0) {
-        wtfBackup = operationHistory.pop();
+
+    if (operationHistory.length > 0 && index >= 0) {
+        firstcall++;
+        wtfBackup = operationHistory[index];
         revertCheck++;
+        index--;
     } else {
         wtfBackup = original2D.getImageData(0, 0, originalImage.width, originalImage.height);
         revertCheck = 0;
     }
 }
+
 function RGBHSIConversion(command, x, y, z) {
     let red = 0;
     let green = 0;
@@ -333,6 +356,7 @@ function draw() {
         filter2D.closePath();
     }
 }
+
 function detect() {
     modelLoadStatus.textContent = `${models.value}模型已加載`;
     objectDetector.detect(filter2D, function(err, results) {
@@ -714,6 +738,7 @@ async function imageFilter(filter) {
             }
             case "cancelFilter": {
                 filter2D.drawImage(originalImage, 0, 0);
+                cleanup();
                 exitOperation = true;
                 break;
             }
@@ -725,6 +750,7 @@ async function imageFilter(filter) {
             }
             case "loadSave": {
                 filterResult = savepointImage;
+                cleanup();
                 exitOperation = true;
                 break;
             }
@@ -737,10 +763,11 @@ async function imageFilter(filter) {
             break;
         }
     }
-    if (stepCount >= 0 && (filter !== "cancelFilter" && filter !== "objectDetection" && filter !== "revertImage"))
-        saveSteps(filterResult);
-    if (stepCount >= 0 && (filter !== "cancelFilter" && filter !== "objectDetection"))
+    if (stepCount >= 0 && (filter !== "cancelFilter" && filter !== "objectDetection")) {
         filter2D.putImageData(filterResult, 0, 0);
+        if (filter !== "revertImage" && enableMultipleFilter)
+            saveSteps(filterResult);
+    }
     stepCount++;
 }
 
@@ -762,7 +789,8 @@ function getCaptcha(canv) {
     const worker = new Tesseract.TesseractWorker({
         corePath,
     });
-    worker.recognize(canv, "eng").progress(function(packet) {/*packet checking*/}).then(function(data) {
+    worker.recognize(canv, "eng").progress(function(packet) {
+        /*packet checking*/ }).then(function(data) {
         document.getElementById("captcha").textContent = `${specialCheck(data)}`;
     })
 }
