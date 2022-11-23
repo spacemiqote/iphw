@@ -102,6 +102,8 @@ let savepointImage = filterResult;
 let stepCount = 0;
 let revertCheck = 0;
 let index = 0;
+let fuck = 0;
+let iamshit = 0;
 let firstcall = 0;
 let loaded = false;
 let objectDetector = 1;
@@ -257,26 +259,38 @@ function loadImage() {
 
 function saveSteps(canvas) {
     operationHistory.push(canvas);
-    index++;
+    index = operationHistory.length;
+    console.log(operationHistory.length, index);
 }
 
-function revertImage() {
-    if (revertCheck === 0 && firstcall === 0)
-        index = operationHistory.length - 2;
-    else if (revertCheck === 0) {
-        index = operationHistory.length - 1;
-    }
-
-    if (operationHistory.length > 0 && index >= 0) {
-        firstcall++;
-        wtfBackup = operationHistory[index];
-        revertCheck++;
-        index--;
-    } else {
-        wtfBackup = original2D.getImageData(0, 0, originalImage.width, originalImage.height);
-        revertCheck = 0;
+function revertImage(filter) {
+    switch (filter) {
+        case "revertImage": {
+            if (index - 1 > 0) {
+                index--;
+                console.log(index);
+                wtfBackup = operationHistory[index - 1];
+            } else {
+                wtfBackup = original2D.getImageData(0, 0, originalImage.width, originalImage.height);
+                index = 0;
+            }
+            break;
+        }
+        case "redoImage": {
+            if (index < operationHistory.length - 1) {
+                wtfBackup = operationHistory[index];
+                index++;
+            } else {
+                if (operationHistory.length > 0)
+                    wtfBackup = operationHistory[operationHistory.length - 1];
+                else
+                    wtfBackup = original2D.getImageData(0, 0, originalImage.width, originalImage.height);
+            }
+            break;
+        }
     }
 }
+
 
 function RGBHSIConversion(command, x, y, z) {
     let red = 0;
@@ -742,8 +756,9 @@ async function imageFilter(filter) {
                 exitOperation = true;
                 break;
             }
+            case "redoImage":
             case "revertImage": {
-                revertImage();
+                revertImage(filter);
                 filterResult = wtfBackup;
                 exitOperation = true;
                 break;
@@ -765,7 +780,7 @@ async function imageFilter(filter) {
     }
     if (stepCount >= 0 && (filter !== "cancelFilter" && filter !== "objectDetection")) {
         filter2D.putImageData(filterResult, 0, 0);
-        if (filter !== "revertImage" && enableMultipleFilter)
+        if (filter !== "revertImage" && filter !== "redoImage" && enableMultipleFilter)
             saveSteps(filterResult);
     }
     stepCount++;
@@ -790,7 +805,8 @@ function getCaptcha(canv) {
         corePath,
     });
     worker.recognize(canv, "eng").progress(function(packet) {
-        /*packet checking*/ }).then(function(data) {
+        /*packet checking*/
+    }).then(function(data) {
         document.getElementById("captcha").textContent = `${specialCheck(data)}`;
     })
 }
