@@ -102,8 +102,6 @@ let savepointImage = filterResult;
 let stepCount = 0;
 let revertCheck = 0;
 let index = 0;
-let fuck = 0;
-let iamshit = 0;
 let firstcall = 0;
 let loaded = false;
 let objectDetector = 1;
@@ -288,6 +286,8 @@ function revertImage(filter) {
             }
             break;
         }
+        default:
+            break;
     }
 }
 
