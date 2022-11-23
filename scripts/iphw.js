@@ -21,9 +21,6 @@ const fileReader = new FileReader(),
 const range = document.querySelectorAll(".inputRange");
 const field = document.querySelectorAll(".inputNumber");
 const coll = document.getElementsByClassName("collapse");
-const currentDate = new Date;
-const seed = cyrb128(currentDate.getTime());
-const rand = mulberry32(seed[0]);
 
 const dmatrix = [
     [0, 128, 32, 160],
@@ -107,7 +104,7 @@ let revertCheck = 0;
 let index = 0;
 let firstcall = 0;
 let loaded = false;
-let objectDetector;
+let objectDetector = 1;
 
 function goFullScreen() {
     const canvas = document.getElementById("filterResult");
@@ -158,6 +155,9 @@ function mulberry32(a) {
         return ((t ^ t >>> 14) >>> 0) / 4294967296;
     }
 }
+const currentDate = new Date;
+const seed = cyrb128(currentDate.getTime());
+const rand = mulberry32(seed[0]);
 
 function checkFocusMode() {
     const enableFocusMode = focusMode.checked;
