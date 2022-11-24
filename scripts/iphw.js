@@ -2,7 +2,6 @@
 /*global ml5, ml5*/
 /*global objects, objects*/
 /*eslint no-undef: "error"*/
-
 const userImage = document.getElementById("userImage");
 const originalImage = document.getElementById("originalImage");
 const models = document.getElementById("models");
@@ -106,6 +105,9 @@ let index = 0;
 let fuck = 0;
 let loaded = false;
 let objectDetector = 1;
+let cmodelCheck = false;
+let ymodelCheck = false;
+
 
 function goFullScreen() {
     const canvas = document.getElementById("filterResult");
@@ -378,14 +380,15 @@ function draw() {
     }
 }
 
-function detect() {
+async function detect() {
     modelLoadStatus.textContent = `${models.value}模型已加載`;
-    objectDetector.detect(filter2D, function(err, results) {
+    await objectDetector.detect(filter2D, function(err, results) {
         objects = results;
         if (objects) {
             draw();
         }
     });
+    delete
 }
 async function imageFilter(filter) {
     const enableMultipleFilter = allowMultipleFilterOn.checked;
@@ -750,9 +753,18 @@ async function imageFilter(filter) {
             }
             case "objectDetection": {
                 if (models.value === "CocoSsd") {
-                    objectDetector = await ml5.objectDetector('cocossd', detect);
+                    if (!cmodelCheck) {
+                        objectDetector = await ml5.objectDetector('cocossd', detect);
+                        cmodelCheck = true;
+                    } else
+                        detect();
+
                 } else if (models.value === "YOLO") {
-                    objectDetector = await ml5.objectDetector('yolo', detect);
+                    if (!ymodelCheck) {
+                        objectDetector = await ml5.objectDetector('yolo', detect);
+                        ymodelCheck = true;
+                    } else
+                        detect();
                 }
                 exitOperation = true;
                 break;
@@ -765,12 +777,11 @@ async function imageFilter(filter) {
             }
             case "redoImage":
             case "revertImage": {
-                if(operationHistory.length>0) {
+                if (operationHistory.length > 0) {
                     revertImage(filter);
                     filterResult = wtfBackup;
-                }
-                else
-                    filterResult=original2D.getImageData(0, 0, originalImage.width, originalImage.height);
+                } else
+                    filterResult = original2D.getImageData(0, 0, originalImage.width, originalImage.height);
                 exitOperation = true;
                 break;
             }
