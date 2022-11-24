@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="styles/fonts.css" />
     <script defer src="scripts/ml5.min.js"></script>
     <script defer src="scripts/tesseract.min.js"></script>
+    <script defer src="scripts/exif-js.js"></script>
     <script defer src="scripts/iphw.js"></script>
 </head>
 <body>
@@ -16,7 +17,7 @@
 <div class="card w-100">
     <div class="button-wrap">
         <label class="new-button" for="userImage">選擇圖片(JPG/PNG) </label>
-        <input type="file" id="userImage" name="userImage" accept="image/png, image/jpeg" />
+        <input type="file" id="userImage" name="userImage" accept="image/png, image/jpeg, image/bmp" />
     </div>
 </div>
 <div class="row">
@@ -90,6 +91,9 @@
             <div>
                 <input type="checkbox" id="specialShit" name="specialShit" />
                 <label for="specialShit">學校驗證碼</label>
+            </div>
+            <div>
+                <textarea id = "exifInfo" class="c" readonly></textarea>
             </div>
         </fieldset>
     </div>

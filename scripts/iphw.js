@@ -16,6 +16,7 @@ const fileReader = new FileReader(),
     original2D = originalImage.getContext("2d", {
         willReadFrequently: !0,
     });
+const passFileType = /^(?:image\/bmp|image\/jpeg|image\/png)$/i;
 const range = document.querySelectorAll(".inputRange");
 const field = document.querySelectorAll(".inputNumber");
 const coll = document.getElementsByClassName("collapse");
@@ -230,8 +231,16 @@ function cleanup() {
 }
 
 function readImage() {
-    if (userImage.files[0]) {
-        fileReader.readAsDataURL(userImage.files[0]);
+    if (userImage.files[0] && userImage.files.length && userImage) {
+        let image = userImage.files[0];
+        if (!passFileType.test(image.type)) { return };
+        fileReader.readAsDataURL(image);
+        EXIF.getData(image, function(){
+            const exifText = EXIF.pretty(this);
+            console.log(exifText);
+            console.log("hello");
+            document.getElementById("exifInfo").textContent = exifText;
+        });
         setViewLoop();
         checkFocusMode();
         stepCount = 0;

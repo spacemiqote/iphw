@@ -75,6 +75,11 @@ a {
     color: #fa0;
     text-decoration: none;
 }
+textarea{
+    color:lawngreen;
+    background-color: black;
+    font: 1em/1.6 Cubic, sans-serif;
+}
 pre {
     overflow: auto;
 }
