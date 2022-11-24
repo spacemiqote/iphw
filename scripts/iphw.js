@@ -753,14 +753,13 @@ async function imageFilter(filter) {
             case "objectDetection": {
                 if (models.value === "CocoSsd") {
                     if (!cmodelCheck) {
-                        objectDetector = await ml5.objectDetector('cocossd', detect);
+                        objectDetector = ml5.objectDetector('cocossd', detect);
                         cmodelCheck = true;
                     } else
                         detect();
-
                 } else if (models.value === "YOLO") {
                     if (!ymodelCheck) {
-                        objectDetector = await ml5.objectDetector('yolo', detect);
+                        objectDetector = ml5.objectDetector('yolo', detect);
                         ymodelCheck = true;
                     } else
                         detect();
