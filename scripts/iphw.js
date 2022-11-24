@@ -1,5 +1,6 @@
 /*jshint esversion: 6 */
 /*global ml5, ml5*/
+/*global EXIF, EXIF*/
 /*global objects, objects*/
 /*eslint no-undef: "error"*/
 const userImage = document.getElementById("userImage");
@@ -232,13 +233,11 @@ function cleanup() {
 
 function readImage() {
     if (userImage.files[0] && userImage.files.length && userImage) {
-        let image = userImage.files[0];
+        const image = userImage.files[0];
         if (!passFileType.test(image.type)) { return };
         fileReader.readAsDataURL(image);
         EXIF.getData(image, function(){
             const exifText = EXIF.pretty(this);
-            console.log(exifText);
-            console.log("hello");
             document.getElementById("exifInfo").textContent = exifText;
         });
         setViewLoop();
