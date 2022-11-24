@@ -769,7 +769,7 @@ async function imageFilter(filter) {
                     filterResult = wtfBackup;
                 }
                 else
-                    filter2D.drawImage(originalImage, 0, 0);
+                    filterResult=original2D.getImageData(0, 0, originalImage.width, originalImage.height);
                 exitOperation = true;
                 break;
             }
