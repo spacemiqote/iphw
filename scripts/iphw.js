@@ -764,8 +764,12 @@ async function imageFilter(filter) {
             }
             case "redoImage":
             case "revertImage": {
-                revertImage(filter);
-                filterResult = wtfBackup;
+                if(operationHistory.length>0) {
+                    revertImage(filter);
+                    filterResult = wtfBackup;
+                }
+                else
+                    filter2D.drawImage(originalImage, 0, 0);
                 exitOperation = true;
                 break;
             }
