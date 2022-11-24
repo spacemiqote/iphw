@@ -104,7 +104,8 @@ let revertCheck = 0;
 let index = 0;
 let fuck = 0;
 let loaded = false;
-let objectDetector = 1;
+let cobjectDetector = 1;
+let yobjectDetector = 1;
 let cmodelCheck = false;
 let ymodelCheck = false;
 
@@ -382,12 +383,21 @@ function draw() {
 
 async function detect() {
     modelLoadStatus.textContent = `${models.value}模型已加載`;
-    await objectDetector.detect(filter2D, function(err, results) {
-        objects = results;
-        if (objects) {
-            draw();
-        }
-    });
+    if(models.value === "CocoSsd") {
+        await cobjectDetector.detect(filter2D, function (err, results) {
+            objects = results;
+            if (objects) {
+                draw();
+            }
+        });
+    }else{
+        await yobjectDetector.detect(filter2D, function (err, results) {
+            objects = results;
+            if (objects) {
+                draw();
+            }
+        });
+    }
 }
 function imageFilter(filter) {
     const enableMultipleFilter = allowMultipleFilterOn.checked;
@@ -753,14 +763,14 @@ function imageFilter(filter) {
             case "objectDetection": {
                 if (models.value === "CocoSsd") {
                     if (!cmodelCheck) {
-                        objectDetector = ml5.objectDetector('cocossd', detect);
+                        cobjectDetector = ml5.objectDetector('cocossd', detect);
                         cmodelCheck = true;
                     } else
                         detect();
 
                 } else if (models.value === "YOLO") {
                     if (!ymodelCheck) {
-                        objectDetector = ml5.objectDetector('yolo', detect);
+                        yobjectDetector = ml5.objectDetector('yolo', detect);
                         ymodelCheck = true;
                     } else
                         detect();
