@@ -388,7 +388,6 @@ async function detect() {
             draw();
         }
     });
-    delete
 }
 async function imageFilter(filter) {
     const enableMultipleFilter = allowMultipleFilterOn.checked;
