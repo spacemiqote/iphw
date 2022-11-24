@@ -256,7 +256,6 @@ function loadImage() {
 }
 
 function saveSteps(canvas) {
-    //   operationHistory.splice(0, -(fuck));
     if (fuck > 0)
         operationHistory = operationHistory.slice(0, operationHistory.length - (fuck));
     operationHistory.push(canvas);
