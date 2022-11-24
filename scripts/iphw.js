@@ -3,7 +3,6 @@
 /*global objects, objects*/
 /*eslint no-undef: "error"*/
 
-let operationHistory = new Array();
 const userImage = document.getElementById("userImage");
 const originalImage = document.getElementById("originalImage");
 const models = document.getElementById("models");
@@ -93,6 +92,8 @@ const emboss = [
     [0, 0, 0],
     [0, 0, -1],
 ];
+
+let operationHistory = new Array();
 let filterResult = document.getElementById("filterResult");
 const filter2D = filterResult.getContext("2d", {
     willReadFrequently: !0,
@@ -807,18 +808,19 @@ function specialCheck(detectText) {
     return shit;
 }
 
-function getCaptcha(canv) {
+async function getCaptcha(canv) {
     const corePath = window.navigator.userAgent.indexOf("Edge") > -1 ?
         'scripts/tesseract-core.asm.js' :
         'scripts/tesseract-core.wasm.js';
     const worker = new Tesseract.TesseractWorker({
         corePath,
     });
-    worker.recognize(canv, "eng").progress(function(packet) {
+    await worker.recognize(canv, "eng").progress(function(packet) {
         /*packet checking*/
     }).then(function(data) {
         document.getElementById("captcha").textContent = `${specialCheck(data)}`;
-    })
+    });
+    await worker.terminate();
 }
 async function fuckCAPTCHA() {
     const special = specialShit.checked;
