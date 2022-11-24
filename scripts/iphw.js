@@ -3,7 +3,7 @@
 /*global objects, objects*/
 /*eslint no-undef: "error"*/
 
-const operationHistory = new Array();
+let operationHistory = new Array();
 const userImage = document.getElementById("userImage");
 const originalImage = document.getElementById("originalImage");
 const models = document.getElementById("models");
@@ -102,7 +102,7 @@ let savepointImage = filterResult;
 let stepCount = 0;
 let revertCheck = 0;
 let index = 0;
-let firstcall = 0;
+let fuck = 0;
 let loaded = false;
 let objectDetector = 1;
 
@@ -221,7 +221,7 @@ function savepoint() {
 function cleanup() {
     operationHistory.length = 0;
     revertCheck = 0;
-    firstcall = 0;
+    fuck = 0;
     index = 0;
 }
 
@@ -256,20 +256,24 @@ function loadImage() {
 }
 
 function saveSteps(canvas) {
+    //   operationHistory.splice(0, -(fuck));
+    if (fuck > 0)
+        operationHistory = operationHistory.slice(0, operationHistory.length - (fuck));
     operationHistory.push(canvas);
-    index = operationHistory.length;
-    console.log(operationHistory.length, index);
+    index++;
+    fuck = 0;
 }
+
 
 function revertImage(filter) {
     switch (filter) {
         case "revertImage": {
             if (index - 1 > 0) {
                 index--;
-                console.log(index);
                 wtfBackup = operationHistory[index - 1];
+                fuck++;
             } else {
-                wtfBackup = original2D.getImageData(0, 0, originalImage.width, originalImage.height);
+                wtfBackup = operationHistory[0];
                 index = 0;
             }
             break;
@@ -278,10 +282,13 @@ function revertImage(filter) {
             if (index < operationHistory.length - 1) {
                 wtfBackup = operationHistory[index];
                 index++;
+                fuck = 0;
             } else {
-                if (operationHistory.length > 0)
+                if (operationHistory.length > 0) {
                     wtfBackup = operationHistory[operationHistory.length - 1];
-                else
+                    index = operationHistory.length;
+                    fuck = 0;
+                } else
                     wtfBackup = original2D.getImageData(0, 0, originalImage.width, originalImage.height);
             }
             break;
