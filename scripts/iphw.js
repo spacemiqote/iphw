@@ -534,9 +534,9 @@ function imageFilter(filter) {
                 break;
             }
             case "histogramEq" :{
-                let freq=new Array(256).fill(0)
-                let cdf=new Array(256).fill(0)
-                let he=new Array(256).fill(0)
+                const freq=new Array(256).fill(0)
+                const cdf=new Array(256).fill(0)
+                const he=new Array(256).fill(0)
                 for(let len=0;len<pixel.length;len+=4) {
                     freq[pixel[len]]++;
                     freq[pixel[len+1]]++;
@@ -583,7 +583,7 @@ function imageFilter(filter) {
                 break;
             }
             case "adjustGamma" : {
-                let preCalc = 255 * Math.pow(1/255,customGamma);
+                const preCalc = 255 * Math.pow(1/255,customGamma);
                 pixel[a] = preCalc*(red**customGamma);
                 pixel[a + 1] = preCalc*(green**customGamma);
                 pixel[a + 2] = preCalc*(blue**customGamma);
