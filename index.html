@@ -30,9 +30,11 @@
             <button class="btn" onclick="imageFilter('binary')" id="binary">二元處理</button>
             <button class="btn" onclick="imageFilter('dither')" id="dither">抖動處理</button>
             <button class="btn" onclick="imageFilter('floyd')" id="floyd">Floyd-Steinberg抖動</button>
+            <button class="btn" onclick="imageFilter('histogramEq')" id="histogramEq">直方圖均衡</button>
         </fieldset>
         <fieldset>
-            <legend>雜訊功能:</legend>
+            <legend>Gamma/雜訊功能:</legend>
+            <button class="btn" onclick="imageFilter('adjustGamma')" id="adjustGamma">Gamma調整</button>
             <button class="btn" onclick="imageFilter('uniformNoise')" id="uniformNoise">均衡雜訊</button>
             <button class="btn" onclick="imageFilter('gaussianNoise')" id="gaussianNoise">高斯雜訊</button>
             <button class="btn" onclick="imageFilter('exponentialNoise')" id="exponentialNoise">指數雜訊</button>
@@ -141,14 +143,18 @@
                     <input type="text" id="customB" class="inputNumber" value="0" onChange="imageFilter('colorbalance');" />
                     <br />
                 </div>
-                <button class="collapse btn">雜訊參數</button>
+                <button class="collapse btn">Gamma/雜訊參數</button>
                 <div class="content">
+                    <br />
+                    <input type="range" id="Gamma" class="inputRange noSync" value="2" min="0" max="10" step="0.01"/>
+                    <br />
+                    Gamma
+                    <input type="text" id="customGamma" class="inputNumber noSync" value="2" />
                     <br />
                     <input type="range" id="Scale" class="inputRange noSync" value="40" min="1" max="255" />
                     <br />
                     Scale
                     <input type="text" id="customScale" class="inputNumber noSync" value="40" />
-                    <hr />
                     <input type="range" class="inputRange noSync" value="0.05" min="0.01" max="1" step="0.01" />
                     <br />
                     P

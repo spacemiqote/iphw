@@ -416,6 +416,7 @@ function imageFilter(filter) {
     let customR = 0;
     let customG = 0;
     let customB = 0;
+    let customGamma = 0;
     let customP = 0;
     let customScale = 0;
     let customWhitening = 0;
@@ -437,18 +438,20 @@ function imageFilter(filter) {
         customR = parseFloat(document.getElementById("customR").value);
         customG = parseFloat(document.getElementById("customG").value);
         customB = parseFloat(document.getElementById("customB").value);
+    }else if (filter == "adjustGamma"){
+        customGamma = parseFloat(document.getElementById("customGamma").value);
     } else if (filter === "uniformNoise" || filter === "gaussianNoise" || filter === "exponentialNoise") {
         customScale = parseFloat(document.getElementById("customScale").value);
     } else if (filter === "impulseNoise") {
         customP = parseFloat(document.getElementById("Pps").value);
     } else if (filter === "skinWhitening") {
         customWhitening = parseFloat(document.getElementById("customWhitening").value);
-    } else if (filter === "medianBlurFilter" || filter === "floyd") {
+    } else if (filter === "medianBlurFilter" || filter === "floyd"|| filter === "histogramEq") {
         for (let y = 0; y < filterResult.height; y++) {
             for (let x = 0; x < filterResult.width; x++) {
                 const currentPixel = y * 4 * filterResult.width + 4 * x;
                 graph[y][x] = 0.299 * filterResult.data[currentPixel] + 0.587 * filterResult.data[currentPixel + 1] + 0.114 * filterResult.data[currentPixel + 2];
-                if (filter === "medianBlurFilter")
+                if (filter === "medianBlurFilter"|| filter === "histogramEq")
                     graph[y][x] = 3 * filterResult.data[currentPixel] + 6 * filterResult.data[currentPixel + 1] + filterResult.data[currentPixel + 2];
             }
         }
@@ -530,6 +533,30 @@ function imageFilter(filter) {
                 exitOperation = true;
                 break;
             }
+            case "histogramEq" :{
+                let freq=new Array(256).fill(0)
+                let cdf=new Array(256).fill(0)
+                let he=new Array(256).fill(0)
+                for(let len=0;len<pixel.length;len+=4) {
+                    freq[pixel[len]]++;
+                    freq[pixel[len+1]]++;
+                    freq[pixel[len+2]]++;
+                }
+                cdf[0]=freq[0];
+                for(let i =1;i<256;i++){
+                    cdf[i]=cdf[i-1]+freq[i];
+                }
+                for(let i =0;i<256;i++) {
+                    he[i]=Math.round(((cdf[i]-cdf[0])*255)/((width*height*3)-cdf[0]));
+                }
+                for(let len = 0;len<pixel.length;len+=4) {
+                    pixel[len]=he[pixel[len]];
+                    pixel[len+1]=he[pixel[len+1]];
+                    pixel[len+2]=he[pixel[len+2]];
+                }
+                exitOperation=true;
+                break;
+            }
             case "hsi": {
                 const hsi = RGBHSIConversion("r2h", red, green, blue);
                 hsi[0] = (hsi[0] + customH + 360) % 360;
@@ -555,8 +582,14 @@ function imageFilter(filter) {
                 pixel[a + 2] += blue - red / 2 - green / 2;
                 break;
             }
+            case "adjustGamma" : {
+                let preCalc = 255 * Math.pow(1/255,customGamma);
+                pixel[a] = preCalc*(red**customGamma);
+                pixel[a + 1] = preCalc*(green**customGamma);
+                pixel[a + 2] = preCalc*(blue**customGamma);
+                break;
+            }
             case "uniformNoise": {
-
                 const noise = rand() * customScale;
                 pixel[a] += noise;
                 pixel[a + 1] += noise;
