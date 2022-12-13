@@ -761,8 +761,8 @@ function imageFilter(filter) {
                         } else if (filter === "robertFilter") {
                             const filterX = robertsX;
                             const filterY = robertsY;
-                            const Gx = graph[y][x] * filterX[0][0] + graph[down][left] * filterX[1][1];
-                            const Gy = graph[y][left] * filterY[0][1] + graph[down][x] * filterY[1][0];
+                            const Gx = graph[y][x] * filterX[0][0] + graph[y][left] * filterX[0][1] + graph[down][x] * filterX[1][0] + graph[down][left] * filterX[1][1];
+                            const Gy = graph[y][x] * filterY[0][0] + graph[y][left] * filterY[0][1] + graph[down][x] * filterY[1][0] + graph[down][left] * filterY[1][1];
                             const preCalc = 255 - (Math.abs(Gx) + Math.abs(Gy));
                             pixel[currentPixel] = checkEdge ? preCalc : (Math.abs(preCalc) > 127 ? 255 : 0);
                             pixel[currentPixel + 1] = checkEdge ? preCalc : (Math.abs(preCalc) > 127 ? 255 : 0);
