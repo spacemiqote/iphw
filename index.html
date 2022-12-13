@@ -42,19 +42,21 @@
         </fieldset>
         <fieldset>
             <legend>濾波功能:</legend>
-            <button class="btn" onclick="imageFilter('laplacianFilter')" id="laplacianFilter">拉普拉斯濾波</button>
-            <button class="btn" onclick="imageFilter('extendLaplacianFilter')" id="extendLaplacianFilter">延伸拉普拉斯濾波</button>
-            <button class="btn" onclick="imageFilter('boxBlurFilter')" id="boxBlurFilter">平均濾波</button>
-            <button class="btn" onclick="imageFilter('highBoxBlurFilter')" id="highBoxBlurFilter">強化高頻濾波</button>
-            <button class="btn" onclick="imageFilter('gaussianBlurFilter')" id="gaussianBlurFilter">高斯濾波</button>
-            <button class="btn" onclick="imageFilter('medianBlurFilter')" id="medianBlurFilter">中值濾波</button>
-            <br />
-            <button class="btn" onclick="imageFilter('sharpenFilter')" id="sharpenFilter">銳化濾波</button>
-            <button class="btn" onclick="imageFilter('unsharpFilter')" id="unsharpFilter">非銳化濾波</button>
-            <button class="btn" onclick="imageFilter('embossFilter')" id="embossFilter">浮雕濾波</button>
-            <button class="btn" onclick="imageFilter('reliefFilter')" id="reliefFilter">壓花濾波</button>
-            <button class="btn" onclick="imageFilter('sobelFilter')" id="sobelFilter">索伯濾波</button>
-            <button class="btn" onclick="imageFilter('prewittFilter')" id="prewittFilter">普雷维特濾波</button>
+            <button class="btn" onclick="imageFilter('laplacianFilter')" id="laplacianFilter">拉普拉斯</button>
+            <button class="btn" onclick="imageFilter('extendLaplacianFilter')" id="extendLaplacianFilter">延伸拉普拉斯</button>
+            <button class="btn" onclick="imageFilter('boxBlurFilter')" id="boxBlurFilter">平均</button>
+            <button class="btn" onclick="imageFilter('highBoxBlurFilter')" id="highBoxBlurFilter">強化高頻</button>
+            <button class="btn" onclick="imageFilter('gaussianBlurFilter')" id="gaussianBlurFilter">高斯</button>
+            <button class="btn" onclick="imageFilter('medianBlurFilter')" id="medianBlurFilter">中值</button>
+            <button class="btn" onclick="imageFilter('sharpenFilter')" id="sharpenFilter">銳化</button>
+            <button class="btn" onclick="imageFilter('unsharpFilter')" id="unsharpFilter">非銳化</button>
+        <button class="btn" onclick="imageFilter('embossFilter')" id="embossFilter">浮雕</button>
+        <button class="btn" onclick="imageFilter('reliefFilter')" id="reliefFilter">壓花</button>
+            <br>
+            <button class="btn" onclick="imageFilter('sobelFilter')" id="sobelFilter">索伯(邊緣檢測)</button>
+            <button class="btn" onclick="imageFilter('prewittFilter')" id="prewittFilter">普雷维特(邊緣檢測)</button>
+            <button class="btn" onclick="imageFilter('laplacianEdgeFilter')" id="laplacianEdgeFilter">拉普拉斯(邊緣檢測)</button>
+            <button class="btn" onclick="imageFilter('robertFilter')" id="robertFilter">羅伯特(邊緣檢測)</button>
         </fieldset>
     </div>
     <div class="3 col">
@@ -70,9 +72,16 @@
             <button class="btn" onclick="download()">下載圖片</button>
         </fieldset>
         <fieldset>
-            <legend>測試功能:</legend>
+            <legend>其它功能:</legend>
             <button class="btn" onclick="fuckCAPTCHA()">查找驗證碼</button>
             驗證碼為:<span id="captcha">None</span>
+            <br>
+            <label for="edgeDetectionCheck">邊界偵測參數設定 :</label>
+            <select name="edgeDetectionCheck" id="edgeDetectionCheck">
+                <option value="filterValue">霓虹值</option>
+                <option value="grayFilterValue">濾波值</option>
+                <option value="edgeValue">臨界值</option>
+            </select>
         </fieldset>
     </div>
     <div class="3 col" id="extraOptions">

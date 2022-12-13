@@ -8,6 +8,7 @@ const originalImage = document.getElementById("originalImage");
 const models = document.getElementById("models");
 const modelLoadStatus = document.getElementById("modelLoadStatus");
 const allowMultipleFilterOn = document.getElementById("allowMultipleFilterOn");
+const edgeDetectionCheck = document.getElementById("edgeDetectionCheck");
 const displayOriginalImage = document.getElementById("displayOriginalImage");
 const focusMode = document.getElementById("focusMode");
 const specialShit = document.getElementById("specialShit");
@@ -33,6 +34,19 @@ const laplacian = [
     [-1, 5, -1],
     [0, -1, 0],
 ];
+const laplacianEdge = [
+  [-1,-1,-1],
+  [-1,8,-1],
+  [-1,-1,-1],
+];
+const robertsX = [
+    [1,0],
+    [0,-1],
+]
+const robertsY = [
+    [0,1],
+    [-1,0],
+]
 const extendLaplacian = [
     [-1, -1, -1],
     [-1, 9, -1],
@@ -409,6 +423,7 @@ async function detect() {
 }
 function imageFilter(filter) {
     const enableMultipleFilter = allowMultipleFilterOn.checked;
+    const edgeDetection = edgeDetectionCheck.value;
     const graph = Array.from(Array(filterResult.height), () => new Array(filterResult.width));
     let customH = 0;
     let customS = 0;
@@ -446,7 +461,7 @@ function imageFilter(filter) {
         customP = parseFloat(document.getElementById("Pps").value);
     } else if (filter === "skinWhitening") {
         customWhitening = parseFloat(document.getElementById("customWhitening").value);
-    } else if (filter === "medianBlurFilter" || filter === "floyd"|| filter === "histogramEq") {
+    } else if (filter === "medianBlurFilter" || filter === "floyd"|| filter === "histogramEq"||filter==="robertFilter") {
         for (let y = 0; y < filterResult.height; y++) {
             for (let x = 0; x < filterResult.width; x++) {
                 const currentPixel = y * 4 * filterResult.width + 4 * x;
@@ -464,6 +479,7 @@ function imageFilter(filter) {
         const height = filterResult.height;
         const width = filterResult.width;
         const pixel = filterResult.data;
+        let checkEdge = (edgeDetection !== "edgeValue");
         switch (filter) {
             case "inverse": {
                 pixel[a] = 255 - red;
@@ -603,6 +619,8 @@ function imageFilter(filter) {
                 pixel[a + 2] += gaussianNoise;
                 break;
             }
+            case "laplacianEdgeFilter":
+            case "robertFilter":
             case "prewittFilter":
             case "reliefFilter":
             case "highBoxBlurFilter":
@@ -679,10 +697,10 @@ function imageFilter(filter) {
                             pixel[currentPixel + 2] = Blue[ypos][xpos];
                         } else if (filter === "sobelFilter" || filter === "prewittFilter") {
                             let filterX = prewittFilterX;
-                            let filterY = prewittFilterY
+                            let filterY = prewittFilterY;
                             if (filter === "sobelFilter") {
                                 filterX = sobelFilterX;
-                                filterY = sobelFilterY
+                                filterY = sobelFilterY;
                             }
                             const R_Gx = (filterX[0][0] * Red[up][left] + Red[up][x] * filterX[0][1] + Red[up][right] * filterX[0][2] +
                                 Red[y][left] * filterX[1][0] + Red[y][x] * filterX[1][1] + Red[y][right] * filterX[1][2] +
@@ -717,10 +735,34 @@ function imageFilter(filter) {
                                 sobelB = 0;
                             if (sobelB > 255)
                                 sobelB = 255;
-                            pixel[currentPixel] = sobelR;
-                            pixel[currentPixel + 1] = sobelG;
-                            pixel[currentPixel + 2] = sobelB;
-                        } else {
+                            let lum = 0.2126 * sobelR + 0.7152 * sobelG + 0.0722 * sobelB;
+                            switch (edgeDetection) {
+                                case "filterValue":
+                                case "grayFilterValue" : {
+                                    pixel[currentPixel] = (edgeDetection === "grayFilterValue") ? 255 - lum : sobelR;
+                                    pixel[currentPixel + 1] = (edgeDetection === "grayFilterValue") ? 255 - lum : sobelG;
+                                    pixel[currentPixel + 2] = (edgeDetection === "grayFilterValue") ? 255 - lum : sobelB;
+                                    break;
+                                }
+                                case "edgeValue": {
+                                    pixel[currentPixel] = Math.abs(255 - Math.abs(lum)) > 127 ? 255 : 0;
+                                    pixel[currentPixel + 1] = Math.abs(255 - Math.abs(lum)) > 127 ? 255 : 0;
+                                    pixel[currentPixel + 2] = Math.abs(255 - Math.abs(lum)) > 127 ? 255 : 0;
+                                    break;
+                                }
+                            }
+                        }
+                        else if(filter === "robertFilter"){
+                            let filterX = robertsX;
+                            let filterY = robertsY;
+                            let Gx=graph[y][x]*filterX[0][0]+graph[down][left]*filterX[1][1];
+                            let Gy=graph[y][left]*filterY[0][1]+graph[down][x]*filterY[1][0];
+                            let preCalc = 255 - (Math.abs(Gx)+Math.abs(Gy));
+                            pixel[currentPixel]= checkEdge ? preCalc : (Math.abs(preCalc)>127 ? 255: 0);
+                            pixel[currentPixel+1]= checkEdge ? preCalc : (Math.abs(preCalc)>127 ? 255: 0);
+                            pixel[currentPixel+2]= checkEdge ? preCalc : (Math.abs(preCalc)>127 ? 255: 0);
+                        }
+                        else {
                             let filterKernel = boxBlur;
                             let extraValue = 0;
                             if (filter === "gaussianBlurFilter")
@@ -734,6 +776,8 @@ function imageFilter(filter) {
                                 filterKernel = unsharp;
                             else if (filter === "laplacianFilter")
                                 filterKernel = laplacian;
+                            else if (filter === "laplacianEdgeFilter")
+                                filterKernel = laplacianEdge;
                             else if (filter === "extendLaplacianFilter")
                                 filterKernel = extendLaplacian;
                             else if (filter === "highBoxBlurFilter")
@@ -749,6 +793,11 @@ function imageFilter(filter) {
                             pixel[currentPixel + 2] = Blue[up][left] * filterKernel[0][0] + Blue[up][x] * filterKernel[0][1] + Blue[up][right] * filterKernel[0][2] +
                                 Blue[y][left] * filterKernel[1][0] + Blue[y][x] * filterKernel[1][1] + Blue[y][right] * filterKernel[1][2] +
                                 Blue[down][left] * filterKernel[2][0] + Blue[down][x] * filterKernel[2][1] + Blue[down][right] * filterKernel[2][2] + extraValue;
+                            if (filter === "laplacianEdgeFilter"){
+                                pixel[currentPixel]=checkEdge? 255-pixel[currentPixel] : (Math.abs(255-pixel[currentPixel])>127 ? 255: 0);
+                                pixel[currentPixel+1]=checkEdge? 255-pixel[currentPixel+1] : (Math.abs(255-pixel[currentPixel+1])>127 ? 255: 0);
+                                pixel[currentPixel+2]=checkEdge? 255-pixel[currentPixel+2] : (Math.abs(255-pixel[currentPixel+2])>127 ? 255: 0);
+                            }
                         }
                     }
                 }
@@ -850,6 +899,7 @@ function imageFilter(filter) {
             break;
         }
     }
+
     if (stepCount >= 0 && (filter !== "cancelFilter" && filter !== "objectDetection")) {
         filter2D.putImageData(filterResult, 0, 0);
         if (filter !== "revertImage" && filter !== "redoImage" && enableMultipleFilter)
