@@ -35,17 +35,17 @@ const laplacian = [
     [0, -1, 0],
 ];
 const laplacianEdge = [
-  [-1,-1,-1],
-  [-1,8,-1],
-  [-1,-1,-1],
+    [-1, -1, -1],
+    [-1, 8, -1],
+    [-1, -1, -1],
 ];
 const robertsX = [
-    [1,0],
-    [0,-1],
+    [1, 0],
+    [0, -1],
 ]
 const robertsY = [
-    [0,1],
-    [-1,0],
+    [0, 1],
+    [-1, 0],
 ]
 const extendLaplacian = [
     [-1, -1, -1],
@@ -168,13 +168,14 @@ function cyrb128(str) {
 }
 
 function mulberry32(a) {
-    return function() {
+    return function () {
         let t = a += 0x6D2B79F5;
         t = Math.imul(t ^ t >>> 15, t | 1);
         t ^= t + Math.imul(t ^ t >>> 7, t | 61);
         return ((t ^ t >>> 14) >>> 0) / 4294967296;
     }
 }
+
 const currentDate = new Date;
 const seed = cyrb128(currentDate.getTime());
 const rand = mulberry32(seed[0]);
@@ -190,10 +191,10 @@ function checkFocusMode() {
 function valueSync(value) {
     for (let i = 0; i < range.length; i++) {
         if (value === true) {
-            range[i].addEventListener("input", function(e) {
+            range[i].addEventListener("input", function (e) {
                 field[i].value = e.target.value;
             });
-            field[i].addEventListener("input", function(e) {
+            field[i].addEventListener("input", function (e) {
                 range[i].value = e.target.value;
             });
         } else if (!range[i].classList.contains("noSync")) {
@@ -203,7 +204,7 @@ function valueSync(value) {
     }
     if (!loaded) {
         for (const i of coll) {
-            i.addEventListener("click", function() {
+            i.addEventListener("click", function () {
                 i.classList.toggle("active");
                 const content = i.nextElementSibling;
                 if (content.style.maxHeight) {
@@ -248,9 +249,12 @@ function cleanup() {
 function readImage() {
     if (userImage.files[0] && userImage.files.length && userImage) {
         const image = userImage.files[0];
-        if (!passFileType.test(image.type)) { return };
+        if (!passFileType.test(image.type)) {
+            return
+        }
+        ;
         fileReader.readAsDataURL(image);
-        EXIF.getData(image, function(){
+        EXIF.getData(image, function () {
             const exifText = EXIF.pretty(this);
             document.getElementById("exifInfo").textContent = exifText;
         });
@@ -269,7 +273,7 @@ function loadImage() {
     });
     const image = new Image();
     image.src = fileReader.result.toString();
-    image.onload = function() {
+    image.onload = function () {
         originalImage.width = image.width;
         originalImage.height = image.height;
         cResult.width = image.width;
@@ -405,14 +409,14 @@ function draw() {
 
 async function detect() {
     modelLoadStatus.textContent = `${models.value}模型已加載`;
-    if(models.value === "CocoSsd") {
+    if (models.value === "CocoSsd") {
         await cobjectDetector.detect(filter2D, function (err, results) {
             objects = results;
             if (objects) {
                 draw();
             }
         });
-    }else{
+    } else {
         await yobjectDetector.detect(filter2D, function (err, results) {
             objects = results;
             if (objects) {
@@ -421,6 +425,7 @@ async function detect() {
         });
     }
 }
+
 function imageFilter(filter) {
     const enableMultipleFilter = allowMultipleFilterOn.checked;
     const edgeDetection = edgeDetectionCheck.value;
@@ -453,7 +458,7 @@ function imageFilter(filter) {
         customR = parseFloat(document.getElementById("customR").value);
         customG = parseFloat(document.getElementById("customG").value);
         customB = parseFloat(document.getElementById("customB").value);
-    }else if (filter == "adjustGamma"){
+    } else if (filter == "adjustGamma") {
         customGamma = parseFloat(document.getElementById("customGamma").value);
     } else if (filter === "uniformNoise" || filter === "gaussianNoise" || filter === "exponentialNoise") {
         customScale = parseFloat(document.getElementById("customScale").value);
@@ -461,12 +466,12 @@ function imageFilter(filter) {
         customP = parseFloat(document.getElementById("Pps").value);
     } else if (filter === "skinWhitening") {
         customWhitening = parseFloat(document.getElementById("customWhitening").value);
-    } else if (filter === "medianBlurFilter" || filter === "floyd"|| filter === "histogramEq"||filter==="robertFilter") {
+    } else if (filter === "medianBlurFilter" || filter === "floyd" || filter === "histogramEq" || filter === "robertFilter") {
         for (let y = 0; y < filterResult.height; y++) {
             for (let x = 0; x < filterResult.width; x++) {
                 const currentPixel = y * 4 * filterResult.width + 4 * x;
                 graph[y][x] = 0.299 * filterResult.data[currentPixel] + 0.587 * filterResult.data[currentPixel + 1] + 0.114 * filterResult.data[currentPixel + 2];
-                if (filter === "medianBlurFilter"|| filter === "histogramEq")
+                if (filter === "medianBlurFilter" || filter === "histogramEq")
                     graph[y][x] = 3 * filterResult.data[currentPixel] + 6 * filterResult.data[currentPixel + 1] + filterResult.data[currentPixel + 2];
             }
         }
@@ -479,7 +484,7 @@ function imageFilter(filter) {
         const height = filterResult.height;
         const width = filterResult.width;
         const pixel = filterResult.data;
-        let checkEdge = (edgeDetection !== "edgeValue");
+        const checkEdge = (edgeDetection !== "edgeValue");
         switch (filter) {
             case "inverse": {
                 pixel[a] = 255 - red;
@@ -549,28 +554,28 @@ function imageFilter(filter) {
                 exitOperation = true;
                 break;
             }
-            case "histogramEq" :{
-                const freq=new Array(256).fill(0)
-                const cdf=new Array(256).fill(0)
-                const he=new Array(256).fill(0)
-                for(let len=0;len<pixel.length;len+=4) {
+            case "histogramEq" : {
+                const freq = new Array(256).fill(0)
+                const cdf = new Array(256).fill(0)
+                const he = new Array(256).fill(0)
+                for (let len = 0; len < pixel.length; len += 4) {
                     freq[pixel[len]]++;
-                    freq[pixel[len+1]]++;
-                    freq[pixel[len+2]]++;
+                    freq[pixel[len + 1]]++;
+                    freq[pixel[len + 2]]++;
                 }
-                cdf[0]=freq[0];
-                for(let i =1;i<256;i++){
-                    cdf[i]=cdf[i-1]+freq[i];
+                cdf[0] = freq[0];
+                for (let i = 1; i < 256; i++) {
+                    cdf[i] = cdf[i - 1] + freq[i];
                 }
-                for(let i =0;i<256;i++) {
-                    he[i]=Math.round(((cdf[i]-cdf[0])*255)/((width*height*3)-cdf[0]));
+                for (let i = 0; i < 256; i++) {
+                    he[i] = Math.round(((cdf[i] - cdf[0]) * 255) / ((width * height * 3) - cdf[0]));
                 }
-                for(let len = 0;len<pixel.length;len+=4) {
-                    pixel[len]=he[pixel[len]];
-                    pixel[len+1]=he[pixel[len+1]];
-                    pixel[len+2]=he[pixel[len+2]];
+                for (let len = 0; len < pixel.length; len += 4) {
+                    pixel[len] = he[pixel[len]];
+                    pixel[len + 1] = he[pixel[len + 1]];
+                    pixel[len + 2] = he[pixel[len + 2]];
                 }
-                exitOperation=true;
+                exitOperation = true;
                 break;
             }
             case "hsi": {
@@ -599,10 +604,10 @@ function imageFilter(filter) {
                 break;
             }
             case "adjustGamma" : {
-                const preCalc = 255 * Math.pow(1/255,customGamma);
-                pixel[a] = preCalc*(red**customGamma);
-                pixel[a + 1] = preCalc*(green**customGamma);
-                pixel[a + 2] = preCalc*(blue**customGamma);
+                const preCalc = 255 * Math.pow(1 / 255, customGamma);
+                pixel[a] = preCalc * (red ** customGamma);
+                pixel[a + 1] = preCalc * (green ** customGamma);
+                pixel[a + 2] = preCalc * (blue ** customGamma);
                 break;
             }
             case "uniformNoise": {
@@ -735,7 +740,7 @@ function imageFilter(filter) {
                                 sobelB = 0;
                             if (sobelB > 255)
                                 sobelB = 255;
-                            let lum = 0.2126 * sobelR + 0.7152 * sobelG + 0.0722 * sobelB;
+                            const lum = 0.2126 * sobelR + 0.7152 * sobelG + 0.0722 * sobelB;
                             switch (edgeDetection) {
                                 case "filterValue":
                                 case "grayFilterValue" : {
@@ -750,19 +755,19 @@ function imageFilter(filter) {
                                     pixel[currentPixel + 2] = Math.abs(255 - Math.abs(lum)) > 127 ? 255 : 0;
                                     break;
                                 }
+                                default:
+                                    break;
                             }
-                        }
-                        else if(filter === "robertFilter"){
-                            let filterX = robertsX;
-                            let filterY = robertsY;
-                            let Gx=graph[y][x]*filterX[0][0]+graph[down][left]*filterX[1][1];
-                            let Gy=graph[y][left]*filterY[0][1]+graph[down][x]*filterY[1][0];
-                            let preCalc = 255 - (Math.abs(Gx)+Math.abs(Gy));
-                            pixel[currentPixel]= checkEdge ? preCalc : (Math.abs(preCalc)>127 ? 255: 0);
-                            pixel[currentPixel+1]= checkEdge ? preCalc : (Math.abs(preCalc)>127 ? 255: 0);
-                            pixel[currentPixel+2]= checkEdge ? preCalc : (Math.abs(preCalc)>127 ? 255: 0);
-                        }
-                        else {
+                        } else if (filter === "robertFilter") {
+                            const filterX = robertsX;
+                            const filterY = robertsY;
+                            const Gx = graph[y][x] * filterX[0][0] + graph[down][left] * filterX[1][1];
+                            let Gy = graph[y][left] * filterY[0][1] + graph[down][x] * filterY[1][0];
+                            const preCalc = 255 - (Math.abs(Gx) + Math.abs(Gy));
+                            pixel[currentPixel] = checkEdge ? preCalc : (Math.abs(preCalc) > 127 ? 255 : 0);
+                            pixel[currentPixel + 1] = checkEdge ? preCalc : (Math.abs(preCalc) > 127 ? 255 : 0);
+                            pixel[currentPixel + 2] = checkEdge ? preCalc : (Math.abs(preCalc) > 127 ? 255 : 0);
+                        } else {
                             let filterKernel = boxBlur;
                             let extraValue = 0;
                             if (filter === "gaussianBlurFilter")
@@ -793,10 +798,10 @@ function imageFilter(filter) {
                             pixel[currentPixel + 2] = Blue[up][left] * filterKernel[0][0] + Blue[up][x] * filterKernel[0][1] + Blue[up][right] * filterKernel[0][2] +
                                 Blue[y][left] * filterKernel[1][0] + Blue[y][x] * filterKernel[1][1] + Blue[y][right] * filterKernel[1][2] +
                                 Blue[down][left] * filterKernel[2][0] + Blue[down][x] * filterKernel[2][1] + Blue[down][right] * filterKernel[2][2] + extraValue;
-                            if (filter === "laplacianEdgeFilter"){
-                                pixel[currentPixel]=checkEdge? 255-pixel[currentPixel] : (Math.abs(255-pixel[currentPixel])>127 ? 255: 0);
-                                pixel[currentPixel+1]=checkEdge? 255-pixel[currentPixel+1] : (Math.abs(255-pixel[currentPixel+1])>127 ? 255: 0);
-                                pixel[currentPixel+2]=checkEdge? 255-pixel[currentPixel+2] : (Math.abs(255-pixel[currentPixel+2])>127 ? 255: 0);
+                            if (filter === "laplacianEdgeFilter") {
+                                pixel[currentPixel] = checkEdge ? 255 - pixel[currentPixel] : (Math.abs(255 - pixel[currentPixel]) > 127 ? 255 : 0);
+                                pixel[currentPixel + 1] = checkEdge ? 255 - pixel[currentPixel + 1] : (Math.abs(255 - pixel[currentPixel + 1]) > 127 ? 255 : 0);
+                                pixel[currentPixel + 2] = checkEdge ? 255 - pixel[currentPixel + 2] : (Math.abs(255 - pixel[currentPixel + 2]) > 127 ? 255 : 0);
                             }
                         }
                     }
@@ -926,13 +931,14 @@ async function getCaptcha(canv) {
     const worker = new Tesseract.TesseractWorker({
         corePath,
     });
-    await worker.recognize(canv, "eng").progress(function(packet) {
+    await worker.recognize(canv, "eng").progress(function (packet) {
         /*packet checking*/
-    }).then(function(data) {
+    }).then(function (data) {
         document.getElementById("captcha").textContent = `${specialCheck(data)}`;
     });
     await worker.terminate();
 }
+
 async function fuckCAPTCHA() {
     const special = specialShit.checked;
     if (special) {
@@ -957,6 +963,7 @@ async function fuckCAPTCHA() {
     }
     await getCaptcha(document.getElementById("filterResult").toDataURL());
 }
+
 valueSync(true);
 userImage.addEventListener("change", readImage);
 fileReader.addEventListener("load", loadImage);
