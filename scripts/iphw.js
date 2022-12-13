@@ -458,7 +458,7 @@ function imageFilter(filter) {
         customR = parseFloat(document.getElementById("customR").value);
         customG = parseFloat(document.getElementById("customG").value);
         customB = parseFloat(document.getElementById("customB").value);
-    } else if (filter == "adjustGamma") {
+    } else if (filter === "adjustGamma") {
         customGamma = parseFloat(document.getElementById("customGamma").value);
     } else if (filter === "uniformNoise" || filter === "gaussianNoise" || filter === "exponentialNoise") {
         customScale = parseFloat(document.getElementById("customScale").value);
@@ -762,7 +762,7 @@ function imageFilter(filter) {
                             const filterX = robertsX;
                             const filterY = robertsY;
                             const Gx = graph[y][x] * filterX[0][0] + graph[down][left] * filterX[1][1];
-                            let Gy = graph[y][left] * filterY[0][1] + graph[down][x] * filterY[1][0];
+                            const Gy = graph[y][left] * filterY[0][1] + graph[down][x] * filterY[1][0];
                             const preCalc = 255 - (Math.abs(Gx) + Math.abs(Gy));
                             pixel[currentPixel] = checkEdge ? preCalc : (Math.abs(preCalc) > 127 ? 255 : 0);
                             pixel[currentPixel + 1] = checkEdge ? preCalc : (Math.abs(preCalc) > 127 ? 255 : 0);
