@@ -470,9 +470,10 @@ function imageFilter(filter) {
         for (let y = 0; y < filterResult.height; y++) {
             for (let x = 0; x < filterResult.width; x++) {
                 const currentPixel = y * 4 * filterResult.width + 4 * x;
-                graph[y][x] = 0.299 * filterResult.data[currentPixel] + 0.587 * filterResult.data[currentPixel + 1] + 0.114 * filterResult.data[currentPixel + 2];
                 if (filter === "medianBlurFilter" || filter === "histogramEq")
                     graph[y][x] = 3 * filterResult.data[currentPixel] + 6 * filterResult.data[currentPixel + 1] + filterResult.data[currentPixel + 2];
+                else
+                    graph[y][x] = 0.299 * filterResult.data[currentPixel] + 0.587 * filterResult.data[currentPixel + 1] + 0.114 * filterResult.data[currentPixel + 2];
             }
         }
     }
