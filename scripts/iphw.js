@@ -108,7 +108,7 @@ const emboss = [
     [0, 0, -1],
 ];
 
-let operationHistory = new Array();
+let operationHistory = [];
 let filterResult = document.getElementById("filterResult");
 const filter2D = filterResult.getContext("2d", {
     willReadFrequently: !0,
@@ -252,11 +252,9 @@ function readImage() {
         if (!passFileType.test(image.type)) {
             return
         }
-        ;
         fileReader.readAsDataURL(image);
         EXIF.getData(image, function () {
-            const exifText = EXIF.pretty(this);
-            document.getElementById("exifInfo").textContent = exifText;
+            document.getElementById("exifInfo").textContent = EXIF.pretty(this);
         });
         setViewLoop();
         checkFocusMode();
@@ -340,12 +338,8 @@ function RGBHSIConversion(command, x, y, z) {
             red = x / (x + y + z);
             green = y / (x + y + z);
             blue = z / (x + y + z);
-        } else {
-            red = green = blue = 0;
         }
-        if (x === y && y === z) {
-            Hue = Saturation = 0;
-        } else if (blue <= green) Hue = Math.acos((red - green / 2 - blue / 2) / Math.sqrt(red ** 2 + green ** 2 + blue ** 2 - red * green - red * blue - green * blue));
+        if (blue <= green) Hue = Math.acos((red - green / 2 - blue / 2) / Math.sqrt(red ** 2 + green ** 2 + blue ** 2 - red * green - red * blue - green * blue));
         else Hue = 2 * Math.PI - Math.acos((red - green / 2 - blue / 2) / Math.sqrt(red ** 2 + green ** 2 + blue ** 2 - red * green - red * blue - green * blue));
         if (Number.isNaN(Hue)) Hue = 0;
         Hue = (Hue * 180) / Math.PI;
@@ -379,8 +373,6 @@ function RGBHSIConversion(command, x, y, z) {
             green = z * (1 - Saturation);
             blue = z * (1 + (Saturation * Math.cos(Hue - (4 * Math.PI) / 3)) / Math.cos((5 * Math.PI) / 3 - Hue));
             red = 3 * z - (green + blue);
-        } else {
-            red = green = blue = 0;
         }
         red *= 255;
         green *= 255;
@@ -394,12 +386,12 @@ function draw() {
     filter2D.fillStyle = "#000000";
     filter2D.fillRect(0, 0, filterResult.width, filterResult.height);
     filter2D.putImageData(filterResult, 0, 0);
-    for (let i = 0; i < objects.length; i += 1) {
+    for (const element of objects) {
         filter2D.font = "bold 25px consolas";
         filter2D.fillStyle = "green";
-        filter2D.fillText(objects[i].label, objects[i].x + 6, objects[i].y + 24);
+        filter2D.fillText(element.label, element.x + 6, element.y + 24);
         filter2D.beginPath();
-        filter2D.rect(objects[i].x, objects[i].y, objects[i].width, objects[i].height);
+        filter2D.rect(element.x, element.y, element.width, element.height);
         filter2D.strokeStyle = "green";
         filter2D.lineWidth = 8;
         filter2D.stroke();
@@ -411,15 +403,15 @@ async function detect() {
     modelLoadStatus.textContent = `${models.value}模型已加載`;
     if (models.value === "CocoSsd") {
         await cobjectDetector.detect(filter2D, function (err, results) {
-            objects = results;
-            if (objects) {
+            if (results) {
+                objects = results;
                 draw();
             }
         });
     } else {
         await yobjectDetector.detect(filter2D, function (err, results) {
-            objects = results;
-            if (objects) {
+            if (results) {
+                objects = results;
                 draw();
             }
         });
@@ -440,6 +432,7 @@ function imageFilter(filter) {
     let customP = 0;
     let customScale = 0;
     let customWhitening = 0;
+    let preCalc = 0;
     filterResult.width = originalImage.width;
     filterResult.height = originalImage.height;
     filterResult = filter2D.getImageData(0, 0, originalImage.width, originalImage.height);
@@ -605,7 +598,7 @@ function imageFilter(filter) {
                 break;
             }
             case "adjustGamma" : {
-                const preCalc = 255 * Math.pow(1 / 255, customGamma);
+                preCalc = 255 * Math.pow(1 / 255, customGamma);
                 pixel[a] = preCalc * (red ** customGamma);
                 pixel[a + 1] = preCalc * (green ** customGamma);
                 pixel[a + 2] = preCalc * (blue ** customGamma);
@@ -764,10 +757,11 @@ function imageFilter(filter) {
                             const filterY = robertsY;
                             const Gx = graph[y][x] * filterX[0][0] + graph[y][left] * filterX[0][1] + graph[down][x] * filterX[1][0] + graph[down][left] * filterX[1][1];
                             const Gy = graph[y][x] * filterY[0][0] + graph[y][left] * filterY[0][1] + graph[down][x] * filterY[1][0] + graph[down][left] * filterY[1][1];
-                            const preCalc = 255 - (Math.abs(Gx) + Math.abs(Gy));
-                            pixel[currentPixel] = checkEdge ? preCalc : (Math.abs(preCalc) > 127 ? 255 : 0);
-                            pixel[currentPixel + 1] = checkEdge ? preCalc : (Math.abs(preCalc) > 127 ? 255 : 0);
-                            pixel[currentPixel + 2] = checkEdge ? preCalc : (Math.abs(preCalc) > 127 ? 255 : 0);
+                            preCalc = 255 - (Math.abs(Gx) + Math.abs(Gy));
+                            const fuckCalc = (Math.abs(preCalc) > 127 ? 255 : 0);
+                            pixel[currentPixel] = checkEdge ? preCalc : fuckCalc;
+                            pixel[currentPixel + 1] = checkEdge ? preCalc : fuckCalc;
+                            pixel[currentPixel + 2] = checkEdge ? preCalc : fuckCalc;
                         } else {
                             let filterKernel = boxBlur;
                             let extraValue = 0;
@@ -800,9 +794,11 @@ function imageFilter(filter) {
                                 Blue[y][left] * filterKernel[1][0] + Blue[y][x] * filterKernel[1][1] + Blue[y][right] * filterKernel[1][2] +
                                 Blue[down][left] * filterKernel[2][0] + Blue[down][x] * filterKernel[2][1] + Blue[down][right] * filterKernel[2][2] + extraValue;
                             if (filter === "laplacianEdgeFilter") {
-                                pixel[currentPixel] = checkEdge ? 255 - pixel[currentPixel] : (Math.abs(255 - pixel[currentPixel]) > 127 ? 255 : 0);
-                                pixel[currentPixel + 1] = checkEdge ? 255 - pixel[currentPixel + 1] : (Math.abs(255 - pixel[currentPixel + 1]) > 127 ? 255 : 0);
-                                pixel[currentPixel + 2] = checkEdge ? 255 - pixel[currentPixel + 2] : (Math.abs(255 - pixel[currentPixel + 2]) > 127 ? 255 : 0);
+                                if(!checkEdge)
+                                    preCalc =  (Math.abs(254 - pixel[currentPixel]) > 127 ? 255 : 0);
+                                pixel[currentPixel] = checkEdge ? 255 - pixel[currentPixel] : preCalc;
+                                pixel[currentPixel + 1] = checkEdge ? 255 - pixel[currentPixel + 1] : preCalc;
+                                pixel[currentPixel + 2] = checkEdge ? 255 - pixel[currentPixel + 2] : preCalc;
                             }
                         }
                     }
@@ -845,14 +841,13 @@ function imageFilter(filter) {
                 const Yvar = 0.299 * red + 0.587 * green + 0.114 * blue;
                 const cB = -0.168736 * red - 0.331264 * green + 0.5 * blue + 128;
                 const cR = 0.499813 * red - 0.418531 * green - 0.081282 * blue + 128;
+                pixel[a] = 0;
+                pixel[a + 1] = 0;
+                pixel[a + 2] = 0;
                 if (Yvar > 80 && cB > 85 && cB < 135 && cR > 135 && cR < 180) {
                     pixel[a] = 255;
                     pixel[a + 1] = 255;
                     pixel[a + 2] = 255;
-                } else {
-                    pixel[a] = 0;
-                    pixel[a + 1] = 0;
-                    pixel[a + 2] = 0;
                 }
                 break;
             }
