@@ -330,7 +330,7 @@ function RGBHSIConversion(command, x, y, z) {
     let red = 0;
     let green = 0;
     let blue = 0;
-    let sum = x + y + z;
+    const sum = x + y + z;
     let Hue;
     let Saturation;
     let Intensity = 0;
@@ -944,21 +944,21 @@ async function fuckCAPTCHA() {
     if (special) {
         //what am I doing with my life :hankey:
         document.getElementById("allowMultipleFilterOn").checked = true;
-        await imageFilter("grayscale");
-        await imageFilter("grayscale");
-        await imageFilter("medianBlurFilter");
-        await imageFilter("gaussianBlurFilter");
-        await imageFilter("sharpenFilter");
+        imageFilter("grayscale");
+        imageFilter("grayscale");
+        imageFilter("medianBlurFilter");
+        imageFilter("gaussianBlurFilter");
+        imageFilter("sharpenFilter");
         document.getElementById("customH").value = 0;
         document.getElementById("customS").value = 0;
         document.getElementById("customI").value = -81;
-        await imageFilter("hsi");
+        imageFilter("hsi");
         document.getElementById("customI").value = 82;
-        await imageFilter("hsi");
+        imageFilter("hsi");
         document.getElementById("customI").value = 18;
-        await imageFilter("hsi");
+        imageFilter("hsi");
     }
-    await getCaptcha(document.getElementById("filterResult").toDataURL());
+    getCaptcha(document.getElementById("filterResult").toDataURL());
 }
 
 valueSync(true);
