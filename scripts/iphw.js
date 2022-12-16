@@ -939,7 +939,7 @@ async function getCaptcha(canv) {
     await worker.terminate();
 }
 
-async function fuckCAPTCHA() {
+function fuckCAPTCHA() {
     const special = specialShit.checked;
     if (special) {
         //what am I doing with my life :hankey:
