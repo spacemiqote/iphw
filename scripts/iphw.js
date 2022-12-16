@@ -330,45 +330,46 @@ function RGBHSIConversion(command, x, y, z) {
     let red = 0;
     let green = 0;
     let blue = 0;
-    let Hue = 0;
-    let Saturation = 0;
+    let sum = x + y + z;
+    let Hue;
+    let Saturation;
     let Intensity = 0;
     if (command === "r2h") {
-        if (x + y + z > 0) {
-            red = x / (x + y + z);
-            green = y / (x + y + z);
-            blue = z / (x + y + z);
+        if (sum > 0) {
+            red = x / sum;
+            green = y / sum;
+            blue = z / sum;
         }
         if (blue <= green) Hue = Math.acos((red - green / 2 - blue / 2) / Math.sqrt(red ** 2 + green ** 2 + blue ** 2 - red * green - red * blue - green * blue));
         else Hue = 2 * Math.PI - Math.acos((red - green / 2 - blue / 2) / Math.sqrt(red ** 2 + green ** 2 + blue ** 2 - red * green - red * blue - green * blue));
         if (Number.isNaN(Hue)) Hue = 0;
         Hue = (Hue * 180) / Math.PI;
         Saturation = (1 - 3 * Math.min(red, green, blue)) * 100;
-        Intensity = (x + y + z) / (3 * 255);
+        Intensity = sum / (3 * 255);
         return [Hue, Saturation, Intensity];
-    } else if (command === "h2r") {
+    } else {
         Hue = (x * Math.PI) / 180;
         Saturation = y / 100;
         if (x === 0) {
-            red = z + 2 * z * Saturation;
-            green = z - z * Saturation;
-            blue = z - z * Saturation;
+            red = z * (1 + 2 * Saturation);
+            green = z * (1 - Saturation);
+            blue = green;
         } else if (x < 120) {
-            blue = z - z * Saturation;
+            blue = z * (1 - Saturation);
             red = z + (z * Saturation * Math.cos(Hue)) / Math.cos(Math.PI / 3 - Hue);
             green = 3 * z - (blue + red);
         } else if (x === 120) {
             red = z - z * Saturation;
             green = z + 2 * z * Saturation;
-            blue = z - z * Saturation;
+            blue = red;
         } else if (x < 240) {
             red = z * (1 - Saturation);
             green = z * (1 + (Saturation * Math.cos(Hue - (2 * Math.PI) / 3)) / Math.cos(Math.PI - Hue));
             blue = 3 * z - (red + green);
         } else if (x === 240) {
-            green = z - z * Saturation;
-            blue = z + 2 * z * Saturation;
-            red = z - z * Saturation;
+            green = z * (1 - Saturation);
+            blue = z * (1 + 2 * Saturation);
+            red = green;
         } else if (x < 360) {
             green = z * (1 - Saturation);
             blue = z * (1 + (Saturation * Math.cos(Hue - (4 * Math.PI) / 3)) / Math.cos((5 * Math.PI) / 3 - Hue));
@@ -379,7 +380,6 @@ function RGBHSIConversion(command, x, y, z) {
         blue *= 255;
         return [red, green, blue];
     }
-    return false;
 }
 
 function draw() {
@@ -425,6 +425,8 @@ function imageFilter(filter) {
     let customH = 0;
     let customS = 0;
     let customI = 0;
+    let preCalcS = 0;
+    let preCalcI = 0;
     let customR = 0;
     let customG = 0;
     let customB = 0;
@@ -447,6 +449,8 @@ function imageFilter(filter) {
         customH = parseFloat(document.getElementById("customH").value);
         customS = parseFloat(document.getElementById("customS").value);
         customI = parseFloat(document.getElementById("customI").value);
+        preCalcS = customS / 100;
+        preCalcI = customI / 100;
     } else if (filter === "colorbalance") {
         customR = parseFloat(document.getElementById("customR").value);
         customG = parseFloat(document.getElementById("customG").value);
@@ -575,10 +579,10 @@ function imageFilter(filter) {
             case "hsi": {
                 const hsi = RGBHSIConversion("r2h", red, green, blue);
                 hsi[0] = (hsi[0] + customH + 360) % 360;
-                if (customS >= 0) hsi[1] = hsi[1] - (1 - hsi[1]) * (customS / 100);
-                else hsi[1] = hsi[1] + hsi[1] * (customS / 100);
-                if (customI >= 0) hsi[2] = hsi[2] + hsi[2] * (customI / 100);
-                else hsi[2] = hsi[2] + (1 - hsi[2]) * (customI / 100);
+                if (customS >= 0) hsi[1] = hsi[1] - (1 - hsi[1]) * preCalcS;
+                else hsi[1] = hsi[1] + hsi[1] * preCalcS;
+                if (customI >= 0) hsi[2] = hsi[2] + hsi[2] * preCalcI;
+                else hsi[2] = hsi[2] + (1 - hsi[2]) * preCalcI;
                 const rgb = RGBHSIConversion("h2r", hsi[0], hsi[1], hsi[2]);
                 pixel[a] = rgb[0];
                 pixel[a + 1] = rgb[1];
@@ -794,8 +798,8 @@ function imageFilter(filter) {
                                 Blue[y][left] * filterKernel[1][0] + Blue[y][x] * filterKernel[1][1] + Blue[y][right] * filterKernel[1][2] +
                                 Blue[down][left] * filterKernel[2][0] + Blue[down][x] * filterKernel[2][1] + Blue[down][right] * filterKernel[2][2] + extraValue;
                             if (filter === "laplacianEdgeFilter") {
-                                if(!checkEdge)
-                                    preCalc =  (Math.abs(254 - pixel[currentPixel]) > 127 ? 255 : 0);
+                                if (!checkEdge)
+                                    preCalc = (Math.abs(254 - pixel[currentPixel]) > 127 ? 255 : 0);
                                 pixel[currentPixel] = checkEdge ? 255 - pixel[currentPixel] : preCalc;
                                 pixel[currentPixel + 1] = checkEdge ? 255 - pixel[currentPixel + 1] : preCalc;
                                 pixel[currentPixel + 2] = checkEdge ? 255 - pixel[currentPixel + 2] : preCalc;
@@ -941,6 +945,7 @@ async function fuckCAPTCHA() {
         //what am I doing with my life :hankey:
         document.getElementById("allowMultipleFilterOn").checked = true;
         await imageFilter("grayscale");
+        await imageFilter("grayscale");
         await imageFilter("medianBlurFilter");
         await imageFilter("gaussianBlurFilter");
         await imageFilter("sharpenFilter");
@@ -948,12 +953,8 @@ async function fuckCAPTCHA() {
         document.getElementById("customS").value = 0;
         document.getElementById("customI").value = -81;
         await imageFilter("hsi");
-        document.getElementById("customH").value = 0;
-        document.getElementById("customS").value = 0;
         document.getElementById("customI").value = 82;
         await imageFilter("hsi");
-        document.getElementById("customH").value = 0;
-        document.getElementById("customS").value = 0;
         document.getElementById("customI").value = 18;
         await imageFilter("hsi");
     }
