@@ -208,7 +208,7 @@ input[type=text]:focus {
 .option {
     color: mediumaquamarine;
 }
-#captcha {
+.output {
     color: darkred;
 }
 
