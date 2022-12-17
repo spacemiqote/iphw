@@ -2,7 +2,6 @@
 /*global ml5, ml5*/
 /*global EXIF, EXIF*/
 /*global objects, objects*/
-/*global Tesseract, Tesseract*/
 /*eslint no-undef: "error"*/
 const userImage = document.getElementById("userImage");
 const originalImage = document.getElementById("originalImage");
@@ -133,9 +132,9 @@ const loadScript = (FILE_URL, type = "text/javascript") => {
         try {
             const scriptEle = document.createElement("script");
             scriptEle.type = type;
-            scriptEle.src =FILE_URL;
+            scriptEle.src = FILE_URL;
             scriptEle.addEventListener("load", (ev) => {
-                resolve({ status: true });
+                resolve({status: true});
             });
             scriptEle.addEventListener("error", (ev) => {
                 reject(new Error("Failed"));
@@ -422,7 +421,7 @@ function draw() {
 
 async function detect() {
     modelLoadStatus.textContent = `${models.value} Model Loaded!`;
-    loadedMl5=true;
+    loadedMl5 = true;
     if (models.value === "CocoSsd") {
         await cobjectDetector.detect(filter2D, function (err, results) {
             if (results) {
@@ -443,6 +442,8 @@ async function detect() {
 async function imageFilter(filter) {
     const enableMultipleFilter = allowMultipleFilterOn.checked;
     const edgeDetection = edgeDetectionCheck.value;
+    const checkGray = (edgeDetection === "grayFilterValue");
+    const checkEdge = (edgeDetection !== "edgeValue");
     const graph = Array.from(Array(filterResult.height), () => new Array(filterResult.width));
     let customH = 0;
     let customS = 0;
@@ -504,7 +505,18 @@ async function imageFilter(filter) {
         const height = filterResult.height;
         const width = filterResult.width;
         const pixel = filterResult.data;
-        const checkEdge = (edgeDetection !== "edgeValue");
+        let filterX = 0;
+        let filterY = 0;
+        let lum = 0;
+        let convR = 0;
+        let convG = 0;
+        let convB = 0;
+        let R_Gx = 0;
+        let R_Gy = 0;
+        let G_Gx = 0;
+        let G_Gy = 0;
+        let B_Gx = 0;
+        let B_Gy =0;
         switch (filter) {
             case "inverse": {
                 pixel[a] = 255 - red;
@@ -720,74 +732,75 @@ async function imageFilter(filter) {
                             pixel[currentPixel] = Red[ypos][xpos];
                             pixel[currentPixel + 1] = Green[ypos][xpos];
                             pixel[currentPixel + 2] = Blue[ypos][xpos];
-                        } else if (filter === "sobelFilter" || filter === "prewittFilter") {
-                            let filterX = prewittFilterX;
-                            let filterY = prewittFilterY;
-                            if (filter === "sobelFilter") {
-                                filterX = sobelFilterX;
-                                filterY = sobelFilterY;
+                        } else if (filter === "sobelFilter" || filter === "prewittFilter" || filter === "robertFilter") {
+                            if (filter === "robertFilter") {
+                                filterX = robertsX;
+                                filterY = robertsY;
+                                R_Gx = Red[y][x] * filterX[0][0] + Red[y][left] * filterX[0][1] + Red[down][x] * filterX[1][0] + Red[down][left] * filterX[1][1];
+                                R_Gy = Red[y][x] * filterY[0][0] + Red[y][left] * filterY[0][1] + Red[down][x] * filterY[1][0] + Red[down][left] * filterY[1][1];
+                                G_Gx = Green[y][x] * filterX[0][0] + Green[y][left] * filterX[0][1] + Green[down][x] * filterX[1][0] + Green[down][left] * filterX[1][1];
+                                G_Gy = Green[y][x] * filterY[0][0] + Green[y][left] * filterY[0][1] + Green[down][x] * filterY[1][0] + Green[down][left] * filterY[1][1];
+                                B_Gx = Blue[y][x] * filterX[0][0] + Blue[y][left] * filterX[0][1] + Blue[down][x] * filterX[1][0] + Blue[down][left] * filterX[1][1];
+                                B_Gy = Blue[y][x] * filterY[0][0] + Blue[y][left] * filterY[0][1] + Blue[down][x] * filterY[1][0] + Blue[down][left] * filterY[1][1];
+                            } else {
+                                filterX = prewittFilterX;
+                                filterY = prewittFilterY;
+                                if (filter === "sobelFilter") {
+                                    filterX = sobelFilterX;
+                                    filterY = sobelFilterY;
+                                }
+                                R_Gx = (filterX[0][0] * Red[up][left] + Red[up][x] * filterX[0][1] + Red[up][right] * filterX[0][2] +
+                                    Red[y][left] * filterX[1][0] + Red[y][x] * filterX[1][1] + Red[y][right] * filterX[1][2] +
+                                    Red[down][left] * filterX[2][0] + Red[down][x] * filterX[2][1] + Red[down][right] * filterX[2][2]);
+                                R_Gy = (filterY[0][0] * Red[up][left] + Red[up][x] * filterY[0][1] + Red[up][right] * filterY[0][2] +
+                                    Red[y][left] * filterY[1][0] + Red[y][x] * filterY[1][1] + Red[y][right] * filterY[1][2] +
+                                    Red[down][left] * filterY[2][0] + Red[down][x] * filterY[2][1] + Red[down][right] * filterY[2][2]);
+                                G_Gx = (filterX[0][0] * Green[up][left] + Green[up][x] * filterX[0][1] + Green[up][right] * filterX[0][2] +
+                                    Green[y][left] * filterX[1][0] + Green[y][x] * filterX[1][1] + Green[y][right] * filterX[1][2] +
+                                    Green[down][left] * filterX[2][0] + Green[down][x] * filterX[2][1] + Green[down][right] * filterX[2][2]);
+                                G_Gy = (filterY[0][0] * Green[up][left] + Green[up][x] * filterY[0][1] + Green[up][right] * filterY[0][2] +
+                                    Green[y][left] * filterY[1][0] + Green[y][x] * filterY[1][1] + Green[y][right] * filterY[1][2] +
+                                    Green[down][left] * filterY[2][0] + Green[down][x] * filterY[2][1] + Green[down][right] * filterY[2][2]);
+                                B_Gx = (filterX[0][0] * Blue[up][left] + Blue[up][x] * filterX[0][1] + Blue[up][right] * filterX[0][2] +
+                                    Blue[y][left] * filterX[1][0] + Blue[y][x] * filterX[1][1] + Blue[y][right] * filterX[1][2] +
+                                    Blue[down][left] * filterX[2][0] + Blue[down][x] * filterX[2][1] + Blue[down][right] * filterX[2][2]);
+                                B_Gy = (filterY[0][0] * Blue[up][left] + Blue[up][x] * filterY[0][1] + Blue[up][right] * filterY[0][2] +
+                                    Blue[y][left] * filterY[1][0] + Blue[y][x] * filterY[1][1] + Blue[y][right] * filterY[1][2] +
+                                    Blue[down][left] * filterY[2][0] + Blue[down][x] * filterY[2][1] + Blue[down][right] * filterY[2][2]);
                             }
-                            const R_Gx = (filterX[0][0] * Red[up][left] + Red[up][x] * filterX[0][1] + Red[up][right] * filterX[0][2] +
-                                Red[y][left] * filterX[1][0] + Red[y][x] * filterX[1][1] + Red[y][right] * filterX[1][2] +
-                                Red[down][left] * filterX[2][0] + Red[down][x] * filterX[2][1] + Red[down][right] * filterX[2][2]);
-                            const R_Gy = (filterY[0][0] * Red[up][left] + Red[up][x] * filterY[0][1] + Red[up][right] * filterY[0][2] +
-                                Red[y][left] * filterY[1][0] + Red[y][x] * filterY[1][1] + Red[y][right] * filterY[1][2] +
-                                Red[down][left] * filterY[2][0] + Red[down][x] * filterY[2][1] + Red[down][right] * filterY[2][2]);
-                            let sobelR = Math.sqrt(R_Gx ** 2 + R_Gy ** 2);
-                            if (sobelR < 0)
-                                sobelR = 0;
-                            if (sobelR > 255)
-                                sobelR = 255;
-                            const G_Gx = (filterX[0][0] * Green[up][left] + Green[up][x] * filterX[0][1] + Green[up][right] * filterX[0][2] +
-                                Green[y][left] * filterX[1][0] + Green[y][x] * filterX[1][1] + Green[y][right] * filterX[1][2] +
-                                Green[down][left] * filterX[2][0] + Green[down][x] * filterX[2][1] + Green[down][right] * filterX[2][2]);
-                            const G_Gy = (filterY[0][0] * Green[up][left] + Green[up][x] * filterY[0][1] + Green[up][right] * filterY[0][2] +
-                                Green[y][left] * filterY[1][0] + Green[y][x] * filterY[1][1] + Green[y][right] * filterY[1][2] +
-                                Green[down][left] * filterY[2][0] + Green[down][x] * filterY[2][1] + Green[down][right] * filterY[2][2]);
-                            let sobelG = Math.sqrt(G_Gx ** 2 + G_Gy ** 2);
-                            if (sobelG < 0)
-                                sobelG = 0;
-                            if (sobelG > 255)
-                                sobelG = 255;
-                            const B_Gx = (filterX[0][0] * Blue[up][left] + Blue[up][x] * filterX[0][1] + Blue[up][right] * filterX[0][2] +
-                                Blue[y][left] * filterX[1][0] + Blue[y][x] * filterX[1][1] + Blue[y][right] * filterX[1][2] +
-                                Blue[down][left] * filterX[2][0] + Blue[down][x] * filterX[2][1] + Blue[down][right] * filterX[2][2]);
-                            const B_Gy = (filterY[0][0] * Blue[up][left] + Blue[up][x] * filterY[0][1] + Blue[up][right] * filterY[0][2] +
-                                Blue[y][left] * filterY[1][0] + Blue[y][x] * filterY[1][1] + Blue[y][right] * filterY[1][2] +
-                                Blue[down][left] * filterY[2][0] + Blue[down][x] * filterY[2][1] + Blue[down][right] * filterY[2][2]);
-                            let sobelB = Math.sqrt(B_Gx ** 2 + B_Gy ** 2);
-                            if (sobelB < 0)
-                                sobelB = 0;
-                            if (sobelB > 255)
-                                sobelB = 255;
-                            const lum = 0.2126 * sobelR + 0.7152 * sobelG + 0.0722 * sobelB;
+                            convR = Math.sqrt(R_Gx ** 2 + R_Gy ** 2);
+                            if (convR < 0)
+                                convR = 0;
+                            if (convR > 255)
+                                convR = 255;
+                            convG = Math.sqrt(G_Gx ** 2 + G_Gy ** 2);
+                            if (convG < 0)
+                                convG = 0;
+                            if (convG > 255)
+                                convG = 255;
+                            convB = Math.sqrt(B_Gx ** 2 + B_Gy ** 2);
+                            if (convB < 0)
+                                convB = 0;
+                            if (convB > 255)
+                                convB = 255; 
+                            lum = 0.2126 * convR + 0.7152 * convG + 0.0722 * convB;
                             switch (edgeDetection) {
                                 case "filterValue":
                                 case "grayFilterValue" : {
-                                    pixel[currentPixel] = (edgeDetection === "grayFilterValue") ? 255 - lum : sobelR;
-                                    pixel[currentPixel + 1] = (edgeDetection === "grayFilterValue") ? 255 - lum : sobelG;
-                                    pixel[currentPixel + 2] = (edgeDetection === "grayFilterValue") ? 255 - lum : sobelB;
+                                    const preCalcLum = 255 - lum;
+                                    pixel[currentPixel] = checkGray ? preCalcLum : convR;
+                                    pixel[currentPixel + 1] = checkGray ? preCalcLum : convG;
+                                    pixel[currentPixel + 2] = checkGray ? preCalcLum : convB;
                                     break;
                                 }
-                                case "edgeValue": {
-                                    pixel[currentPixel] = Math.abs(255 - Math.abs(lum)) > 127 ? 255 : 0;
-                                    pixel[currentPixel + 1] = Math.abs(255 - Math.abs(lum)) > 127 ? 255 : 0;
-                                    pixel[currentPixel + 2] = Math.abs(255 - Math.abs(lum)) > 127 ? 255 : 0;
+                                default : {
+                                    const preCalcAbs = Math.abs(255 - Math.abs(lum)) > 127 ? 255 : 0;
+                                    pixel[currentPixel] = preCalcAbs;
+                                    pixel[currentPixel + 1] = preCalcAbs;
+                                    pixel[currentPixel + 2] = preCalcAbs;
                                     break;
                                 }
-                                default:
-                                    break;
                             }
-                        } else if (filter === "robertFilter") {
-                            const filterX = robertsX;
-                            const filterY = robertsY;
-                            const Gx = graph[y][x] * filterX[0][0] + graph[y][left] * filterX[0][1] + graph[down][x] * filterX[1][0] + graph[down][left] * filterX[1][1];
-                            const Gy = graph[y][x] * filterY[0][0] + graph[y][left] * filterY[0][1] + graph[down][x] * filterY[1][0] + graph[down][left] * filterY[1][1];
-                            preCalc = 255 - (Math.abs(Gx) + Math.abs(Gy));
-                            const fuckCalc = (Math.abs(preCalc) > 127 ? 255 : 0);
-                            pixel[currentPixel] = checkEdge ? preCalc : fuckCalc;
-                            pixel[currentPixel + 1] = checkEdge ? preCalc : fuckCalc;
-                            pixel[currentPixel + 2] = checkEdge ? preCalc : fuckCalc;
                         } else {
                             let filterKernel = boxBlur;
                             let extraValue = 0;
@@ -820,11 +833,18 @@ async function imageFilter(filter) {
                                 Blue[y][left] * filterKernel[1][0] + Blue[y][x] * filterKernel[1][1] + Blue[y][right] * filterKernel[1][2] +
                                 Blue[down][left] * filterKernel[2][0] + Blue[down][x] * filterKernel[2][1] + Blue[down][right] * filterKernel[2][2] + extraValue;
                             if (filter === "laplacianEdgeFilter") {
-                                if (!checkEdge)
-                                    preCalc = (Math.abs(254 - pixel[currentPixel]) > 127 ? 255 : 0);
-                                pixel[currentPixel] = checkEdge ? 255 - pixel[currentPixel] : preCalc;
-                                pixel[currentPixel + 1] = checkEdge ? 255 - pixel[currentPixel + 1] : preCalc;
-                                pixel[currentPixel + 2] = checkEdge ? 255 - pixel[currentPixel + 2] : preCalc;
+                                const lum = 0.2126 * pixel[currentPixel] + 0.7152 * pixel[currentPixel + 1] + 0.0722 * pixel[currentPixel + 2];
+                                if (!checkEdge && !checkGray) {
+                                    preCalc = Math.abs(255 - Math.abs(lum)) > 127 ? 255 : 0;
+                                    pixel[currentPixel] = preCalc;
+                                    pixel[currentPixel + 1] = preCalc;
+                                    pixel[currentPixel + 2] = preCalc;
+                                } else {
+                                    preCalc = 255 - (0.2126 * pixel[currentPixel] + 0.7152 * pixel[currentPixel + 1] + 0.0722 * pixel[currentPixel + 2]);
+                                    pixel[currentPixel] = checkGray ? preCalc : pixel[currentPixel];
+                                    pixel[currentPixel + 1] = checkGray ? preCalc : pixel[currentPixel + 1];
+                                    pixel[currentPixel + 2] = checkGray ? preCalc : pixel[currentPixel + 2];
+                                }
                             }
                         }
                     }
@@ -880,9 +900,9 @@ async function imageFilter(filter) {
             case "objectDetection": {
                 if (!loadedMl5) {
                     await loadScript("scripts/ml5.min.js")
-                        .then(data => {
+                        .then(data => { // loading scripts
                         })
-                        .catch(err => {
+                        .catch(err => { // catch errors
                         });
                 }
                 if (models.value === "CocoSsd") {
@@ -896,7 +916,7 @@ async function imageFilter(filter) {
                         yobjectDetector = ml5.objectDetector('yolo', detect);
                         ymodelCheck = true;
                     } else
-                        detect();
+                        await detect();
                 }
                 exitOperation = true;
                 break;
@@ -970,16 +990,15 @@ async function getCaptcha(canv) {
 
 async function fuckCAPTCHA() {
     const special = specialShit.checked;
-    if(!loadedTesseract){
+    if (!loadedTesseract) {
         await loadScript("scripts/tesseract.min.js")
-            .then( data  => {
+            .then(data => { // load scripts
             })
-            .catch( err => {
+            .catch(err => { // catch errors
             });
     }
     if (special) {
         document.getElementById("allowMultipleFilterOn").checked = true;
-        imageFilter("grayscale");
         imageFilter("grayscale");
         imageFilter("medianBlurFilter");
         imageFilter("gaussianBlurFilter");
