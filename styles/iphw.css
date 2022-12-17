@@ -96,12 +96,6 @@ a {
     text-decoration: none;
 }
 
-textarea {
-    color: lawngreen;
-    background-color: black;
-    font: 1em/1.6 "FantasqueSansMono NF", sans-serif;
-}
-
 pre {
     overflow: auto;
 }
@@ -362,4 +356,10 @@ select::-ms-expand {
 
 .select:hover::after {
     color: #23b499;
+}
+
+#exifInfo{
+    color: lawngreen;
+    background-color: black !important;
+    font: 1em/1.6 "FantasqueSansMono NF", sans-serif;
 }
