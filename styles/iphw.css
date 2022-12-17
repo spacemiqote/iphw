@@ -126,7 +126,8 @@ td, th {
     border: solid;
     border-color: rgb(91 99 102) !important;
     color: hsl(90deg 100% 50%) !important;
-    font: .7em "FantasqueSansMono NF", sans-serif;
+    font-size: 12px;
+    font-family: "FantasqueSansMono NF", sans-serif;
 }
 
 .container {

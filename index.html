@@ -105,6 +105,7 @@
             Captcha : <span id="captcha" class="option">Not Detected</span>
             <div>
                 <textarea id="exifInfo" class="c" readonly></textarea>
+                <label for="exifInfo"/>
             </div>
         </fieldset>
     </div>
@@ -119,21 +120,27 @@
                     <br/>
                     <input type="range" id="hue" class="inputRange" value="0" min="0" max="360"
                            onChange="imageFilter('hsi');"/>
+                    <label for="hue" />
                     <br/>
                     Hue
                     <input type="text" id="customH" class="inputNumber" value="0" onChange="imageFilter('hsi');"/>
+                    <label for="customH"/>
                     <br/>
                     <input type="range" id="saturation" class="inputRange" value="0" min="-100" max="100"
                            onChange="imageFilter('hsi');"/>
+                    <label for="saturation" />
                     <br/>
                     Saturation
                     <input type="text" id="customS" class="inputNumber" value="0" onChange="imageFilter('hsi');"/>
+                    <label for="customS"/>
                     <br/>
                     <input type="range" id="intensity" class="inputRange" value="0" min="-100" max="100"
                            onChange="imageFilter('hsi');"/>
+                    <label for="intensity"/>
                     <br/>
                     Intensity
                     <input type="text" id="customI" class="inputNumber" value="0" onChange="imageFilter('hsi');"/>
+                    <label for="customI" />
                     <br/>
                 </div>
                 <button class="collapse btn">Color Balance</button>
@@ -141,42 +148,54 @@
                     <br/>
                     <input type="range" id="Red" class="inputRange" value="0" min="-100" max="100"
                            onChange="imageFilter('colorbalance');"/>
+                    <label for="Red" />
                     <br/>
                     Cyan / Red
                     <input type="text" id="customR" class="inputNumber" value="0"
                            onChange="imageFilter('colorbalance');"/>
+                    <label for="customR"/>
                     <br/>
                     <input type="range" id="Green" class="inputRange" value="0" min="-100" max="100"
                            onChange="imageFilter('colorbalance');"/>
+                    <label for="Green"/>
                     <br/>
                     Magenta / Green
                     <input type="text" id="customG" class="inputNumber" value="0"
                            onChange="imageFilter('colorbalance');"/>
+                    <label for="customG"/>
                     <br/>
                     <input type="range" id="Blue" class="inputRange" value="0" min="-100" max="100"
                            onChange="imageFilter('colorbalance');"/>
+                    <label for="Blue"/>
                     <br/>
                     Yellow / Blue
                     <input type="text" id="customB" class="inputNumber" value="0"
                            onChange="imageFilter('colorbalance');"/>
+                    <label for="customB" />
                     <br/>
                 </div>
                 <button class="collapse btn">Gamma/Noises</button>
                 <div class="content">
                     <br/>
                     <input type="range" id="Gamma" class="inputRange noSync" value="2" min="0" max="10" step="0.01"/>
+                    <label for="Gamma" />
                     <br/>
                     Gamma
                     <input type="text" id="customGamma" class="inputNumber noSync" value="2"/>
+                    <label for="customGamma" />
                     <br/>
                     <input type="range" id="Scale" class="inputRange noSync" value="40" min="1" max="255"/>
+                    <label for="Scale" />
                     <br/>
                     Scale
                     <input type="text" id="customScale" class="inputNumber noSync" value="40"/>
-                    <input type="range" class="inputRange noSync" value="0.05" min="0.01" max="1" step="0.01"/>
+                    <label for="customScale" />
+                    <input type="range" id="customScaleRange" class="inputRange noSync" value="0.05" min="0.01" max="1" step="0.01"/>
+                    <label for="customScaleRange" />
                     <br/>
                     Power
                     <input type="text" id="Pps" class="inputNumber noSync" value="0.05"/>
+                    <label for="Pps" />
                     <br/>
                 </div>
                 <button class="collapse btn">Skin Whitening</button>
@@ -185,13 +204,17 @@
                     <br/>
                     Strength
                     <input type="text" id="customWhitening" class="inputNumber" value="1.26" min="0.1" max="2"/>
+                    <label for="customWhitening"/>
                     <br/>
                     <button class="btn" onclick="imageFilter('validateYCbCr')" id="validateYCbCr">Validate YCbCr
                     </button>
+                    <label for="validateYCbCr"/>
                     <button class="btn" onclick="imageFilter('showSkinArea')" id="showSkinArea">Show Skin Area
                     </button>
+                    <label for="showSkinArea"/>
                     <button class="btn" onclick="imageFilter('skinWhitening')" id="skinWhitening">Whitening Skin
                     </button>
+                    <label for="skinWhitening"/>
                 </div>
                 <button class="collapse btn">C.N.N</button>
                 <div class="content">
