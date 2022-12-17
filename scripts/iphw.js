@@ -400,7 +400,7 @@ function draw() {
 }
 
 async function detect() {
-    modelLoadStatus.textContent = `${models.value}模型已加載`;
+    modelLoadStatus.textContent = `${models.value} Model Loaded!`;
     if (models.value === "CocoSsd") {
         await cobjectDetector.detect(filter2D, function (err, results) {
             if (results) {
@@ -920,7 +920,7 @@ function specialCheck(detectText) {
     shit = (shit.length > 5) ? shit.slice(0, 5) : shit;
     shit = shit.toLowerCase();
     if (shit.length < 5)
-        shit = "無法辨識";
+        shit = "No Result";
     return shit;
 }
 
@@ -942,7 +942,6 @@ async function getCaptcha(canv) {
 function fuckCAPTCHA() {
     const special = specialShit.checked;
     if (special) {
-        //what am I doing with my life :hankey:
         document.getElementById("allowMultipleFilterOn").checked = true;
         imageFilter("grayscale");
         imageFilter("grayscale");

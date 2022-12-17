@@ -3,7 +3,7 @@
     color: hsl(300deg 100% 50%);
     box-sizing: border-box;
     margin: .5em 0;
-    font-family: Cubic, sans-serif !important;
+    font-family: "FantasqueSansMono NF", sans-serif !important;
 }
 
 @media (min-width: 35em) {
@@ -63,32 +63,32 @@
     max-width: 60em;
     padding: 1em;
     margin: auto;
-    font: 1em/1.6 Cubic, sans-serif;
+    font: 1em/1.6 "FantasqueSansMono NF", sans-serif;
 }
 
 h6 {
-    font: 300 1em Cubic, sans-serif;
+    font: 300 1em "FantasqueSansMono NF", sans-serif;
 }
 
 h5 {
-    font: 300 1.2em Cubic, sans-serif;
+    font: 300 1.2em "FantasqueSansMono NF", sans-serif;
 }
 
 h3 {
-    font: 300 2em Cubic, sans-serif;
+    font: 300 2em "FantasqueSansMono NF", sans-serif;
     text-align: center;
 }
 
 h4 {
-    font: 300 1.5em Cubic, sans-serif;
+    font: 300 1.5em "FantasqueSansMono NF", sans-serif;
 }
 
 h2 {
-    font: 300 2.2em Cubic, sans-serif;
+    font: 300 2.2em "FantasqueSansMono NF", sans-serif;
 }
 
 h1 {
-    font: 300 2.5em Cubic, sans-serif;
+    font: 300 2.5em "FantasqueSansMono NF", sans-serif;
 }
 
 a {
@@ -99,7 +99,7 @@ a {
 textarea {
     color: lawngreen;
     background-color: black;
-    font: 1em/1.6 Cubic, sans-serif;
+    font: 1em/1.6 "FantasqueSansMono NF", sans-serif;
 }
 
 pre {
@@ -126,7 +126,7 @@ td, th {
     border: solid;
     border-color: rgb(91 99 102) !important;
     color: hsl(90deg 100% 50%) !important;
-    font: .7em Cubic, sans-serif;
+    font: .7em "FantasqueSansMono NF", sans-serif;
 }
 
 .container {
@@ -211,7 +211,7 @@ input[type=text]:focus {
 }
 
 .option {
-    color: saddlebrown;
+    color: mediumaquamarine;
 }
 
 .noSync {
@@ -293,7 +293,7 @@ p {
 }
 
 .collapse:after {
-    font-family: "Cubic", sans-serif;
+    font-family: "FantasqueSansMono NF", sans-serif;
     content: ">";
     color: #FFFFFF;
     font-weight: bold;
