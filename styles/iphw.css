@@ -182,29 +182,38 @@ input[type=text]:focus {
 }
 
 #hue {
+    width: 260px;
     background: linear-gradient(to right, hsl(0, 100%, 50%), hsl(60, 100%, 50%), hsl(120, 100%, 50%), hsl(180, 100%, 50%), hsl(240, 100%, 50%), hsl(300, 100%, 50%), hsl(360, 100%, 50%)) !important;
 }
 
 #saturation {
+    width: 260px;
     background: linear-gradient(to right, hsl(90, 0%, 50%), hsl(90, 100%, 50%)) !important;
 }
 
 #intensity {
+    width: 260px;
     background: linear-gradient(to right, hsl(0, 50%, 0%), hsl(0, 50%, 100%)) !important;
 }
 
 #Red {
+    width: 260px;
     background: linear-gradient(to right, cyan, red) !important;
 }
 
 #Green {
+    width: 260px;
     background: linear-gradient(to right, magenta, green) !important;
 }
 
 #Blue {
+    width: 260px;
     background: linear-gradient(to right, yellow, blue) !important;
 }
 
+#Gamma,#Power,#Scale,#whiteningRange {
+    width: 260px;
+}
 .option {
     color: mediumaquamarine;
 }
@@ -224,7 +233,6 @@ form {
 
 input[type="range"] {
     -webkit-appearance: none;
-    width: 300px;
     height: 20px;
     margin: 10px 20px;
     background: linear-gradient(to right, #9A2720 0%, #9A2720 100%) no-repeat center;
