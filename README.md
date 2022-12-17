@@ -1,7 +1,6 @@
-### [bsod.me](https://bsod.me/)的原始程式碼  
-**資工三A(Department of Computer Science and Information Engineering)**  
-**因為沒學過離散數學（Discrete Mathematics)，所以不太會寫程式(Coding:Success,Programming:Failure)**  
-**第一次用[Github](https://github.com/)，看到原始碼的時候請笑小聲一點。**:sob:	  
+### [bsod.me](https://bsod.me/) Source Code  
+**Image Processing Class(Department of Computer Science and Information Engineering)**  
+__Version: 1.2.0__  
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)  
