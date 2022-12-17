@@ -208,6 +208,9 @@ input[type=text]:focus {
 .option {
     color: mediumaquamarine;
 }
+#captcha {
+    color: darkred;
+}
 
 .noSync {
     background: linear-gradient(to right, black, white) !important;
@@ -230,7 +233,7 @@ input[type="range"] {
 }
 
 input[type="range"]:first-of-type {
-    margin-top: 30px;
+    margin-top: 15px;
 }
 
 input[type="range"]::-webkit-slider-thumb {

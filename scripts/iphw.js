@@ -611,6 +611,10 @@ async function imageFilter(filter) {
                 exitOperation = true;
                 break;
             }
+            case "flip":{
+                
+                break;
+            }
             case "hsi": {
                 const hsi = RGBHSIConversion("r2h", red, green, blue);
                 hsi[0] = (hsi[0] + customH + 360) % 360;

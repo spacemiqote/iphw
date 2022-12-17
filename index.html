@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>2D Image Processing</title>
     <meta name="description" content="2D Image Processing"/>
-    <meta http-equiv="origin-trial" content="AhuFXhsk4pmns6oQBXtYBcQHnven0JU3B0vwwHsIduMS6zVi4SIKk4UuqCPHyEvhkWGqVERbgpfzvjLYTniHVwcAAABaeyJvcmlnaW4iOiJodHRwczovL2Jzb2QubWU6NDQzIiwiZmVhdHVyZSI6IldlYkdQVSIsImV4cGlyeSI6MTY3NTIwOTU5OSwiaXNTdWJkb21haW4iOnRydWV9">
+    <meta http-equiv="origin-trial"
+          content="AhuFXhsk4pmns6oQBXtYBcQHnven0JU3B0vwwHsIduMS6zVi4SIKk4UuqCPHyEvhkWGqVERbgpfzvjLYTniHVwcAAABaeyJvcmlnaW4iOiJodHRwczovL2Jzb2QubWU6NDQzIiwiZmVhdHVyZSI6IldlYkdQVSIsImV4cGlyeSI6MTY3NTIwOTU5OSwiaXNTdWJkb21haW4iOnRydWV9">
     <link rel="icon" href="heart-fill.svg">
     <link rel="stylesheet" type="text/css" href="styles/iphw.css"/>
     <link rel="stylesheet" type="text/css" href="styles/fonts.css"/>
@@ -64,28 +65,34 @@
             <legend>File/Edit/View</legend>
             <button class="btn" onclick="imageFilter('revertImage')" id="revertImage">Undo</button>
             <button class="btn" onclick="imageFilter('redoImage')" id="redoImage">Redo</button>
-            <button class="btn" onclick="imageFilter('cancelFilter')" id="cancelFilter">Restore</button>
+            <button class="btn" onclick="imageFilter('cancelFilter')" id="cancelFilter">Reset</button>
             <button class="btn" onclick="savepoint()">Snapshot</button>
             <button class="btn" onclick="imageFilter('loadSave')">Load Snapshot</button>
             <br>
-            <button class="btn" onclick="goFullScreen()">Fullscreen(Desktop Only)</button>
+            <button class="btn" onclick="goFullScreen()">Fullscreen(Desktop)</button>
             <button class="btn" onclick="download()">Download</button>
         </fieldset>
         <fieldset>
-            <legend>Parameters:</legend>
-            <button class="btn" onclick="fuckCAPTCHA()">Crack Captcha</button>
+            <legend>Extended:</legend>
+            Captcha : <span id="captcha" class="option">Not Detected</span>
+            <button class="btn" onclick="fuckCAPTCHA('')">Crack Captcha</button>
+            <span class="content" id="modelLoadStatus">Model Not Loaded...</span>
+            <button class="btn" onclick="imageFilter('objectDetection')" id="objectDetection">Launch C.N.N Detection</button>
             <br>
-            <label for="edgeDetectionCheck">E.D Setup :</label>
-            <select id="edgeDetectionCheck" class="option">
-                <option value="filterValue">Neon/RGB</option>
-                <option value="grayFilterValue">Grayscale</option>
-                <option value="edgeValue">Edge</option>
+            <label for="flipDirection">Flip Direction:</label>
+            <select id="flipDirection" class="option">
+                <option value="horizontal">Horizontal</option>
+                <option value="vertical">Vertical</option>
             </select>
+            <button class="btn" onclick="imageFilter('flip')">Flip</button>
+            <button class="btn" onclick="imageFilter('panning')">Panning</button>
+            <button class="btn" onclick="imageFilter('sheer')">Sheer</button>
+            <button class="btn" onclick="imageFilter('fish')">Fish</button>
         </fieldset>
     </div>
     <div class="2 col" id="extraOptions">
         <fieldset>
-            <legend>Extended :</legend>
+            <legend>Parameters:</legend>
             <div>
                 <input type="checkbox" id="allowMultipleFilterOn"/>
                 <label for="allowMultipleFilterOn">Allow Filter Overlap</label>
@@ -102,10 +109,22 @@
                 <input type="checkbox" id="specialShit"/>
                 <label for="specialShit">School Captcha</label>
             </div>
-            Captcha : <span id="captcha" class="option">Not Detected</span>
+            <label for="edgeDetectionCheck">E.D Setup :</label>
+            <select id="edgeDetectionCheck" class="option">
+                <option value="filterValue">Neon/RGB</option>
+                <option value="grayFilterValue">Grayscale</option>
+                <option value="edgeValue">Edge</option>
+            </select>
+            <br>
+            <label for="models">C.N.N Setup :</label>
+            <select id="models" class="option">
+                <option value="CocoSsd">COCO-SSD</option>
+                <option value="YOLO">YOLO-Tiny</option>
+            </select>
+            <br>
             <div>
-            <label for="exifInfo">EXIF Details: </label>
-            <textarea id="exifInfo" class="c" readonly></textarea>
+                <label for="exifInfo">EXIF Details: </label><br>
+                <textarea id="exifInfo" class="c" readonly></textarea>
             </div>
         </fieldset>
     </div>
@@ -120,7 +139,7 @@
                     <br/>
                     <input type="range" id="hue" class="inputRange" value="0" min="0" max="360"
                            onChange="imageFilter('hsi');"/>
-                    <label for="hue" />
+                    <label for="hue"/>
                     <br/>
                     Hue
                     <input type="text" id="customH" class="inputNumber" value="0" onChange="imageFilter('hsi');"/>
@@ -128,7 +147,7 @@
                     <br/>
                     <input type="range" id="saturation" class="inputRange" value="0" min="-100" max="100"
                            onChange="imageFilter('hsi');"/>
-                    <label for="saturation" />
+                    <label for="saturation"/>
                     <br/>
                     Saturation
                     <input type="text" id="customS" class="inputNumber" value="0" onChange="imageFilter('hsi');"/>
@@ -140,7 +159,7 @@
                     <br/>
                     Intensity
                     <input type="text" id="customI" class="inputNumber" value="0" onChange="imageFilter('hsi');"/>
-                    <label for="customI" />
+                    <label for="customI"/>
                     <br/>
                 </div>
                 <button class="collapse btn">Color Balance</button>
@@ -148,7 +167,7 @@
                     <br/>
                     <input type="range" id="Red" class="inputRange" value="0" min="-100" max="100"
                            onChange="imageFilter('colorbalance');"/>
-                    <label for="Red" />
+                    <label for="Red"/>
                     <br/>
                     Cyan / Red
                     <input type="text" id="customR" class="inputNumber" value="0"
@@ -171,36 +190,38 @@
                     Yellow / Blue
                     <input type="text" id="customB" class="inputNumber" value="0"
                            onChange="imageFilter('colorbalance');"/>
-                    <label for="customB" />
+                    <label for="customB"/>
                     <br/>
                 </div>
                 <button class="collapse btn">Gamma/Noises</button>
                 <div class="content">
                     <br/>
                     <input type="range" id="Gamma" class="inputRange noSync" value="2" min="0" max="10" step="0.01"/>
-                    <label for="Gamma" />
+                    <label for="Gamma"/>
                     <br/>
                     Gamma
                     <input type="text" id="customGamma" class="inputNumber noSync" value="2"/>
-                    <label for="customGamma" />
+                    <label for="customGamma"/>
                     <br/>
                     <input type="range" id="Scale" class="inputRange noSync" value="40" min="1" max="255"/>
-                    <label for="Scale" />
+                    <label for="Scale"/>
                     <br/>
                     Scale
                     <input type="text" id="customScale" class="inputNumber noSync" value="40"/>
-                    <label for="customScale" />
-                    <input type="range" id="customScaleRange" class="inputRange noSync" value="0.05" min="0.01" max="1" step="0.01"/>
-                    <label for="customScaleRange" />
+                    <label for="customScale"/>
+                    <input type="range" id="Power" class="inputRange noSync" value="0.05" min="0.01" max="1"
+                           step="0.01"/>
+                    <label for="Power"/>
                     <br/>
                     Power
                     <input type="text" id="Pps" class="inputNumber noSync" value="0.05"/>
-                    <label for="Pps" />
+                    <label for="Pps"/>
                     <br/>
                 </div>
                 <button class="collapse btn">Skin Whitening</button>
                 <div class="content">
-                    <input type="range" id="whiteningRange" class="inputRange noSync" value="1.26" min="0.1" max="2" step="0.01"/>
+                    <input type="range" id="whiteningRange" class="inputRange noSync" value="1.26" min="0.1" max="2"
+                           step="0.01"/>
                     <label for="whiteningRange"/>
                     <br/>
                     Strength
@@ -217,16 +238,36 @@
                     </button>
                     <label for="skinWhitening"/>
                 </div>
-                <button class="collapse btn">C.N.N</button>
+                <button class="collapse btn">Transform</button>
                 <div class="content">
-                    <label for="models">Choose Pre-Trained Models :</label>
-                    <select name="models" id="models" class="option">
-                        <option value="CocoSsd">COCO-SSD</option>
-                        <option value="YOLO">YOLO-Tiny</option>
-                    </select>
+                    <div class="row">
+                        <div class="4 col">
+                    <input type="range" id="transformXr" class="inputRange noSync" value="2" min="0" max="10"
+                           step="0.01"/>
+                    <label for="transformXr"/>
                     <br/>
-                    <span class="content" id="modelLoadStatus">Model Not Loaded...</span>
-                    <button class="btn" onclick="imageFilter('objectDetection')" id="objectDetection">Launch Detection</button>
+                    X
+                    <input type="text" id="transformXt" class="inputNumber noSync" value="2"/>
+                    <label for="transformXt"/>
+                    </div>
+                        <div class="4 col">
+                    <input type="range" id="transformYr" class="inputRange noSync" value="40" min="1" max="255"/>
+                    <label for="transformYr"/>
+                    <br/>
+                    Y
+                    <input type="text" id="transformYt" class="inputNumber noSync" value="40"/>
+                    <label for="transformYt"/>
+                    <br/>
+                    </div>
+                        <div class="4 col">
+                    <input type="range" id="sheerAngler" class="inputRange noSync" value="30" min="1" max="360"/>
+                    <label for="sheerAngler"/>
+                    <br />
+                    Sheer Angle:
+                    <input type="text" id="sheerAnglet" class="inputNumber noSync" value="30"/>
+                    <label for="sheerAnglet"/>
+                            </div>
+                        </div>
                 </div>
             </div>
         </fieldset>
