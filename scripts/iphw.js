@@ -2,6 +2,7 @@
 /*global ml5, ml5*/
 /*global EXIF, EXIF*/
 /*global objects, objects*/
+/*global Tesseract, Tesseract*/
 /*eslint no-undef: "error"*/
 const userImage = document.getElementById("userImage");
 const originalImage = document.getElementById("originalImage");
@@ -124,6 +125,10 @@ let cobjectDetector = 1;
 let yobjectDetector = 1;
 let cmodelCheck = false;
 let ymodelCheck = false;
+let loadedTesseract = false;
+let loadedMl5 = false;
+
+
 
 
 function goFullScreen() {
@@ -401,6 +406,7 @@ function draw() {
 
 async function detect() {
     modelLoadStatus.textContent = `${models.value} Model Loaded!`;
+    loadedMl5=true;
     if (models.value === "CocoSsd") {
         await cobjectDetector.detect(filter2D, function (err, results) {
             if (results) {
@@ -418,7 +424,7 @@ async function detect() {
     }
 }
 
-function imageFilter(filter) {
+async function imageFilter(filter) {
     const enableMultipleFilter = allowMultipleFilterOn.checked;
     const edgeDetection = edgeDetectionCheck.value;
     const graph = Array.from(Array(filterResult.height), () => new Array(filterResult.width));
@@ -856,16 +862,22 @@ function imageFilter(filter) {
                 break;
             }
             case "objectDetection": {
+                if (!loadedMl5) {
+                    await loadScript("scripts/ml5.min.js")
+                        .then(data => {
+                        })
+                        .catch(err => {
+                        });
+                }
                 if (models.value === "CocoSsd") {
                     if (!cmodelCheck) {
-                        cobjectDetector = ml5.objectDetector('cocossd', detect);
+                        cobjectDetector = await ml5.objectDetector('cocossd', detect);
                         cmodelCheck = true;
                     } else
                         detect();
-
                 } else if (models.value === "YOLO") {
                     if (!ymodelCheck) {
-                        yobjectDetector = ml5.objectDetector('yolo', detect);
+                        yobjectDetector = await ml5.objectDetector('yolo', detect);
                         ymodelCheck = true;
                     } else
                         detect();
@@ -928,7 +940,7 @@ async function getCaptcha(canv) {
     const corePath = window.navigator.userAgent.indexOf("Edge") > -1 ?
         'scripts/tesseract-core.asm.js' :
         'scripts/tesseract-core.wasm.js';
-    const worker = new Tesseract.TesseractWorker({
+    const worker = await new Tesseract.TesseractWorker({
         corePath,
     });
     await worker.recognize(canv, "eng").progress(function (packet) {
@@ -939,8 +951,37 @@ async function getCaptcha(canv) {
     await worker.terminate();
 }
 
-function fuckCAPTCHA() {
+const loadScript = (FILE_URL, type = "text/javascript") => {
+    return new Promise((resolve, reject) => {
+        try {
+            const scriptEle = document.createElement("script");
+            scriptEle.type = type;
+            scriptEle.src =FILE_URL;
+            scriptEle.addEventListener("load", (ev) => {
+                resolve({ status: true });
+            });
+            scriptEle.addEventListener("error", (ev) => {
+                reject({
+                    status: false,
+                    message: ` ＄{FILE_URL}`
+                });
+            });
+            document.body.appendChild(scriptEle);
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+async function fuckCAPTCHA() {
     const special = specialShit.checked;
+    if(!loadedTesseract){
+        await loadScript("scripts/tesseract.min.js")
+            .then( data  => {
+            })
+            .catch( err => {
+            });
+    }
     if (special) {
         document.getElementById("allowMultipleFilterOn").checked = true;
         imageFilter("grayscale");
@@ -957,8 +998,9 @@ function fuckCAPTCHA() {
         document.getElementById("customI").value = 18;
         imageFilter("hsi");
     }
-    getCaptcha(document.getElementById("filterResult").toDataURL());
+    await getCaptcha(document.getElementById("filterResult").toDataURL());
 }
+
 
 valueSync(true);
 userImage.addEventListener("change", readImage);
