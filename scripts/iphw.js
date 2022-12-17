@@ -128,8 +128,24 @@ let ymodelCheck = false;
 let loadedTesseract = false;
 let loadedMl5 = false;
 
-
-
+const loadScript = (FILE_URL, type = "text/javascript") => {
+    return new Promise((resolve, reject) => {
+        try {
+            const scriptEle = document.createElement("script");
+            scriptEle.type = type;
+            scriptEle.src =FILE_URL;
+            scriptEle.addEventListener("load", (ev) => {
+                resolve({ status: true });
+            });
+            scriptEle.addEventListener("error", (ev) => {
+                reject(new Error("Failed"));
+            });
+            document.body.appendChild(scriptEle);
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 
 function goFullScreen() {
     const canvas = document.getElementById("filterResult");
@@ -871,13 +887,13 @@ async function imageFilter(filter) {
                 }
                 if (models.value === "CocoSsd") {
                     if (!cmodelCheck) {
-                        cobjectDetector = await ml5.objectDetector('cocossd', detect);
+                        cobjectDetector = ml5.objectDetector('cocossd', detect);
                         cmodelCheck = true;
                     } else
                         detect();
                 } else if (models.value === "YOLO") {
                     if (!ymodelCheck) {
-                        yobjectDetector = await ml5.objectDetector('yolo', detect);
+                        yobjectDetector = ml5.objectDetector('yolo', detect);
                         ymodelCheck = true;
                     } else
                         detect();
@@ -937,6 +953,7 @@ function specialCheck(detectText) {
 }
 
 async function getCaptcha(canv) {
+    loadedTesseract = true;
     const corePath = window.navigator.userAgent.indexOf("Edge") > -1 ?
         'scripts/tesseract-core.asm.js' :
         'scripts/tesseract-core.wasm.js';
@@ -950,28 +967,6 @@ async function getCaptcha(canv) {
     });
     await worker.terminate();
 }
-
-const loadScript = (FILE_URL, type = "text/javascript") => {
-    return new Promise((resolve, reject) => {
-        try {
-            const scriptEle = document.createElement("script");
-            scriptEle.type = type;
-            scriptEle.src =FILE_URL;
-            scriptEle.addEventListener("load", (ev) => {
-                resolve({ status: true });
-            });
-            scriptEle.addEventListener("error", (ev) => {
-                reject({
-                    status: false,
-                    message: ` ＄{FILE_URL}`
-                });
-            });
-            document.body.appendChild(scriptEle);
-        } catch (error) {
-            reject(error);
-        }
-    });
-};
 
 async function fuckCAPTCHA() {
     const special = specialShit.checked;
