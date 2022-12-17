@@ -2,6 +2,7 @@
 /*global ml5, ml5*/
 /*global EXIF, EXIF*/
 /*global objects, objects*/
+/*global Tesseract, Tesseract*/
 /*eslint no-undef: "error"*/
 const userImage = document.getElementById("userImage");
 const originalImage = document.getElementById("originalImage");
@@ -833,7 +834,7 @@ async function imageFilter(filter) {
                                 Blue[y][left] * filterKernel[1][0] + Blue[y][x] * filterKernel[1][1] + Blue[y][right] * filterKernel[1][2] +
                                 Blue[down][left] * filterKernel[2][0] + Blue[down][x] * filterKernel[2][1] + Blue[down][right] * filterKernel[2][2] + extraValue;
                             if (filter === "laplacianEdgeFilter") {
-                                const lum = 0.2126 * pixel[currentPixel] + 0.7152 * pixel[currentPixel + 1] + 0.0722 * pixel[currentPixel + 2];
+                                lum = 0.2126 * pixel[currentPixel] + 0.7152 * pixel[currentPixel + 1] + 0.0722 * pixel[currentPixel + 2];
                                 if (!checkEdge && !checkGray) {
                                     preCalc = Math.abs(255 - Math.abs(lum)) > 127 ? 255 : 0;
                                     pixel[currentPixel] = preCalc;

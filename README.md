@@ -1,6 +1,7 @@
-### [bsod.me](https://bsod.me/) Source Code  
-**Image Processing Class(Department of Computer Science and Information Engineering)**  
-__Version: 1.2.0__  
+### Source Code: [bsod.me](https://bsod.me/)  
+**Image Processing Class Project**  
+<em>(Department of Computer Science and Information Engineering)</em>  
+__Version: 1.2.1__  
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)  
