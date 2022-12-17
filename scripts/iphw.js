@@ -996,7 +996,6 @@ async function fuckCAPTCHA() {
     await getCaptcha(document.getElementById("filterResult").toDataURL());
 }
 
-
 valueSync(true);
 userImage.addEventListener("change", readImage);
 fileReader.addEventListener("load", loadImage);
