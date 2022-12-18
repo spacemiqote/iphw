@@ -1,6 +1,6 @@
 * + * {
     background: #2E3440 !important;
-    color: hsl(300deg 100% 50%);
+    color: hsl(128, 96%, 89%);
     box-sizing: border-box;
     margin: .4em 0;
     font-family: "FantasqueSansMono NF", sans-serif !important;
@@ -114,7 +114,7 @@ td, th {
 
 .btn {
     background: #2E3440 !important;
-    padding: 1em;
+    padding: 0.8em;
     letter-spacing: .1em;
     text-transform: uppercase;
     border: solid;
@@ -236,14 +236,10 @@ form {
 input[type="range"] {
     -webkit-appearance: none;
     height: 20px;
-    margin: 10px 20px;
     background: linear-gradient(to right, #9A2720 0%, #9A2720 100%) no-repeat center;
     overflow: hidden;
     outline: none;
-}
-
-input[type="range"]:first-of-type {
-    margin-top: 15px;
+    margin: auto 20px 10px;
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -292,6 +288,7 @@ p {
 }
 
 .collapsible {
+    margin-bottom: auto;
     cursor: pointer;
     width: 100%;
     border: none;
