@@ -92,6 +92,7 @@ h1 {
 }
 
 a {
+    float: right;
     color: #fa0;
     text-decoration: none;
 }
@@ -307,7 +308,7 @@ p {
     background-color: transparent;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
-    color: #00f3ff;
+    color: #00f3ff !important;
 }
 
 .active:after {

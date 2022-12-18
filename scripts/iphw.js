@@ -131,174 +131,6 @@ let loadedMl5 = false;
 let imageFilename = "None";
 let imageType = "None";
 
-function initFunctions() {
-    document.getElementById("inverse").addEventListener("click", function () {
-        imageFilter('inverse')
-    });
-    document.getElementById("grayscale").addEventListener("click", function () {
-        imageFilter('grayscale')
-    });
-    document.getElementById("sepia").addEventListener("click", function () {
-        imageFilter('sepia')
-    });
-    document.getElementById("binary").addEventListener("click", function () {
-        imageFilter('binary')
-    });
-    document.getElementById("dither").addEventListener("click", function () {
-        imageFilter('dither')
-    });
-    document.getElementById("floyd").addEventListener("click", function () {
-        imageFilter('floyd')
-    });
-    document.getElementById("histogramEq").addEventListener("click", function () {
-        imageFilter('histogramEq')
-    });
-    document.getElementById("adjustGamma").addEventListener("click", function () {
-        imageFilter('adjustGamma')
-    });
-    document.getElementById("uniformNoise").addEventListener("click", function () {
-        imageFilter('uniformNoise')
-    });
-    document.getElementById("gaussianNoise").addEventListener("click", function () {
-        imageFilter('gaussianNoise')
-    });
-    document.getElementById("exponentialNoise").addEventListener("click", function () {
-        imageFilter('exponentialNoise')
-    });
-    document.getElementById("impuseNoise").addEventListener("click", function () {
-        imageFilter('impulseNoise')
-    });
-    document.getElementById("laplacianFilter").addEventListener("click", function () {
-        imageFilter('laplacianFilter')
-    });
-    document.getElementById("extendLaplacianFilter").addEventListener("click", function () {
-        imageFilter('extendLaplacianFilter')
-    });
-    document.getElementById("extendLaplacianFilter").addEventListener("click", function () {
-        imageFilter('extendLaplacianFilter')
-    });
-    document.getElementById("boxBlurFilter").addEventListener("click", function () {
-        imageFilter('boxBlurFilter')
-    });
-    document.getElementById("highBoxBlurFilter").addEventListener("click", function () {
-        imageFilter('highBoxBlurFilter')
-    });
-    document.getElementById("gaussianBlurFilter").addEventListener("click", function () {
-        imageFilter('gaussianBlurFilter')
-    });
-    document.getElementById("medianBlurFilter").addEventListener("click", function () {
-        imageFilter('medianBlurFilter')
-    });
-    document.getElementById("sharpenFilter").addEventListener("click", function () {
-        imageFilter('sharpenFilter')
-    });
-    document.getElementById("unsharpFilter").addEventListener("click", function () {
-        imageFilter('unsharpFilter')
-    });
-    document.getElementById("embossFilter").addEventListener("click", function () {
-        imageFilter('embossFilter')
-    });
-    document.getElementById("reliefFilter").addEventListener("click", function () {
-        imageFilter('reliefFilter')
-    });
-    document.getElementById("sobelFilter").addEventListener("click", function () {
-        imageFilter('sobelFilter')
-    });
-    document.getElementById("prewittFilter").addEventListener("click", function () {
-        imageFilter('prewittFilter')
-    });
-    document.getElementById("robertFilter").addEventListener("click", function () {
-        imageFilter('robertFilter')
-    });
-    document.getElementById("laplacianEdgeFilter").addEventListener("click", function () {
-        imageFilter('laplacianEdgeFilter')
-    });
-    document.getElementById("revertImage").addEventListener("click", function () {
-        imageFilter('revertImage')
-    });
-    document.getElementById("redoImage").addEventListener("click", function () {
-        imageFilter('redoImage')
-    });
-    document.getElementById("cancelFilter").addEventListener("click", function () {
-        imageFilter('cancelFilter')
-    });
-    document.getElementById("loadSave").addEventListener("click", function () {
-        imageFilter('loadSave')
-    });
-    document.getElementById("savepoint").addEventListener("click", savepoint);
-    document.getElementById("download").addEventListener("click", download);
-    document.getElementById("fullscreenCanvas").addEventListener("click", function () {
-        openFullscreen(document.getElementById('filterResult'))
-    });
-    document.getElementById("fullscreen").addEventListener("click", function () {
-        openFullscreen(document.documentElement)
-    });
-    document.getElementById("exitFullscreen").addEventListener("click", function () {
-        closeFullscreen()
-    });
-    document.getElementById("fuckCaptcha").addEventListener("click", fuckCAPTCHA);
-    document.getElementById("objectDetection").addEventListener("click", function () {
-        imageFilter('objectDetection')
-    });
-    document.getElementById("focusEditing").addEventListener("click", focusEditing);
-    document.getElementById("flip").addEventListener("click", function () {
-        imageFilter('flip')
-    });
-    document.getElementById("fish").addEventListener("click", function () {
-        imageFilter('fish')
-    });
-    document.getElementById("panning").addEventListener("click", function () {
-        imageFilter('panning')
-    });
-    document.getElementById("sheer").addEventListener("click", function () {
-        imageFilter('sheer')
-    });
-    document.getElementById("validateYCbCr").addEventListener("click", function () {
-        imageFilter('validateYCbCr')
-    });
-    document.getElementById("showSkinArea").addEventListener("click", function () {
-        imageFilter('showSkinArea')
-    });
-    document.getElementById("skinWhitening").addEventListener("click", function () {
-        imageFilter('skinWhitening')
-    });
-    document.getElementById("hue").addEventListener("change", function () {
-        imageFilter('hsi')
-    });
-    document.getElementById("customH").addEventListener("change", function () {
-        imageFilter('hsi')
-    });
-    document.getElementById("saturation").addEventListener("change", function () {
-        imageFilter('hsi')
-    });
-    document.getElementById("customS").addEventListener("change", function () {
-        imageFilter('hsi')
-    });
-    document.getElementById("intensity").addEventListener("change", function () {
-        imageFilter('hsi')
-    });
-    document.getElementById("customI").addEventListener("change", function () {
-        imageFilter('hsi')
-    });
-    document.getElementById("Red").addEventListener("change", function () {
-        imageFilter('colorbalance')
-    });
-    document.getElementById("customR").addEventListener("change", function () {
-        imageFilter('colorbalance')
-    });
-    document.getElementById("Green").addEventListener("change", function () {
-        imageFilter('colorbalance')
-    });
-    document.getElementById("customG").addEventListener("change", function () {
-        imageFilter('colorbalance')
-    });
-    document.getElementById("Blue").addEventListener("change", function () {
-        imageFilter('colorbalance')
-    });
-    document.getElementById("customB").addEventListener("change", function () {
-        imageFilter('colorbalance')
-    });
-}
 
 const loadScript = (FILE_URL, type = "text/javascript") => {
     return new Promise((resolve, reject) => {
@@ -416,7 +248,7 @@ function valueSync(value) {
                 if (content.style.maxHeight) {
                     content.style.maxHeight = null;
                 } else {
-                    content.style.maxHeight = `${content.scrollHeight}px`;
+                    content.style.maxHeight = `${content.scrollHeight + 15}px`;
                 }
             });
         }
@@ -1297,21 +1129,37 @@ valueSync(true);
 userImage.addEventListener("change", readImage);
 fileReader.addEventListener("load", loadImage);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function initFunctions() {
+    const filterFunction = ['inverse','grayscale','sepia','binary','dither','floyd','histogramEq','adjustGamma',
+        'uniformNoise','gaussianNoise','exponentialNoise','impulseNoise','laplacianFilter','extendLaplacianFilter','boxBlurFilter','highBoxBlurFilter',
+        'gaussianBlurFilter','medianBlurFilter','sharpenFilter','unsharpFilter','embossFilter','reliefFilter','sobelFilter','prewittFilter',
+        'robertFilter','laplacianEdgeFilter','revertImage','redoImage','cancelFilter','loadSave','flip','fish','panning','sheer','showSkinArea','skinWhitening',
+        'validateYCbCr','objectDetection'];
+    const uiFunction = ['savepoint','download','fullscreenCanvas','fullscreen','closeFullscreen','fuckCAPTCHA','focusEditing'];
+    const dynamicFunction = {'hue':'hsi','customH':'hsi','saturation':"hsi",'customS':'hsi','intensity':'customI','Red':'colorbalance','customR':'colorbalance',
+        'Green':'colorbalance','customG':'colorbalance','Blue':'colorbalance','customB':'colorbalance'};
+    for (const element of filterFunction){
+        document.getElementById(element).addEventListener("click", function () {
+            imageFilter(element);
+        });
+    }
+    for (const element of uiFunction){
+        if (element === 'fullscreenCanvas'){
+            document.getElementById(element).addEventListener("click",function(){
+                openFullscreen(document.getElementById('filterResult'))
+            });
+        }
+        else if(element === 'fullscreen'){
+            document.getElementById(element).addEventListener("click",function(){
+                openFullscreen(document.documentElement)
+            });
+        }
+        else
+            document.getElementById(element).addEventListener("click",eval(element));
+    }
+    for (const [key, value] of Object.entries(dynamicFunction)) {
+        document.getElementById(key).addEventListener("click", function () {
+            imageFilter(value);
+        });
+    }
+}
