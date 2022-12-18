@@ -285,16 +285,6 @@ p {
     margin-left: 5px;
 }
 
-.content {
-    width: -webkit-fill-available;
-    width: -moz-available;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    text-align: center;
-    object-fit: cover;
-}
-
-
 #exifInfo {
     color: lawngreen;
     background-color: black !important;
@@ -316,7 +306,7 @@ p {
     margin-left: 5px;
 }
 
-.active, collapsible:hover {
+.active, .collapsible:hover {
     background-color: transparent;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
@@ -328,6 +318,12 @@ p {
 }
 
 .content {
+    width: -webkit-fill-available;
+    width: -moz-available;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    text-align: center;
+    object-fit: cover;
     padding: 0 18px;
     max-height: 0;
     overflow: hidden;
