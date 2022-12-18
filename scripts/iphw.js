@@ -4,12 +4,14 @@
 /*global objects, objects*/
 /*global Tesseract, Tesseract*/
 /*eslint no-undef: "error"*/
+const webpage = document.documentElement;
 const userImage = document.getElementById("userImage");
 const originalImage = document.getElementById("originalImage");
 const models = document.getElementById("models");
 const modelLoadStatus = document.getElementById("modelLoadStatus");
 const allowMultipleFilterOn = document.getElementById("allowMultipleFilterOn");
 const edgeDetectionCheck = document.getElementById("edgeDetectionCheck");
+const flipDirectionHV = document.getElementById("flipDirection");
 const displayOriginalImage = document.getElementById("displayOriginalImage");
 const focusMode = document.getElementById("focusMode");
 const specialShit = document.getElementById("specialShit");
@@ -22,7 +24,7 @@ const fileReader = new FileReader(),
 const passFileType = /^(?:image\/bmp|image\/jpeg|image\/png)$/i;
 const range = document.querySelectorAll(".inputRange");
 const field = document.querySelectorAll(".inputNumber");
-const coll = document.getElementsByClassName("collapse");
+const coll = document.getElementsByClassName("collapsible");
 
 const dmatrix = [
     [0, 128, 32, 160],
@@ -127,6 +129,8 @@ let cmodelCheck = false;
 let ymodelCheck = false;
 let loadedTesseract = false;
 let loadedMl5 = false;
+let imageFilename = "None";
+let imageType = "None";
 
 const loadScript = (FILE_URL, type = "text/javascript") => {
     return new Promise((resolve, reject) => {
@@ -147,11 +151,24 @@ const loadScript = (FILE_URL, type = "text/javascript") => {
     });
 };
 
-function goFullScreen() {
-    const canvas = document.getElementById("filterResult");
-    if (canvas.requestFullScreen) canvas.requestFullScreen();
-    else if (canvas.webkitRequestFullScreen) canvas.webkitRequestFullScreen();
-    else if (canvas.mozRequestFullScreen) canvas.mozRequestFullScreen();
+function openFullscreen(element) {
+    if (element.requestFullscreen) {
+        element.requestFullscreen();
+    } else if (element.webkitRequestFullscreen) {
+        element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) {
+        element.msRequestFullscreen();
+    } else if (element.mozRequestFullScreen) element.mozRequestFullScreen();
+}
+
+function closeFullscreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+    }
 }
 
 function download() {
@@ -273,6 +290,8 @@ function readImage() {
         if (!passFileType.test(image.type)) {
             return
         }
+        imageType = image.type;
+        imageFilename = image.name;
         fileReader.readAsDataURL(image);
         EXIF.getData(image, function () {
             document.getElementById("exifInfo").textContent = EXIF.pretty(this);
@@ -300,6 +319,10 @@ function loadImage() {
         original2D.drawImage(image, 0, 0);
         cResult = original2D.getImageData(0, 0, originalImage.width, originalImage.height);
         c2D.putImageData(cResult, 0, 0);
+        document.getElementById("processed").textContent = `${imageFilename}, ${imageType}, W: ${image.width}, H: ${image.height}`;
+        document.getElementById("original").textContent = `${imageFilename}, ${imageType}, W: ${image.width}, H: ${image.height}`;
+        document.getElementById("transformXr").max = `${image.width}`;
+        document.getElementById("transformYr").max = `${image.height}`;
         focusEditing();
     };
 }
@@ -443,6 +466,7 @@ async function detect() {
 async function imageFilter(filter) {
     const enableMultipleFilter = allowMultipleFilterOn.checked;
     const edgeDetection = edgeDetectionCheck.value;
+    const flipDirection = flipDirectionHV.value;
     const checkGray = (edgeDetection === "grayFilterValue");
     const checkEdge = (edgeDetection !== "edgeValue");
     const graph = Array.from(Array(filterResult.height), () => new Array(filterResult.width));
@@ -459,6 +483,14 @@ async function imageFilter(filter) {
     let customScale = 0;
     let customWhitening = 0;
     let preCalc = 0;
+    let transformX = 0;
+    let transformY = 0;
+    let fishR = 0;
+    let sheerAngle = 0;
+    let tanTheta = 0;
+    let tempW = 0;
+    let tempH = 0;
+
     filterResult.width = originalImage.width;
     filterResult.height = originalImage.height;
     filterResult = filter2D.getImageData(0, 0, originalImage.width, originalImage.height);
@@ -481,6 +513,27 @@ async function imageFilter(filter) {
         customB = parseFloat(document.getElementById("customB").value);
     } else if (filter === "adjustGamma") {
         customGamma = parseFloat(document.getElementById("customGamma").value);
+    } else if (filter === "flip" || filter === "panning" || filter === "fish" || filter === "sheer") {
+        for (let y = 0; y < filterResult.height; y++) {
+            for (let x = 0; x < filterResult.width; x++) {
+                const currentPixel = y * 4 * filterResult.width + 4 * x;
+                graph[currentPixel] = filterResult.data[currentPixel];
+                graph[currentPixel + 1] = filterResult.data[currentPixel + 1];
+                graph[currentPixel + 2] = filterResult.data[currentPixel + 2];
+            }
+        }
+        if (filter === "panning") {
+            transformX = parseInt(document.getElementById("transformXt").value);
+            transformY = parseInt(document.getElementById("transformYt").value);
+        } else if (filter === "fish")
+            fishR = Math.round(Math.min(filterResult.height, filterResult.width) / 2);
+        else if (filter === "sheer") {
+            sheerAngle = parseInt(document.getElementById("sheerAnglet").value);
+            console.log(sheerAngle);
+            tanTheta = Math.tan(sheerAngle * Math.PI / 180);
+            tempW = Math.floor(filterResult.width / 2);
+            tempH = Math.floor(filterResult.height / 2);
+        }
     } else if (filter === "uniformNoise" || filter === "gaussianNoise" || filter === "exponentialNoise") {
         customScale = parseFloat(document.getElementById("customScale").value);
     } else if (filter === "impulseNoise") {
@@ -517,7 +570,9 @@ async function imageFilter(filter) {
         let G_Gx = 0;
         let G_Gy = 0;
         let B_Gx = 0;
-        let B_Gy =0;
+        let B_Gy = 0;
+        let preCalcX = 0;
+        let preCalcY = 0;
         switch (filter) {
             case "inverse": {
                 pixel[a] = 255 - red;
@@ -611,8 +666,56 @@ async function imageFilter(filter) {
                 exitOperation = true;
                 break;
             }
-            case "flip":{
-                
+            case "fish":
+            case "panning":
+            case "sheer":
+            case "flip": {
+                for (let y = 0; y < height; y++) {
+                    for (let x = 0; x < width; x++) {
+                        const currentPixel = y * 4 * width + 4 * x;
+                        let r = 0;
+                        let transformPixel = 0;
+                        let checkBound = false;
+                        const checkDirection = (flipDirection === "horizontal");
+                        if (filter === "flip") {
+                            let preCalcTemp1 = (4 * (width - x - 1));
+                            preCalcY = y * width * 4 + preCalcTemp1;
+                            preCalcX = (height - y - 1) * 4 * width + preCalcTemp1;
+                            transformPixel = checkDirection ? preCalcY : preCalcX;
+                        } else if (filter === "fish") {
+                            let preCalcTemp1 = (height / 2);
+                            let preCalcTemp2 = (width / 2);
+                            let preCalcTemp3 = (y - preCalcTemp1);
+                            let preCalcTemp4 = (x - preCalcTemp2);
+                            r = Math.sqrt(preCalcTemp3 ** 2 + preCalcTemp4 ** 2);
+                            let preCalcTemp5 = (r / fishR);
+                            preCalcY = Math.round(preCalcTemp3 * preCalcTemp5 + preCalcTemp1);
+                            preCalcX = Math.round(preCalcTemp4 * preCalcTemp5 + preCalcTemp2);
+                        } else if (filter === "panning") {
+                            preCalcY = (y - transformY);
+                            preCalcX = (x - transformX);
+                        } else {
+                            if (checkDirection) {
+                                preCalcX = x - tempW;
+                                preCalcY = Math.round(preCalcX * tanTheta + (y - tempH));
+                            } else {
+                                preCalcY = y - tempH;
+                                preCalcX = Math.round(preCalcY * tanTheta + (x - tempW));
+                            }
+                            preCalcX += tempW;
+                            preCalcY += tempH;
+                        }
+                        if (filter !== "flip") {
+                            transformPixel = preCalcY * 4 * width + preCalcX * 4;
+                            checkBound = preCalcX < width && preCalcY < height && preCalcX >= 0 && preCalcY >= 0;
+                        } else
+                            checkBound = true;
+                        pixel[currentPixel] = checkBound ? graph[transformPixel] : 0;
+                        pixel[currentPixel + 1] = checkBound ? graph[transformPixel + 1] : 0;
+                        pixel[currentPixel + 2] = checkBound ? graph[transformPixel + 2] : 0;
+                    }
+                }
+                exitOperation = true;
                 break;
             }
             case "hsi": {
@@ -787,7 +890,7 @@ async function imageFilter(filter) {
                             if (convB < 0)
                                 convB = 0;
                             if (convB > 255)
-                                convB = 255; 
+                                convB = 255;
                             lum = 0.2126 * convR + 0.7152 * convG + 0.0722 * convB;
                             switch (edgeDetection) {
                                 case "filterValue":

@@ -2,7 +2,7 @@
     background: #2E3440 !important;
     color: hsl(300deg 100% 50%);
     box-sizing: border-box;
-    margin: .5em 0;
+    margin: .4em 0;
     font-family: "FantasqueSansMono NF", sans-serif !important;
 }
 
@@ -151,7 +151,7 @@ input[type="file"] {
     cursor: pointer;
     border-radius: 4px;
     font-size: 16px;
-    color: #fff;
+    color: #00f3ff;
     text-align: center;
     width: -webkit-fill-available;
     width: -moz-available;
@@ -211,12 +211,14 @@ input[type=text]:focus {
     background: linear-gradient(to right, yellow, blue) !important;
 }
 
-#Gamma,#Power,#Scale,#whiteningRange {
+#Gamma, #Power, #Scale, #whiteningRange {
     width: 260px;
 }
+
 .option {
     color: mediumaquamarine;
 }
+
 .output {
     color: darkred;
 }
@@ -274,30 +276,6 @@ p {
     margin-top: 30px;
 }
 
-.collapse {
-    background-color: transparent;
-    color: #FFFFFF;
-    cursor: pointer;
-    padding: 18px;
-    width: -webkit-fill-available;
-    width: -moz-available;
-    border: none;
-    text-align: center;
-    outline: none;
-    font-size: 15px;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-    border-bottom: 1px solid #101010;
-    transition: all 0.3 ease-in-out;
-}
-
-.active, .collapse:hover {
-    background-color: transparent;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-    color: #FFFFFF;
-}
-
 .collapse:after {
     font-family: "FantasqueSansMono NF", sans-serif;
     content: ">";
@@ -308,16 +286,52 @@ p {
 }
 
 .content {
-    padding: 0 18px;
-    max-height: 0;
-    overflow: hidden;
     width: -webkit-fill-available;
     width: -moz-available;
-    transition: max-height 0.2s ease-out;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     text-align: center;
     object-fit: cover;
+}
+
+
+#exifInfo {
+    color: lawngreen;
+    background-color: black !important;
+    font: 1em/1.6 "FantasqueSansMono NF", sans-serif;
+}
+
+.collapsible {
+    cursor: pointer;
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 15px;
+}
+
+.collapsible:after {
+    content: '\002B';
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+}
+
+.active, collapsible:hover {
+    background-color: transparent;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    color: #00f3ff;
+}
+
+.active:after {
+    content: "\2212";
+}
+
+.content {
+    padding: 0 18px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
 }
 
 select {
@@ -335,7 +349,7 @@ select {
     color: #fff;
     cursor: pointer;
     font-size: 1em;
-    font-family: 'Open Sans', sans-serif;
+    font-family: "FantasqueSansMono NF", sans-serif;
 }
 
 select::-ms-expand {
@@ -367,10 +381,4 @@ select::-ms-expand {
 
 .select:hover::after {
     color: #23b499;
-}
-
-#exifInfo{
-    color: lawngreen;
-    background-color: black !important;
-    font: 1em/1.6 "FantasqueSansMono NF", sans-serif;
 }
