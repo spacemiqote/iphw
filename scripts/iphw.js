@@ -523,13 +523,12 @@ async function imageFilter(filter) {
             }
         }
         if (filter === "panning") {
-            transformX = parseInt(document.getElementById("transformXt").value);
-            transformY = parseInt(document.getElementById("transformYt").value);
+            transformX = parseInt(document.getElementById("transformXt").value,10);
+            transformY = parseInt(document.getElementById("transformYt").value,10);
         } else if (filter === "fish")
             fishR = Math.round(Math.min(filterResult.height, filterResult.width) / 2);
         else if (filter === "sheer") {
-            sheerAngle = parseInt(document.getElementById("sheerAnglet").value);
-            console.log(sheerAngle);
+            sheerAngle = parseInt(document.getElementById("sheerAnglet").value,10);
             tanTheta = Math.tan(sheerAngle * Math.PI / 180);
             tempW = Math.floor(filterResult.width / 2);
             tempH = Math.floor(filterResult.height / 2);
@@ -678,17 +677,17 @@ async function imageFilter(filter) {
                         let checkBound = false;
                         const checkDirection = (flipDirection === "horizontal");
                         if (filter === "flip") {
-                            let preCalcTemp1 = (4 * (width - x - 1));
+                            const preCalcTemp1 = (4 * (width - x - 1));
                             preCalcY = y * width * 4 + preCalcTemp1;
                             preCalcX = (height - y - 1) * 4 * width + preCalcTemp1;
                             transformPixel = checkDirection ? preCalcY : preCalcX;
                         } else if (filter === "fish") {
-                            let preCalcTemp1 = (height / 2);
-                            let preCalcTemp2 = (width / 2);
-                            let preCalcTemp3 = (y - preCalcTemp1);
-                            let preCalcTemp4 = (x - preCalcTemp2);
+                            const preCalcTemp1 = (height / 2);
+                            const preCalcTemp2 = (width / 2);
+                            const preCalcTemp3 = (y - preCalcTemp1);
+                            const preCalcTemp4 = (x - preCalcTemp2);
                             r = Math.sqrt(preCalcTemp3 ** 2 + preCalcTemp4 ** 2);
-                            let preCalcTemp5 = (r / fishR);
+                            const preCalcTemp5 = (r / fishR);
                             preCalcY = Math.round(preCalcTemp3 * preCalcTemp5 + preCalcTemp1);
                             preCalcX = Math.round(preCalcTemp4 * preCalcTemp5 + preCalcTemp2);
                         } else if (filter === "panning") {
