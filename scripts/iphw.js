@@ -4,7 +4,6 @@
 /*global objects, objects*/
 /*global Tesseract, Tesseract*/
 /*eslint no-undef: "error"*/
-const webpage = document.documentElement;
 const userImage = document.getElementById("userImage");
 const originalImage = document.getElementById("originalImage");
 const models = document.getElementById("models");

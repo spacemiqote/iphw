@@ -14,7 +14,9 @@
 
 </head>
 <body>
-<h3>2D Image Processing</h3>
+<div class="banner">
+<h3 class="typewriter">2D Image Processing</h3>
+</div>
 <div class="card w-100">
     <div class="button-wrap">
         <label class="new-button" for="userImage">Choose Image(JPG/PNG)</label>
@@ -77,8 +79,8 @@
                 <button class="btn" onclick="imageFilter('loadSave')">Load Snapshot</button>
                 <button class="btn" onclick="download()">Download</button>
                 <br>
-                <button class="btn" onclick="openFullscreen(filterResult)">Fullscreen(Canvas)</button>
-                <button class="btn" onclick="openFullscreen(webpage)">Fullscreen</button>
+                <button class="btn" onclick="openFullscreen(document.getElementById('filterResult'))">Fullscreen(Canvas)</button>
+                <button class="btn" onclick="openFullscreen(document.documentElement)">Fullscreen</button>
                 <button class="btn" onclick="closeFullscreen()">Exit Fullscreen</button>
             </div>
         </fieldset>
