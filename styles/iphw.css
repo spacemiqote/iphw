@@ -55,7 +55,7 @@
     border: solid rgb(115 124 129)
 }
 
-.btn:hover, a:hover {
+button:hover, a:hover {
     opacity: .6
 }
 
@@ -106,13 +106,13 @@ td, th {
     border-bottom: solid #eee;
 }
 
-.btn.primary {
+button .primary {
     color: white;
     background: #9c27b0 !important;
     border: solid rgb(91 99 102) !important;
 }
 
-.btn {
+button {
     background: #2E3440 !important;
     padding: 0.8em;
     letter-spacing: .1em;
@@ -405,4 +405,8 @@ select::-ms-expand {
     100% {
         width: 21.5ch;
     }
+}
+
+#originalBox{
+    visibility: hidden;
 }

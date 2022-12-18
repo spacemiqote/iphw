@@ -131,6 +131,175 @@ let loadedMl5 = false;
 let imageFilename = "None";
 let imageType = "None";
 
+function initFunctions() {
+    document.getElementById("inverse").addEventListener("click", function () {
+        imageFilter('inverse')
+    });
+    document.getElementById("grayscale").addEventListener("click", function () {
+        imageFilter('grayscale')
+    });
+    document.getElementById("sepia").addEventListener("click", function () {
+        imageFilter('sepia')
+    });
+    document.getElementById("binary").addEventListener("click", function () {
+        imageFilter('binary')
+    });
+    document.getElementById("dither").addEventListener("click", function () {
+        imageFilter('dither')
+    });
+    document.getElementById("floyd").addEventListener("click", function () {
+        imageFilter('floyd')
+    });
+    document.getElementById("histogramEq").addEventListener("click", function () {
+        imageFilter('histogramEq')
+    });
+    document.getElementById("adjustGamma").addEventListener("click", function () {
+        imageFilter('adjustGamma')
+    });
+    document.getElementById("uniformNoise").addEventListener("click", function () {
+        imageFilter('uniformNoise')
+    });
+    document.getElementById("gaussianNoise").addEventListener("click", function () {
+        imageFilter('gaussianNoise')
+    });
+    document.getElementById("exponentialNoise").addEventListener("click", function () {
+        imageFilter('exponentialNoise')
+    });
+    document.getElementById("impuseNoise").addEventListener("click", function () {
+        imageFilter('impulseNoise')
+    });
+    document.getElementById("laplacianFilter").addEventListener("click", function () {
+        imageFilter('laplacianFilter')
+    });
+    document.getElementById("extendLaplacianFilter").addEventListener("click", function () {
+        imageFilter('extendLaplacianFilter')
+    });
+    document.getElementById("extendLaplacianFilter").addEventListener("click", function () {
+        imageFilter('extendLaplacianFilter')
+    });
+    document.getElementById("boxBlurFilter").addEventListener("click", function () {
+        imageFilter('boxBlurFilter')
+    });
+    document.getElementById("highBoxBlurFilter").addEventListener("click", function () {
+        imageFilter('highBoxBlurFilter')
+    });
+    document.getElementById("gaussianBlurFilter").addEventListener("click", function () {
+        imageFilter('gaussianBlurFilter')
+    });
+    document.getElementById("medianBlurFilter").addEventListener("click", function () {
+        imageFilter('medianBlurFilter')
+    });
+    document.getElementById("sharpenFilter").addEventListener("click", function () {
+        imageFilter('sharpenFilter')
+    });
+    document.getElementById("unsharpFilter").addEventListener("click", function () {
+        imageFilter('unsharpFilter')
+    });
+    document.getElementById("embossFilter").addEventListener("click", function () {
+        imageFilter('embossFilter')
+    });
+    document.getElementById("reliefFilter").addEventListener("click", function () {
+        imageFilter('reliefFilter')
+    });
+    document.getElementById("sobelFilter").addEventListener("click", function () {
+        imageFilter('sobelFilter')
+    });
+    document.getElementById("prewittFilter").addEventListener("click", function () {
+        imageFilter('prewittFilter')
+    });
+    document.getElementById("robertFilter").addEventListener("click", function () {
+        imageFilter('robertFilter')
+    });
+    document.getElementById("laplacianEdgeFilter").addEventListener("click", function () {
+        imageFilter('laplacianEdgeFilter')
+    });
+    document.getElementById("revertImage").addEventListener("click", function () {
+        imageFilter('revertImage')
+    });
+    document.getElementById("redoImage").addEventListener("click", function () {
+        imageFilter('redoImage')
+    });
+    document.getElementById("cancelFilter").addEventListener("click", function () {
+        imageFilter('cancelFilter')
+    });
+    document.getElementById("loadSave").addEventListener("click", function () {
+        imageFilter('loadSave')
+    });
+    document.getElementById("savepoint").addEventListener("click", savepoint);
+    document.getElementById("download").addEventListener("click", download);
+    document.getElementById("fullscreenCanvas").addEventListener("click", function () {
+        openFullscreen(document.getElementById('filterResult'))
+    });
+    document.getElementById("fullscreen").addEventListener("click", function () {
+        openFullscreen(document.documentElement)
+    });
+    document.getElementById("exitFullscreen").addEventListener("click", function () {
+        closeFullscreen()
+    });
+    document.getElementById("fuckCaptcha").addEventListener("click", fuckCAPTCHA);
+    document.getElementById("objectDetection").addEventListener("click", function () {
+        imageFilter('objectDetection')
+    });
+    document.getElementById("focusEditing").addEventListener("click", focusEditing);
+    document.getElementById("flip").addEventListener("click", function () {
+        imageFilter('flip')
+    });
+    document.getElementById("fish").addEventListener("click", function () {
+        imageFilter('fish')
+    });
+    document.getElementById("panning").addEventListener("click", function () {
+        imageFilter('panning')
+    });
+    document.getElementById("sheer").addEventListener("click", function () {
+        imageFilter('sheer')
+    });
+    document.getElementById("validateYCbCr").addEventListener("click", function () {
+        imageFilter('validateYCbCr')
+    });
+    document.getElementById("showSkinArea").addEventListener("click", function () {
+        imageFilter('showSkinArea')
+    });
+    document.getElementById("skinWhitening").addEventListener("click", function () {
+        imageFilter('skinWhitening')
+    });
+    document.getElementById("hue").addEventListener("change", function () {
+        imageFilter('hsi')
+    });
+    document.getElementById("customH").addEventListener("change", function () {
+        imageFilter('hsi')
+    });
+    document.getElementById("saturation").addEventListener("change", function () {
+        imageFilter('hsi')
+    });
+    document.getElementById("customS").addEventListener("change", function () {
+        imageFilter('hsi')
+    });
+    document.getElementById("intensity").addEventListener("change", function () {
+        imageFilter('hsi')
+    });
+    document.getElementById("customI").addEventListener("change", function () {
+        imageFilter('hsi')
+    });
+    document.getElementById("Red").addEventListener("change", function () {
+        imageFilter('colorbalance')
+    });
+    document.getElementById("customR").addEventListener("change", function () {
+        imageFilter('colorbalance')
+    });
+    document.getElementById("Green").addEventListener("change", function () {
+        imageFilter('colorbalance')
+    });
+    document.getElementById("customG").addEventListener("change", function () {
+        imageFilter('colorbalance')
+    });
+    document.getElementById("Blue").addEventListener("change", function () {
+        imageFilter('colorbalance')
+    });
+    document.getElementById("customB").addEventListener("change", function () {
+        imageFilter('colorbalance')
+    });
+}
+
 const loadScript = (FILE_URL, type = "text/javascript") => {
     return new Promise((resolve, reject) => {
         try {
@@ -251,6 +420,7 @@ function valueSync(value) {
                 }
             });
         }
+        initFunctions();
         loaded = true;
     }
 }
@@ -1083,8 +1253,9 @@ async function getCaptcha(canv) {
     const corePath = window.navigator.userAgent.indexOf("Edge") > -1 ?
         'scripts/tesseract-core.asm.js' :
         'scripts/tesseract-core.wasm.js';
+    const workerPath = 'scripts/worker.min.js';
     const worker = await new Tesseract.TesseractWorker({
-        corePath,
+        corePath,workerPath
     });
     await worker.recognize(canv, "eng").progress(function (packet) {
         /*packet checking*/
@@ -1122,5 +1293,25 @@ async function fuckCAPTCHA() {
 }
 
 valueSync(true);
+
 userImage.addEventListener("change", readImage);
 fileReader.addEventListener("load", loadImage);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

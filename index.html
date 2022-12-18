@@ -7,6 +7,7 @@
     <meta name="description" content="2D Image Processing Web App"/>
     <meta http-equiv="origin-trial"
           content="AhuFXhsk4pmns6oQBXtYBcQHnven0JU3B0vwwHsIduMS6zVi4SIKk4UuqCPHyEvhkWGqVERbgpfzvjLYTniHVwcAAABaeyJvcmlnaW4iOiJodHRwczovL2Jzb2QubWU6NDQzIiwiZmVhdHVyZSI6IldlYkdQVSIsImV4cGlyeSI6MTY3NTIwOTU5OSwiaXNTdWJkb21haW4iOnRydWV9">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; script-src 'self' 'wasm-unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; media-src 'self'; font-src 'self'; object-src 'self'; connect-src 'self' data:">
     <link rel="icon" href="heart-fill.svg">
     <link rel="stylesheet" type="text/css" href="styles/iphw.css"/>
     <link rel="stylesheet" type="text/css" href="styles/fonts.css"/>
@@ -28,43 +29,43 @@
         <fieldset>
             <legend class="collapsible">Simple Processing:</legend>
             <div class="content">
-                <button class="btn" onclick="imageFilter('inverse')">Inverse</button>
-                <button class="btn" onclick="imageFilter('grayscale')">Grayscale</button>
-                <button class="btn" onclick="imageFilter('sepia')">Sepia</button>
-                <button class="btn" onclick="imageFilter('binary')">Binary</button>
-                <button class="btn" onclick="imageFilter('dither')">Dither</button>
-                <button class="btn" onclick="imageFilter('floyd')">Floyd-Steinberg</button>
-                <button class="btn" onclick="imageFilter('histogramEq')">Histogram Equalization</button>
+                <button  id="inverse">Inverse</button>
+                <button  id="grayscale">Grayscale</button>
+                <button  id="sepia">Sepia</button>
+                <button  id="binary">Binary</button>
+                <button  id="dither">Dither</button>
+                <button  id="floyd">Floyd-Steinberg</button>
+                <button  id="histogramEq">Histogram Equalization</button>
             </div>
         </fieldset>
         <fieldset>
             <legend class="collapsible">Gamma/Noises:</legend>
             <div class="content">
-                <button class="btn" onclick="imageFilter('adjustGamma')">Gamma Adjustment</button>
-                <button class="btn" onclick="imageFilter('uniformNoise')">Uniform</button>
-                <button class="btn" onclick="imageFilter('gaussianNoise')">Gaussian</button>
-                <button class="btn" onclick="imageFilter('exponentialNoise')">Exponential</button>
-                <button class="btn" onclick="imageFilter('impulseNoise')">Impulse</button>
+                <button  id="adjustGamma">Gamma Adjustment</button>
+                <button  id="uniformNoise">Uniform</button>
+                <button  id="gaussianNoise">Gaussian</button>
+                <button  id="exponentialNoise">Exponential</button>
+                <button  id="impuseNoise">Impulse</button>
             </div>
         </fieldset>
         <fieldset>
             <legend class="collapsible">Filters:</legend>
             <div class="content">
-                <button class="btn" onclick="imageFilter('laplacianFilter')">Laplacian</button>
-                <button class="btn" onclick="imageFilter('extendLaplacianFilter')">Extended Laplacian</button>
-                <button class="btn" onclick="imageFilter('boxBlurFilter')">Box Blur</button>
-                <button class="btn" onclick="imageFilter('highBoxBlurFilter')">High Box Blur</button>
-                <button class="btn" onclick="imageFilter('gaussianBlurFilter')">Gaussian Blur</button>
-                <button class="btn" onclick="imageFilter('medianBlurFilter')">Median Blur</button>
-                <button class="btn" onclick="imageFilter('sharpenFilter')">Sharpen</button>
+                <button  id="laplacianFilter">Laplacian</button>
+                <button  id="extendLaplacianFilter">Extended Laplacian</button>
+                <button  id="boxBlurFilter">Box Blur</button>
+                <button  id="highBoxBlurFilter">High Box Blur</button>
+                <button  id="gaussianBlurFilter">Gaussian Blur</button>
+                <button  id="medianBlurFilter">Median Blur</button>
+                <button  id="sharpenFilter">Sharpen</button>
                 <br>
-                <button class="btn" onclick="imageFilter('unsharpFilter')">Unsharp</button>
-                <button class="btn" onclick="imageFilter('embossFilter')">Emboss</button>
-                <button class="btn" onclick="imageFilter('reliefFilter')">Relief</button>
-                <button class="btn" onclick="imageFilter('sobelFilter')">Sobel(E.D)</button>
-                <button class="btn" onclick="imageFilter('prewittFilter')">Prewitt(E.D)</button>
-                <button class="btn" onclick="imageFilter('laplacianEdgeFilter')">Laplacian(E.D)</button>
-                <button class="btn" onclick="imageFilter('robertFilter')">Robert(E.D)</button>
+                <button  id="unsharpFilter">Unsharp</button>
+                <button  id="embossFilter">Emboss</button>
+                <button  id="reliefFilter">Relief</button>
+                <button  id="sobelFilter">Sobel(E.D)</button>
+                <button  id="prewittFilter">Prewitt(E.D)</button>
+                <button  id="laplacianEdgeFilter">Laplacian(E.D)</button>
+                <button  id="robertFilter">Robert(E.D)</button>
             </div>
         </fieldset>
     </div>
@@ -72,26 +73,26 @@
         <fieldset>
             <legend class="collapsible">File/Edit/View</legend>
             <div class="content">
-                <button class="btn" onclick="imageFilter('revertImage')" id="revertImage">Undo</button>
-                <button class="btn" onclick="imageFilter('redoImage')" id="redoImage">Redo</button>
-                <button class="btn" onclick="imageFilter('cancelFilter')" id="cancelFilter">Reset</button>
-                <button class="btn" onclick="savepoint()">Snapshot</button>
-                <button class="btn" onclick="imageFilter('loadSave')">Load Snapshot</button>
-                <button class="btn" onclick="download()">Download</button>
+                <button  id="revertImage">Undo</button>
+                <button  id="redoImage">Redo</button>
+                <button  id="cancelFilter">Reset</button>
+                <button  id="savepoint">Snapshot</button>
+                <button  id="loadSave">Load Snapshot</button>
+                <button  id="download">Download</button>
                 <br>
-                <button class="btn" onclick="openFullscreen(document.getElementById('filterResult'))">Fullscreen(Canvas)</button>
-                <button class="btn" onclick="openFullscreen(document.documentElement)">Fullscreen</button>
-                <button class="btn" onclick="closeFullscreen()">Exit Fullscreen</button>
+                <button  id="fullscreenCanvas">Fullscreen(Canvas)</button>
+                <button  id="fullscreen">Fullscreen</button>
+                <button  id="exitFullscreen">Exit Fullscreen</button>
             </div>
         </fieldset>
         <fieldset>
             <legend class="collapsible">Extended:</legend>
             <div class="content">
                 Captcha : <span id="captcha" class="output">Not Detected</span>
-                <button class="btn" onclick="fuckCAPTCHA('')">Crack Captcha</button>
+                <button  id="fuckCaptcha">Crack Captcha</button>
                 <br>
                 Model Status: <span class="output" id="modelLoadStatus">Not Loaded</span>
-                <button class="btn" onclick="imageFilter('objectDetection')" id="objectDetection">Launch C.N.N Detection
+                <button  id="objectDetection">Launch C.N.N Detection
                 </button>
                 <br>
                 <label for="flipDirection">Flip/Sheer Direction:</label>
@@ -99,11 +100,11 @@
                     <option value="horizontal">Horizontal/Y</option>
                     <option value="vertical">Vertical/X</option>
                 </select>
-                <button class="btn" onclick="imageFilter('flip')">Flip</button>
+                <button  id="flip">Flip</button>
                 <br>
-                <button class="btn" onclick="imageFilter('fish')">Fish</button>
-                <button class="btn" onclick="imageFilter('panning')">Panning</button>
-                <button class="btn" onclick="imageFilter('sheer')">Sheer</button>
+                <button  id="fish">Fish</button>
+                <button  id="panning">Panning</button>
+                <button  id="sheer">Sheer</button>
             </div>
         </fieldset>
     </div>
@@ -117,7 +118,7 @@
                 </div>
                 <div>
                     <input type="checkbox" id="displayOriginalImage"/>
-                    <label for="displayOriginalImage" onclick="focusEditing()">Show Original</label>
+                    <label id="focusEditing" for="displayOriginalImage">Show Original</label>
                 </div>
                 <div>
                     <input type="checkbox" id="focusMode"/>
@@ -153,64 +154,55 @@
         <fieldset>
             <legend>Customize Values:</legend>
             <div class="3 row">
-                <button class="collapsible btn">HSI</button>
+                <button class="collapsible">HSI</button>
                 <div class="content">
-                    <input type="range" id="hue" class="inputRange" value="0" min="0" max="360"
-                           onChange="imageFilter('hsi');"/>
+                    <input type="range" id="hue" class="inputRange" value="0" min="0" max="360"/>
                     <label for="hue"/>
                     <br/>
                     Hue
-                    <input type="text" id="customH" class="inputNumber" value="0" onChange="imageFilter('hsi');"/>
+                    <input type="text" id="customH" class="inputNumber" value="0"/>
                     <label for="customH"/>
                     <br/>
-                    <input type="range" id="saturation" class="inputRange" value="0" min="-100" max="100"
-                           onChange="imageFilter('hsi');"/>
+                    <input type="range" id="saturation" class="inputRange" value="0" min="-100" max="100"/>
                     <label for="saturation"/>
                     <br/>
                     Saturation
-                    <input type="text" id="customS" class="inputNumber" value="0" onChange="imageFilter('hsi');"/>
+                    <input type="text" id="customS" class="inputNumber" value="0"/>
                     <label for="customS"/>
                     <br/>
-                    <input type="range" id="intensity" class="inputRange" value="0" min="-100" max="100"
-                           onChange="imageFilter('hsi');"/>
+                    <input type="range" id="intensity" class="inputRange" value="0" min="-100" max="100"/>
                     <label for="intensity"/>
                     <br/>
                     Intensity
-                    <input type="text" id="customI" class="inputNumber" value="0" onChange="imageFilter('hsi');"/>
+                    <input type="text" id="customI" class="inputNumber" value="0"/>
                     <label for="customI"/>
                     <br/>
                 </div>
-                <button class="collapsible btn">Color Balance</button>
+                <button class="collapsible">Color Balance</button>
                 <div class="content">
-                    <input type="range" id="Red" class="inputRange" value="0" min="-100" max="100"
-                           onChange="imageFilter('colorbalance');"/>
+                    <input type="range" id="Red" class="inputRange" value="0" min="-100" max="100"/>
                     <label for="Red"/>
                     <br/>
                     Cyan / Red
-                    <input type="text" id="customR" class="inputNumber" value="0"
-                           onChange="imageFilter('colorbalance');"/>
+                    <input type="text" id="customR" class="inputNumber" value="0"/>
                     <label for="customR"/>
                     <br/>
-                    <input type="range" id="Green" class="inputRange" value="0" min="-100" max="100"
-                           onChange="imageFilter('colorbalance');"/>
+                    <input type="range" id="Green" class="inputRange" value="0" min="-100" max="100"/>
                     <label for="Green"/>
                     <br/>
                     Magenta / Green
-                    <input type="text" id="customG" class="inputNumber" value="0"
-                           onChange="imageFilter('colorbalance');"/>
+                    <input type="text" id="customG" class="inputNumber" value="0"/>
                     <label for="customG"/>
                     <br/>
-                    <input type="range" id="Blue" class="inputRange" value="0" min="-100" max="100"
-                           onChange="imageFilter('colorbalance');"/>
+                    <input type="range" id="Blue" class="inputRange" value="0" min="-100" max="100"/>
                     <label for="Blue"/>
                     <br/>
                     Yellow / Blue
-                    <input type="text" id="customB" class="inputNumber" value="0"
-                           onChange="imageFilter('colorbalance');"/>
+                    <input type="text" id="customB" class="inputNumber" value="0"/>
                     <label for="customB"/>
                     <br/>
                 </div>
-                <button class="collapsible btn">Gamma/Noises</button>
+                <button class="collapsible">Gamma/Noises</button>
                 <div class="content">
                     <input type="range" id="Gamma" class="inputRange noSync" value="2" min="0" max="10" step="0.01"/>
                     <label for="Gamma"/>
@@ -234,7 +226,7 @@
                     <label for="Pps"/>
                     <br/>
                 </div>
-                <button class="collapsible btn">Skin Whitening</button>
+                <button class="collapsible">Skin Whitening</button>
                 <div class="content">
                     <input type="range" id="whiteningRange" class="inputRange noSync" value="1.26" min="0.1" max="2"
                            step="0.01"/>
@@ -244,17 +236,17 @@
                     <input type="text" id="customWhitening" class="inputNumber" value="1.26" min="0.1" max="2"/>
                     <label for="customWhitening"/>
                     <br/>
-                    <button class="btn" onclick="imageFilter('validateYCbCr')" id="validateYCbCr">Validate YCbCr
+                    <button  id="validateYCbCr">Validate YCbCr
                     </button>
                     <label for="validateYCbCr"/>
-                    <button class="btn" onclick="imageFilter('showSkinArea')" id="showSkinArea">Show Skin Area
+                    <button  id="showSkinArea">Show Skin Area
                     </button>
                     <label for="showSkinArea"/>
-                    <button class="btn" onclick="imageFilter('skinWhitening')" id="skinWhitening">Whitening Skin
+                    <button  id="skinWhitening">Whitening Skin
                     </button>
                     <label for="skinWhitening"/>
                 </div>
-                <button class="collapsible btn">Transform</button>
+                <button class="collapsible">Transform</button>
                 <div class="content">
                     <div class="row">
                         <div class="4 col">
@@ -294,7 +286,7 @@
                 <span id="processed">Processed :</span>
                 <canvas id="filterResult" class="w-100"></canvas>
             </div>
-            <div id="originalBox" style="visibility: hidden;">
+            <div id="originalBox">
                 <span id="original">Original :</span>
                 <canvas id="originalImage" class="w-100"></canvas>
             </div>
