@@ -1128,26 +1128,6 @@ async function fuckCAPTCHA() {
     await getCaptcha(document.getElementById("filterResult").toDataURL());
 }
 
-async function quickShot (){
-    setViewLoop();
-    checkFocusMode();
-    stepCount = 0;
-    cleanup();
-    valueSync(false); 
-    const filterResult = document.getElementById('filterResult');
-    const ctx = filterResult.getContext('2d');
-    const loadMemImage = new Image;
-    loadMemImage.referrerPolicy="no-referrer";
-    loadMemImage.onload = function(){
-        ctx.drawImage(loadMemImage,0,0); // Or at whatever offset you like
-        original2D.drawImage(loadMemImage,0,0);
-    };
-    loadMemImage.src = "https://sso.nutc.edu.tw/eportal/Validation_Code.aspx";
-    allowMultipleFilterOn.checked = true;
-    specialShit.checked = true;
-    await fuckCAPTCHA();
-}
-
 valueSync(true);
 
 userImage.addEventListener("change", readImage);
