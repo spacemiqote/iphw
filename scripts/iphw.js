@@ -1139,7 +1139,7 @@ function initFunctions() {
         'gaussianBlurFilter','medianBlurFilter','sharpenFilter','unsharpFilter','embossFilter','reliefFilter','sobelFilter','prewittFilter',
         'robertFilter','laplacianEdgeFilter','revertImage','redoImage','cancelFilter','loadSave','flip','fish','panning','sheer','showSkinArea','skinWhitening',
         'validateYCbCr','objectDetection'];
-    const uiFunction = ['savepoint','download','fullscreenCanvas','fullscreen','closeFullscreen','fuckCAPTCHA','quickShot','focusEditing'];
+    const uiFunction = ['savepoint','download','fullscreenCanvas','fullscreen','closeFullscreen','fuckCAPTCHA',/*'quickShot'*/'focusEditing'];
     const dynamicFunction = {'hue':'hsi','customH':'hsi','saturation':"hsi",'customS':'hsi','intensity':'hsi','customI':'hsi','Red':'colorbalance','customR':'colorbalance',
         'Green':'colorbalance','customG':'colorbalance','Blue':'colorbalance','customB':'colorbalance'};
     const webpage = document;
@@ -1180,11 +1180,11 @@ function initFunctions() {
                     functionCall();
                     break;
                 }
-                case "quickShot":{
+                /*case "quickShot":{
                     const functionCall = function(){webpage.getElementById(element).addEventListener("click",quickShot)};
                     functionCall();
                     break;
-                }
+                }*/
                 case "focusEditing":{
                     const functionCall = function(){webpage.getElementById(element).addEventListener("click",focusEditing)};
                     functionCall();
