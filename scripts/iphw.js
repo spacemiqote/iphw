@@ -1128,6 +1128,26 @@ async function fuckCAPTCHA() {
     await getCaptcha(document.getElementById("filterResult").toDataURL());
 }
 
+async function quickShot (){
+    setViewLoop();
+    checkFocusMode();
+    stepCount = 0;
+    cleanup();
+    valueSync(false); 
+    const filterResult = document.getElementById('filterResult');
+    const ctx = filterResult.getContext('2d');
+    const loadMemImage = new Image;
+    loadMemImage.referrerPolicy="no-referrer";
+    loadMemImage.onload = function(){
+        ctx.drawImage(loadMemImage,0,0); // Or at whatever offset you like
+        original2D.drawImage(loadMemImage,0,0);
+    };
+    loadMemImage.src = "https://sso.nutc.edu.tw/eportal/Validation_Code.aspx";
+    allowMultipleFilterOn.checked = true;
+    specialShit.checked = true;
+    await fuckCAPTCHA();
+}
+
 valueSync(true);
 
 userImage.addEventListener("change", readImage);
@@ -1139,7 +1159,7 @@ function initFunctions() {
         'gaussianBlurFilter','medianBlurFilter','sharpenFilter','unsharpFilter','embossFilter','reliefFilter','sobelFilter','prewittFilter',
         'robertFilter','laplacianEdgeFilter','revertImage','redoImage','cancelFilter','loadSave','flip','fish','panning','sheer','showSkinArea','skinWhitening',
         'validateYCbCr','objectDetection'];
-    const uiFunction = ['savepoint','download','fullscreenCanvas','fullscreen','closeFullscreen','fuckCAPTCHA','focusEditing'];
+    const uiFunction = ['savepoint','download','fullscreenCanvas','fullscreen','closeFullscreen','fuckCAPTCHA','quickShot','focusEditing'];
     const dynamicFunction = {'hue':'hsi','customH':'hsi','saturation':"hsi",'customS':'hsi','intensity':'hsi','customI':'hsi','Red':'colorbalance','customR':'colorbalance',
         'Green':'colorbalance','customG':'colorbalance','Blue':'colorbalance','customB':'colorbalance'};
     const webpage = document;
@@ -1176,22 +1196,27 @@ function initFunctions() {
                     break;
                 }
                 case "fuckCAPTCHA":{
-                    const functionCall = function(){webpage.getElementById(element).addEventListener("click",fuckCAPTCHA);}
+                    const functionCall = function(){webpage.getElementById(element).addEventListener("click",fuckCAPTCHA)};
+                    functionCall();
+                    break;
+                }
+                case "quickShot":{
+                    const functionCall = function(){webpage.getElementById(element).addEventListener("click",quickShot)};
                     functionCall();
                     break;
                 }
                 case "focusEditing":{
-                    const functionCall = function(){webpage.getElementById(element).addEventListener("click",focusEditing);}
+                    const functionCall = function(){webpage.getElementById(element).addEventListener("click",focusEditing)};
                     functionCall();
                     break;
                 }
                 case "closeFullscreen":{
-                    const functionCall = function(){webpage.getElementById(element).addEventListener("click",closeFullscreen);}
+                    const functionCall = function(){webpage.getElementById(element).addEventListener("click",closeFullscreen)};
                     functionCall();
                     break;
                 }
                 case "download":{
-                    const functionCall = function(){webpage.getElementById(element).addEventListener("click",download);}
+                    const functionCall = function(){webpage.getElementById(element).addEventListener("click",download)};
                     functionCall();
                     break; 
                 }

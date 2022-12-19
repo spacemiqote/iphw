@@ -14,8 +14,9 @@
 </head>
 <body>
 <a href="Privacy-Policy.pdf" target="_blank" referrerpolicy="strict-origin-when-cross-origin">Privacy Policy</a>
+<br>
 <div class="banner">
-<h3 class="typewriter">2D Image Processing</h3>
+    <h3 class="typewriter">2D Image Processing</h3>
 </div>
 <div class="card w-100">
     <div class="button-wrap">
@@ -28,43 +29,43 @@
         <fieldset>
             <legend class="collapsible">Simple Processing:</legend>
             <div class="content">
-                <button  id="inverse">Inverse</button>
-                <button  id="grayscale">Grayscale</button>
-                <button  id="sepia">Sepia</button>
-                <button  id="binary">Binary</button>
-                <button  id="dither">Dither</button>
-                <button  id="floyd">Floyd-Steinberg</button>
-                <button  id="histogramEq">Histogram Equalization</button>
+                <button id="inverse">Inverse</button>
+                <button id="grayscale">Grayscale</button>
+                <button id="sepia">Sepia</button>
+                <button id="binary">Binary</button>
+                <button id="dither">Dither</button>
+                <button id="floyd">Floyd-Steinberg</button>
+                <button id="histogramEq">Histogram Equalization</button>
             </div>
         </fieldset>
         <fieldset>
             <legend class="collapsible">Gamma/Noises:</legend>
             <div class="content">
-                <button  id="adjustGamma">Gamma Adjustment</button>
-                <button  id="uniformNoise">Uniform</button>
-                <button  id="gaussianNoise">Gaussian</button>
-                <button  id="exponentialNoise">Exponential</button>
-                <button  id="impulseNoise">Impulse</button>
+                <button id="adjustGamma">Gamma Adjustment</button>
+                <button id="uniformNoise">Uniform</button>
+                <button id="gaussianNoise">Gaussian</button>
+                <button id="exponentialNoise">Exponential</button>
+                <button id="impulseNoise">Impulse</button>
             </div>
         </fieldset>
         <fieldset>
             <legend class="collapsible">Filters:</legend>
             <div class="content">
-                <button  id="laplacianFilter">Laplacian</button>
-                <button  id="extendLaplacianFilter">Extended Laplacian</button>
-                <button  id="boxBlurFilter">Box Blur</button>
-                <button  id="highBoxBlurFilter">High Box Blur</button>
-                <button  id="gaussianBlurFilter">Gaussian Blur</button>
-                <button  id="medianBlurFilter">Median Blur</button>
-                <button  id="sharpenFilter">Sharpen</button>
+                <button id="laplacianFilter">Laplacian</button>
+                <button id="extendLaplacianFilter">Extended Laplacian</button>
+                <button id="boxBlurFilter">Box Blur</button>
+                <button id="highBoxBlurFilter">High Box Blur</button>
+                <button id="gaussianBlurFilter">Gaussian Blur</button>
+                <button id="medianBlurFilter">Median Blur</button>
+                <button id="sharpenFilter">Sharpen</button>
                 <br>
-                <button  id="unsharpFilter">Unsharp</button>
-                <button  id="embossFilter">Emboss</button>
-                <button  id="reliefFilter">Relief</button>
-                <button  id="sobelFilter">Sobel(E.D)</button>
-                <button  id="prewittFilter">Prewitt(E.D)</button>
-                <button  id="laplacianEdgeFilter">Laplacian(E.D)</button>
-                <button  id="robertFilter">Robert(E.D)</button>
+                <button id="unsharpFilter">Unsharp</button>
+                <button id="embossFilter">Emboss</button>
+                <button id="reliefFilter">Relief</button>
+                <button id="sobelFilter">Sobel(E.D)</button>
+                <button id="prewittFilter">Prewitt(E.D)</button>
+                <button id="laplacianEdgeFilter">Laplacian(E.D)</button>
+                <button id="robertFilter">Robert(E.D)</button>
             </div>
         </fieldset>
     </div>
@@ -72,26 +73,27 @@
         <fieldset>
             <legend class="collapsible">File/Edit/View</legend>
             <div class="content">
-                <button  id="revertImage">Undo</button>
-                <button  id="redoImage">Redo</button>
-                <button  id="cancelFilter">Reset</button>
-                <button  id="savepoint">Snapshot</button>
-                <button  id="loadSave">Load Snapshot</button>
-                <button  id="download">Download</button>
+                <button id="revertImage">Undo</button>
+                <button id="redoImage">Redo</button>
+                <button id="cancelFilter">Reset</button>
+                <button id="savepoint">Snapshot</button>
+                <button id="loadSave">Load Snapshot</button>
+                <button id="download">Download</button>
                 <br>
-                <button  id="fullscreenCanvas">Fullscreen(Canvas)</button>
-                <button  id="fullscreen">Fullscreen</button>
-                <button  id="closeFullscreen">Exit Fullscreen</button>
+                <button id="fullscreenCanvas">Fullscreen(Canvas)</button>
+                <button id="fullscreen">Fullscreen</button>
+                <button id="closeFullscreen">Exit Fullscreen</button>
             </div>
         </fieldset>
         <fieldset>
             <legend class="collapsible">Extended:</legend>
             <div class="content">
                 Captcha : <span id="captcha" class="output">Not Detected</span>
-                <button  id="fuckCAPTCHA">Crack Captcha</button>
+                <button id="fuckCAPTCHA">Crack Captcha</button>
+                <button id="quickShot">Quick Shot</button>
                 <br>
                 Model Status: <span class="output" id="modelLoadStatus">Not Loaded</span>
-                <button  id="objectDetection">Launch C.N.N Detection
+                <button id="objectDetection">Launch C.N.N Detection
                 </button>
                 <br>
                 <label for="flipDirection">Flip/Sheer Direction:</label>
@@ -99,11 +101,11 @@
                     <option value="horizontal">Horizontal/Y</option>
                     <option value="vertical">Vertical/X</option>
                 </select>
-                <button  id="flip">Flip</button>
+                <button id="flip">Flip</button>
                 <br>
-                <button  id="fish">Fish</button>
-                <button  id="panning">Panning</button>
-                <button  id="sheer">Sheer</button>
+                <button id="fish">Fish</button>
+                <button id="panning">Panning</button>
+                <button id="sheer">Sheer</button>
             </div>
         </fieldset>
     </div>
@@ -149,7 +151,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="4 col">
+    <div class="2 col">
         <fieldset>
             <legend>Customize Values:</legend>
             <div class="3 row">
@@ -235,51 +237,42 @@
                     <input type="text" id="customWhitening" class="inputNumber" value="1.26" min="0.1" max="2"/>
                     <label for="customWhitening"/>
                     <br/>
-                    <button  id="validateYCbCr">Validate YCbCr
+                    <button id="validateYCbCr">Validate YCbCr
                     </button>
                     <label for="validateYCbCr"/>
-                    <button  id="showSkinArea">Show Skin Area
+                    <button id="showSkinArea">Show Skin Area
                     </button>
                     <label for="showSkinArea"/>
-                    <button  id="skinWhitening">Whitening Skin
+                    <button id="skinWhitening">Whitening Skin
                     </button>
                     <label for="skinWhitening"/>
                 </div>
                 <button class="collapsible">Transform</button>
                 <div class="content">
-                    <div class="row">
-                        <div class="4 col">
-                            <input type="range" id="transformXr" class="inputRange noSync" value="0" min="0" max="10"/>
-                            <label for="transformXr"/>
-                            <br/>
-                            X
-                            <input type="text" id="transformXt" class="inputNumber noSync" value="0"/>
-                            <label for="transformXt"/>
-                        </div>
-                        <div class="4 col">
-                            <input type="range" id="transformYr" class="inputRange noSync" value="0" min="0" max="10"/>
-                            <label for="transformYr"/>
-                            <br/>
-                            Y
-                            <input type="text" id="transformYt" class="inputNumber noSync" value="0"/>
-                            <label for="transformYt"/>
-                            <br/>
-                        </div>
-                        <div class="4 col">
-                            <input type="range" id="sheerAngler" class="inputRange noSync" value="30" min="1"
-                                   max="360"/>
-                            <label for="sheerAngler"/>
-                            <br/>
-                            Sheer Angle:
-                            <input type="text" id="sheerAnglet" class="inputNumber noSync" value="30"/>
-                            <label for="sheerAnglet"/>
-                        </div>
-                    </div>
+                    <input type="range" id="transformXr" class="inputRange noSync" value="0" min="0" max="10"/>
+                    <label for="transformXr"/>
+                    <br/>
+                    X
+                    <input type="text" id="transformXt" class="inputNumber noSync" value="0"/>
+                    <label for="transformXt"/>
+                    <input type="range" id="transformYr" class="inputRange noSync" value="0" min="0" max="10"/>
+                    <label for="transformYr"/>
+                    <br/>
+                    Y
+                    <input type="text" id="transformYt" class="inputNumber noSync" value="0"/>
+                    <label for="transformYt"/>
+                    <br/>
+                    <input type="range" id="sheerAngler" class="inputRange noSync" value="30" min="1" max="360"/>
+                    <label for="sheerAngler"/>
+                    <br/>
+                    Sheer Angle:
+                    <input type="text" id="sheerAnglet" class="inputNumber noSync" value="30"/>
+                    <label for="sheerAnglet"/>
                 </div>
             </div>
         </fieldset>
     </div>
-    <div class="8 col">
+    <div class="10 col">
         <div class="row">
             <div class="card col" id="filterBox">
                 <span id="processed">Processed :</span>

@@ -212,7 +212,7 @@ input[type=text]:focus {
     background: linear-gradient(to right, yellow, blue) !important;
 }
 
-#Gamma, #Power, #Scale, #whiteningRange {
+#Gamma, #Power, #Scale, #whiteningRange, #transformXr, #transformYr, #sheerAngler{
     width: 260px;
 }
 
