@@ -1,7 +1,6 @@
-### Source Code: [bsod.me](https://bsod.me/)  
-**Image Processing Class Project**  
-<em>(Department of Computer Science and Information Engineering)</em>  
-__Version: 1.2.3__  
+## 2D Image Processing Web App
+### Live Version: [bsod.me](https://bsod.me/)    
+[![latest version](https://img.shields.io/github/v/release/spacemiqote/spacemiqote.github.io?color=rgb%28143%2C%20252%2C%20158%29&style=flat-square)](https://github.com/spacemiqote/spacemiqote.github.io/releases/latest) 
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)  
@@ -12,6 +11,5 @@ __Version: 1.2.3__
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=bugs)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)  
-[GDPR-compliant privacy notice ](https://bsod.me/Privacy-Policy.pdf)  
-[Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0/)  
-![Creative Commons License](https://i.creativecommons.org/l/by-sa/4.0/80x15.png)
+[![Creative Commons Attribution-ShareAlike 4.0 International License](https://img.shields.io/github/license/spacemiqote/spacemiqote.github.io?color=rgb%28143%2C%20252%2C%20158%29&style=flat-square)](http://creativecommons.org/licenses/by-sa/4.0/)  
+[GDPR-compliant privacy notice ](https://bsod.me/Privacy-Policy.pdf)
