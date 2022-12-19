@@ -1141,6 +1141,7 @@ function initFunctions() {
     const uiFunction = ['savepoint','download','fullscreenCanvas','fullscreen','closeFullscreen','fuckCAPTCHA','focusEditing'];
     const dynamicFunction = {'hue':'hsi','customH':'hsi','saturation':"hsi",'customS':'hsi','intensity':'hsi','customI':'hsi','Red':'colorbalance','customR':'colorbalance',
         'Green':'colorbalance','customG':'colorbalance','Blue':'colorbalance','customB':'colorbalance'};
+    const webpage = document;
     for (const element of filterFunction){
         const functionCall = function() {
             document.getElementById(element).addEventListener("click", function () {
@@ -1152,16 +1153,16 @@ function initFunctions() {
     for (const element of uiFunction){
         if (element === 'fullscreenCanvas'){
             const functionCall = function() {
-                document.getElementById(element).addEventListener("click", function () {
-                    openFullscreen(document.getElementById('filterResult'))
+                webpage.getElementById(element).addEventListener("click", function () {
+                    openFullscreen(webpage.getElementById('filterResult'))
                 });
             }
             functionCall();
             }
         else if(element === 'fullscreen'){
             const functionCall = function() {
-                document.getElementById(element).addEventListener("click", function () {
-                    openFullscreen(document.documentElement)
+                webpage.getElementById(element).addEventListener("click", function () {
+                    openFullscreen(webpage.documentElement)
                 });
             }
             functionCall();
@@ -1169,35 +1170,38 @@ function initFunctions() {
         else{
             switch (element) {
                 case "savepoint":{
-                    const functionCall = function() {document.getElementById(element).addEventListener("click",savepoint)};
+                    const functionCall = function() {webpage.getElementById(element).addEventListener("click",savepoint)};
                     functionCall();
                     break;
                 }
                 case "fuckCAPTCHA":{
-                    const functionCall = function(){document.getElementById(element).addEventListener("click",fuckCAPTCHA);}
+                    const functionCall = function(){webpage.getElementById(element).addEventListener("click",fuckCAPTCHA);}
                     functionCall();
                     break;
                 }
                 case "focusEditing":{
-                    const functionCall = function(){document.getElementById(element).addEventListener("click",focusEditing);}
+                    const functionCall = function(){webpage.getElementById(element).addEventListener("click",focusEditing);}
                     functionCall();
                     break;
                 }
                 case "closeFullscreen":{
-                    const functionCall = function(){document.getElementById(element).addEventListener("click",closeFullscreen);}
+                    const functionCall = function(){webpage.getElementById(element).addEventListener("click",closeFullscreen);}
                     functionCall();
                     break;
                 }
-                default:
-                    const functionCall = function(){document.getElementById(element).addEventListener("click",download);}
+                case "download":{
+                    const functionCall = function(){webpage.getElementById(element).addEventListener("click",download);}
                     functionCall();
+                    break; 
+                }
+                default:
                     break;
             }
         }
     }
     for (const [key, value] of Object.entries(dynamicFunction)) {
         const functionCall = function(){
-            document.getElementById(key).addEventListener("click", function () {imageFilter(value);});
+            webpage.getElementById(key).addEventListener("click", function () {imageFilter(value);});
         }
         functionCall();
     }
