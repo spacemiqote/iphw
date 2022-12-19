@@ -698,13 +698,10 @@ async function imageFilter(filter) {
                             preCalcY = (y - transformY);
                             preCalcX = (x - transformX);
                         } else {
-                            if (checkDirection) {
-                                preCalcX = x - tempW;
-                                preCalcY = Math.round(preCalcX * tanTheta + (y - tempH));
-                            } else {
-                                preCalcY = y - tempH;
-                                preCalcX = Math.round(preCalcY * tanTheta + (x - tempW));
-                            }
+                            const preCalcTemp1 = x - tempW;
+                            const preCalcTemp2 = y - tempH;
+                            preCalcY = checkDirection ? Math.round(preCalcTemp1 * tanTheta + preCalcTemp2) : preCalcTemp2 ;
+                            preCalcX = checkDirection ? preCalcTemp1 : Math.round(preCalcTemp2 * tanTheta + preCalcTemp1) ;
                             preCalcX += tempW;
                             preCalcY += tempH;
                         }
