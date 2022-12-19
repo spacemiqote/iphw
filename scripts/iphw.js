@@ -1089,8 +1089,9 @@ async function getCaptcha(canv) {
         'scripts/tesseract-core.asm.js' :
         'scripts/tesseract-core.wasm.js';
     const workerPath = 'scripts/worker.min.js';
+    const langPath = '.';
     const worker = await new Tesseract.TesseractWorker({
-        corePath,workerPath
+        corePath,workerPath,langPath,
     });
     await worker.recognize(canv, "eng").progress(function (packet) {
         /*packet checking*/
