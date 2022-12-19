@@ -229,12 +229,15 @@ function checkFocusMode() {
 function valueSync(value) {
     for (let i = 0; i < range.length; i++) {
         if (value === true) {
-            range[i].addEventListener("input", function (e) {
-                field[i].value = e.target.value;
-            });
-            field[i].addEventListener("input", function (e) {
-                range[i].value = e.target.value;
-            });
+            const functionCall = function() {
+                range[i].addEventListener("input", function (e) {
+                    field[i].value = e.target.value;
+                });
+                field[i].addEventListener("input", function (e) {
+                    range[i].value = e.target.value;
+                });
+            }
+            functionCall();
         } else if (!range[i].classList.contains("noSync")) {
             field[i].value = 0;
             range[i].value = 0;
@@ -1136,30 +1139,66 @@ function initFunctions() {
         'robertFilter','laplacianEdgeFilter','revertImage','redoImage','cancelFilter','loadSave','flip','fish','panning','sheer','showSkinArea','skinWhitening',
         'validateYCbCr','objectDetection'];
     const uiFunction = ['savepoint','download','fullscreenCanvas','fullscreen','closeFullscreen','fuckCAPTCHA','focusEditing'];
-    const dynamicFunction = {'hue':'hsi','customH':'hsi','saturation':"hsi",'customS':'hsi','intensity':'customI','Red':'colorbalance','customR':'colorbalance',
+    const dynamicFunction = {'hue':'hsi','customH':'hsi','saturation':"hsi",'customS':'hsi','intensity':'hsi','customI':'hsi','Red':'colorbalance','customR':'colorbalance',
         'Green':'colorbalance','customG':'colorbalance','Blue':'colorbalance','customB':'colorbalance'};
     for (const element of filterFunction){
-        document.getElementById(element).addEventListener("click", function () {
-            imageFilter(element);
-        });
+        const functionCall = function() {
+            document.getElementById(element).addEventListener("click", function () {
+                imageFilter(element);
+            });
+        }
+        functionCall();
     }
     for (const element of uiFunction){
         if (element === 'fullscreenCanvas'){
-            document.getElementById(element).addEventListener("click",function(){
-                openFullscreen(document.getElementById('filterResult'))
-            });
-        }
+            const functionCall = function() {
+                document.getElementById(element).addEventListener("click", function () {
+                    openFullscreen(document.getElementById('filterResult'))
+                });
+            }
+            functionCall();
+            }
         else if(element === 'fullscreen'){
-            document.getElementById(element).addEventListener("click",function(){
-                openFullscreen(document.documentElement)
-            });
+            const functionCall = function() {
+                document.getElementById(element).addEventListener("click", function () {
+                    openFullscreen(document.documentElement)
+                });
+            }
+            functionCall();
         }
-        else
-            document.getElementById(element).addEventListener("click",eval(element));
+        else{
+            switch (element) {
+                case "savepoint":{
+                    const functionCall = function() {document.getElementById(element).addEventListener("click",savepoint)};
+                    functionCall();
+                    break;
+                }
+                case "fuckCAPTCHA":{
+                    const functionCall = function(){document.getElementById(element).addEventListener("click",fuckCAPTCHA);}
+                    functionCall();
+                    break;
+                }
+                case "focusEditing":{
+                    const functionCall = function(){document.getElementById(element).addEventListener("click",focusEditing);}
+                    functionCall();
+                    break;
+                }
+                case "closeFullscreen":{
+                    const functionCall = function(){document.getElementById(element).addEventListener("click",closeFullscreen);}
+                    functionCall();
+                    break;
+                }
+                default:
+                    const functionCall = function(){document.getElementById(element).addEventListener("click",download);}
+                    functionCall();
+                    break;
+            }
+        }
     }
     for (const [key, value] of Object.entries(dynamicFunction)) {
-        document.getElementById(key).addEventListener("click", function () {
-            imageFilter(value);
-        });
+        const functionCall = function(){
+            document.getElementById(key).addEventListener("click", function () {imageFilter(value);});
+        }
+        functionCall();
     }
 }
