@@ -1141,61 +1141,70 @@ function initFunctions() {
     };
     const webpage = document;
     for (const element of filterFunction) {
-        const functionCall = function () {
-            document.getElementById(element).addEventListener("click", function () {
-                imageFilter(element);
+        const functionCall = () => {
+            webpage.getElementById(key).addEventListener("click", () => {
+                imageFilter(value);
             });
-        }
+        };
         functionCall();
     }
     for (const element of uiFunction) {
         if (element === 'fullscreenCanvas') {
-            const functionCall = function () {
-                webpage.getElementById(element).addEventListener("click", function () {
-                    openFullscreen(webpage.getElementById('filterResult'))
+            const functionCall = () => {
+                const el = webpage.getElementById(element);
+                el.addEventListener("click", () => {
+                    openFullscreen(webpage.getElementById("filterResult"));
                 });
-            }
+            };
             functionCall();
         } else if (element === 'fullscreen') {
-            const functionCall = function () {
-                webpage.getElementById(element).addEventListener("click", function () {
-                    openFullscreen(webpage.documentElement)
+            const el = webpage.getElementById(element);
+            const functionCall = () => {
+                el.addEventListener("click", () => {
+                    openFullscreen(webpage.documentElement);
                 });
-            }
+            };
             functionCall();
         } else {
             switch (element) {
                 case "savepoint": {
-                    const functionCall = function () {
-                        webpage.getElementById(element).addEventListener("click", savepoint)
+                    const functionCall = () => {
+                        const el = webpage.getElementById(element);
+                        el.addEventListener("click", savepoint);
                     };
                     functionCall();
                     break;
                 }
                 case "fuckCAPTCHA": {
-                    const functionCall = function () {
-                        webpage.getElementById(element).addEventListener("click", fuckCAPTCHA)
+                    const functionCall = () => {
+                        const el = webpage.getElementById(element);
+                        el.addEventListener("click", fuckCAPTCHA);
                     };
                     functionCall();
                     break;
                 }
                 case "focusEditing": {
-                    const functionCall = function () {
-                        webpage.getElementById(element).addEventListener("click", focusEditing)
+                    const functionCall = () => {
+                        const el = webpage.getElementById(element);
+                        el.addEventListener("click", focusEditing);
                     };
                     functionCall();
+                    break;
                     break;
                 }
                 case "closeFullscreen": {
-                    const functionCall = function () {
-                        webpage.getElementById(element).addEventListener("click", closeFullscreen)
+                    const functionCall = () => {
+                        const el = webpage.getElementById(element);
+                        el.addEventListener("click", closeFullscreen);
                     };
                     functionCall();
                     break;
+                    break;
                 }
                 case "download": {
-                    const functionCall = function () {
-                        webpage.getElementById(element).addEventListener("click", download)
+                    const functionCall = () => {
+                        const el = webpage.getElementById(element);
+                        el.addEventListener("click", download);
                     };
                     functionCall();
                     break;
@@ -1206,11 +1215,12 @@ function initFunctions() {
         }
     }
     for (const [key, value] of Object.entries(dynamicFunction)) {
-        const functionCall = function () {
-            webpage.getElementById(key).addEventListener("click", function () {
+        const functionCall = () => {
+            const el = webpage.getElementById(key);
+            el.addEventListener("click", () => {
                 imageFilter(value);
             });
-        }
+        };
         functionCall();
     }
 }
