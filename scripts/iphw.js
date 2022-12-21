@@ -1141,9 +1141,10 @@ function initFunctions() {
     };
     const webpage = document;
     for (const element of filterFunction) {
+        const el = webpage.getElementById(element);
         const functionCall = () => {
-            webpage.getElementById(key).addEventListener("click", () => {
-                imageFilter(value);
+            el.addEventListener("click", () => {
+                imageFilter(element);
             });
         };
         functionCall();
@@ -1190,7 +1191,6 @@ function initFunctions() {
                     };
                     functionCall();
                     break;
-                    break;
                 }
                 case "closeFullscreen": {
                     const functionCall = () => {
@@ -1198,7 +1198,6 @@ function initFunctions() {
                         el.addEventListener("click", closeFullscreen);
                     };
                     functionCall();
-                    break;
                     break;
                 }
                 case "download": {
