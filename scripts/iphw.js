@@ -804,39 +804,31 @@ async function imageFilter(filter) {
                         if (down > height - 1) down = height - 1;
                         const currentPixel = y * 4 * width + 4 * x;
                         if (filter === "medianBlurFilter") {
-                            let medianMask = new Int32Array([graph[up][left], graph[up][x], graph[up][right], graph[y][left], graph[y][x], graph[y][right], graph[down][left], graph[down][x], graph[down][right]]);
-                            medianMask = medianMask.sort();
-                            let ypos = 0;
-                            let xpos = 0;
+                            const medianMask = [
+                                graph[up][left],
+                                graph[up][x],
+                                graph[up][right],
+                                graph[y][left],
+                                graph[y][x],
+                                graph[y][right],
+                                graph[down][left],
+                                graph[down][x],
+                                graph[down][right],
+                            ];
+                            medianMask.sort();
                             const mMask = medianMask[4];
-                            if (mMask === graph[up][left]) {
-                                ypos = up;
-                                xpos = left;
-                            } else if (mMask === graph[up][x]) {
-                                ypos = up;
-                                xpos = x;
-                            } else if (mMask === graph[up][right]) {
-                                ypos = up;
-                                xpos = right;
-                            } else if (mMask === graph[y][left]) {
-                                ypos = y;
-                                xpos = left;
-                            } else if (mMask === graph[y][x]) {
-                                ypos = y;
-                                xpos = x;
-                            } else if (mMask === graph[y][right]) {
-                                ypos = y;
-                                xpos = right;
-                            } else if (mMask === graph[down][left]) {
-                                ypos = down;
-                                xpos = left;
-                            } else if (mMask === graph[down][x]) {
-                                ypos = down;
-                                xpos = x;
-                            } else if (mMask === graph[down][right]) {
-                                ypos = down;
-                                xpos = right;
-                            }
+                            const valueMap = {
+                                [graph[up][left]]: { ypos: up, xpos: left },
+                                [graph[up][x]]: { ypos: up, xpos: x },
+                                [graph[up][right]]: { ypos: up, xpos: right },
+                                [graph[y][left]]: { ypos: y, xpos: left },
+                                [graph[y][x]]: { ypos: y, xpos: x },
+                                [graph[y][right]]: { ypos: y, xpos: right },
+                                [graph[down][left]]: { ypos: down, xpos: left },
+                                [graph[down][x]]: { ypos: down, xpos: x },
+                                [graph[down][right]]: { ypos: down, xpos: right },
+                            };
+                            const { ypos, xpos } = valueMap[mMask];
                             pixel[currentPixel] = Red[ypos][xpos];
                             pixel[currentPixel + 1] = Green[ypos][xpos];
                             pixel[currentPixel + 2] = Blue[ypos][xpos];
