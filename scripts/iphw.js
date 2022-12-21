@@ -1,7 +1,6 @@
 /*jshint esversion: 6 */
 /*global ml5, ml5*/
 /*global EXIF, EXIF*/
-/*global objects, objects*/
 /*global Tesseract, Tesseract*/
 /*eslint no-undef: "error"*/
 "use strict";
@@ -119,7 +118,6 @@ const filter2D = filterResult.getContext("2d", {
 let wtfBackup = filterResult;
 let savepointImage = filterResult;
 let stepCount = 0;
-let revertCheck = 0;
 let index = 0;
 let fuck = 0;
 let loaded = false;
@@ -140,10 +138,10 @@ const loadScript = (FILE_URL, type = "text/javascript") => {
             const scriptEle = document.createElement("script");
             scriptEle.type = type;
             scriptEle.src = FILE_URL;
-            scriptEle.addEventListener("load", (ev) => {
-                resolve({status: true});
+            scriptEle.addEventListener("load", () => {
+                resolve({ status: true });
             });
-            scriptEle.addEventListener("error", (ev) => {
+            scriptEle.addEventListener("error", () => {
                 reject(new Error("Failed"));
             });
             document.body.appendChild(scriptEle);
@@ -285,7 +283,6 @@ function savepoint() {
 
 function cleanup() {
     operationHistory.length = 0;
-    revertCheck = 0;
     fuck = 0;
     index = 0;
 }
@@ -299,8 +296,9 @@ function readImage() {
         imageType = image.type;
         imageFilename = image.name;
         fileReader.readAsDataURL(image);
+        const exifInfo = EXIF.pretty(this);
         EXIF.getData(image, function () {
-            document.getElementById("exifInfo").textContent = EXIF.pretty(this);
+            document.getElementById("exifInfo").textContent = exifInfo;
         });
         setViewLoop();
         checkFocusMode();
@@ -1006,13 +1004,8 @@ async function imageFilter(filter) {
                 break;
             }
             case "objectDetection": {
-                if (!loadedMl5) {
-                    await loadScript("scripts/ml5.min.js")
-                        .then(data => { // loading scripts
-                        })
-                        .catch(err => { // catch errors
-                        });
-                }
+                if (!loadedMl5)
+                    await loadScript("scripts/ml5.min.js").then().catch();
                 if (models.value === "CocoSsd") {
                     if (!cmodelCheck) {
                         cobjectDetector = ml5.objectDetector('cocossd', detect);
@@ -1100,13 +1093,8 @@ async function getCaptcha(canv) {
 
 async function fuckCAPTCHA() {
     const special = specialShit.checked;
-    if (!loadedTesseract) {
-        await loadScript("scripts/tesseract.min.js")
-            .then(data => { // load scripts
-            })
-            .catch(err => { // catch errors
-            });
-    }
+    if (!loadedTesseract)
+        await loadScript("scripts/tesseract.min.js");
     if (special) {
         document.getElementById("allowMultipleFilterOn").checked = true;
         imageFilter("grayscale");
