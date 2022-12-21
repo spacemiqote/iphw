@@ -139,7 +139,7 @@ const loadScript = (FILE_URL, type = "text/javascript") => {
             scriptEle.type = type;
             scriptEle.src = FILE_URL;
             scriptEle.addEventListener("load", () => {
-                resolve({ status: true });
+                resolve({status: true});
             });
             scriptEle.addEventListener("error", () => {
                 reject(new Error("Failed"));
@@ -229,7 +229,7 @@ function checkFocusMode() {
 function valueSync(value) {
     for (let i = 0; i < range.length; i++) {
         if (value === true) {
-            const functionCall = function() {
+            const functionCall = function () {
                 range[i].addEventListener("input", function (e) {
                     field[i].value = e.target.value;
                 });
@@ -296,10 +296,9 @@ function readImage() {
         imageType = image.type;
         imageFilename = image.name;
         fileReader.readAsDataURL(image);
-        const exifInfo = EXIF.pretty(this);
         EXIF.getData(image, function () {
-            document.getElementById("exifInfo").textContent = exifInfo;
-        });
+            document.getElementById("exifInfo").textContent = EXIF.pretty(this);
+        }.bind(image));
         setViewLoop();
         checkFocusMode();
         stepCount = 0;
@@ -525,12 +524,12 @@ async function imageFilter(filter) {
             }
         }
         if (filter === "panning") {
-            transformX = parseInt(document.getElementById("transformXt").value,10);
-            transformY = parseInt(document.getElementById("transformYt").value,10);
+            transformX = parseInt(document.getElementById("transformXt").value, 10);
+            transformY = parseInt(document.getElementById("transformYt").value, 10);
         } else if (filter === "fish")
             fishR = Math.round(Math.min(filterResult.height, filterResult.width) / 2);
         else if (filter === "sheer") {
-            sheerAngle = parseInt(document.getElementById("sheerAnglet").value,10);
+            sheerAngle = parseInt(document.getElementById("sheerAnglet").value, 10);
             tanTheta = Math.tan(sheerAngle * Math.PI / 180);
             tempW = Math.floor(filterResult.width / 2);
             tempH = Math.floor(filterResult.height / 2);
@@ -551,6 +550,9 @@ async function imageFilter(filter) {
                     graph[y][x] = 0.299 * filterResult.data[currentPixel] + 0.587 * filterResult.data[currentPixel + 1] + 0.114 * filterResult.data[currentPixel + 2];
             }
         }
+    } else if (filter === "objectDetection") {
+        if (!loadedMl5)
+            await loadScript("scripts/ml5.min.js").then().catch();
     }
     let exitOperation = false;
     for (let a = 0; a < filterResult.data.length; a += 4) {
@@ -698,8 +700,8 @@ async function imageFilter(filter) {
                         } else {
                             const preCalcTemp1 = x - tempW;
                             const preCalcTemp2 = y - tempH;
-                            preCalcY = checkDirection ? Math.round(preCalcTemp1 * tanTheta + preCalcTemp2) : preCalcTemp2 ;
-                            preCalcX = checkDirection ? preCalcTemp1 : Math.round(preCalcTemp2 * tanTheta + preCalcTemp1) ;
+                            preCalcY = checkDirection ? Math.round(preCalcTemp1 * tanTheta + preCalcTemp2) : preCalcTemp2;
+                            preCalcX = checkDirection ? preCalcTemp1 : Math.round(preCalcTemp2 * tanTheta + preCalcTemp1);
                             preCalcX += tempW;
                             preCalcY += tempH;
                         }
@@ -1004,8 +1006,6 @@ async function imageFilter(filter) {
                 break;
             }
             case "objectDetection": {
-                if (!loadedMl5)
-                    await loadScript("scripts/ml5.min.js").then().catch();
                 if (models.value === "CocoSsd") {
                     if (!cmodelCheck) {
                         cobjectDetector = ml5.objectDetector('cocossd', detect);
@@ -1081,7 +1081,7 @@ async function getCaptcha(canv) {
     const workerPath = 'scripts/worker.min.js';
     const langPath = '.';
     const worker = await new Tesseract.TesseractWorker({
-        corePath,workerPath,langPath,
+        corePath, workerPath, langPath,
     });
     await worker.recognize(canv, "eng").progress(function (packet) {
         /*packet checking*/
@@ -1119,66 +1119,86 @@ userImage.addEventListener("change", readImage);
 fileReader.addEventListener("load", loadImage);
 
 function initFunctions() {
-    const filterFunction = ['inverse','grayscale','sepia','binary','dither','floyd','histogramEq','adjustGamma',
-        'uniformNoise','gaussianNoise','exponentialNoise','impulseNoise','laplacianFilter','extendLaplacianFilter','boxBlurFilter','highBoxBlurFilter',
-        'gaussianBlurFilter','medianBlurFilter','sharpenFilter','unsharpFilter','embossFilter','reliefFilter','sobelFilter','prewittFilter',
-        'robertFilter','laplacianEdgeFilter','revertImage','redoImage','cancelFilter','loadSave','flip','fish','panning','sheer','showSkinArea','skinWhitening',
-        'validateYCbCr','objectDetection'];
-    const uiFunction = ['savepoint','download','fullscreenCanvas','fullscreen','closeFullscreen','fuckCAPTCHA','focusEditing'];
-    const dynamicFunction = {'hue':'hsi','customH':'hsi','saturation':"hsi",'customS':'hsi','intensity':'hsi','customI':'hsi','Red':'colorbalance','customR':'colorbalance',
-        'Green':'colorbalance','customG':'colorbalance','Blue':'colorbalance','customB':'colorbalance'};
+    const filterFunction = ['inverse', 'grayscale', 'sepia', 'binary', 'dither', 'floyd', 'histogramEq', 'adjustGamma',
+        'uniformNoise', 'gaussianNoise', 'exponentialNoise', 'impulseNoise', 'laplacianFilter', 'extendLaplacianFilter', 'boxBlurFilter', 'highBoxBlurFilter',
+        'gaussianBlurFilter', 'medianBlurFilter', 'sharpenFilter', 'unsharpFilter', 'embossFilter', 'reliefFilter', 'sobelFilter', 'prewittFilter',
+        'robertFilter', 'laplacianEdgeFilter', 'revertImage', 'redoImage', 'cancelFilter', 'loadSave', 'flip', 'fish', 'panning', 'sheer', 'showSkinArea', 'skinWhitening',
+        'validateYCbCr', 'objectDetection'];
+    const uiFunction = ['savepoint', 'download', 'fullscreenCanvas', 'fullscreen', 'closeFullscreen', 'fuckCAPTCHA', 'focusEditing'];
+    const dynamicFunction = {
+        'hue': 'hsi',
+        'customH': 'hsi',
+        'saturation': "hsi",
+        'customS': 'hsi',
+        'intensity': 'hsi',
+        'customI': 'hsi',
+        'Red': 'colorbalance',
+        'customR': 'colorbalance',
+        'Green': 'colorbalance',
+        'customG': 'colorbalance',
+        'Blue': 'colorbalance',
+        'customB': 'colorbalance'
+    };
     const webpage = document;
-    for (const element of filterFunction){
-        const functionCall = function() {
+    for (const element of filterFunction) {
+        const functionCall = function () {
             document.getElementById(element).addEventListener("click", function () {
                 imageFilter(element);
             });
         }
         functionCall();
     }
-    for (const element of uiFunction){
-        if (element === 'fullscreenCanvas'){
-            const functionCall = function() {
+    for (const element of uiFunction) {
+        if (element === 'fullscreenCanvas') {
+            const functionCall = function () {
                 webpage.getElementById(element).addEventListener("click", function () {
                     openFullscreen(webpage.getElementById('filterResult'))
                 });
             }
             functionCall();
-            }
-        else if(element === 'fullscreen'){
-            const functionCall = function() {
+        } else if (element === 'fullscreen') {
+            const functionCall = function () {
                 webpage.getElementById(element).addEventListener("click", function () {
                     openFullscreen(webpage.documentElement)
                 });
             }
             functionCall();
-        }
-        else{
+        } else {
             switch (element) {
-                case "savepoint":{
-                    const functionCall = function() {webpage.getElementById(element).addEventListener("click",savepoint)};
+                case "savepoint": {
+                    const functionCall = function () {
+                        webpage.getElementById(element).addEventListener("click", savepoint)
+                    };
                     functionCall();
                     break;
                 }
-                case "fuckCAPTCHA":{
-                    const functionCall = function(){webpage.getElementById(element).addEventListener("click",fuckCAPTCHA)};
+                case "fuckCAPTCHA": {
+                    const functionCall = function () {
+                        webpage.getElementById(element).addEventListener("click", fuckCAPTCHA)
+                    };
                     functionCall();
                     break;
                 }
-                case "focusEditing":{
-                    const functionCall = function(){webpage.getElementById(element).addEventListener("click",focusEditing)};
+                case "focusEditing": {
+                    const functionCall = function () {
+                        webpage.getElementById(element).addEventListener("click", focusEditing)
+                    };
                     functionCall();
                     break;
                 }
-                case "closeFullscreen":{
-                    const functionCall = function(){webpage.getElementById(element).addEventListener("click",closeFullscreen)};
+                case "closeFullscreen": {
+                    const functionCall = function () {
+                        webpage.getElementById(element).addEventListener("click", closeFullscreen)
+                    };
                     functionCall();
                     break;
                 }
-                case "download":{
-                    const functionCall = function(){webpage.getElementById(element).addEventListener("click",download)};
+                case "download": {
+                    const functionCall = function () {
+                        webpage.getElementById(element).addEventListener("click", download)
+                    };
                     functionCall();
-                    break; 
+                    break;
                 }
                 default:
                     break;
@@ -1186,8 +1206,10 @@ function initFunctions() {
         }
     }
     for (const [key, value] of Object.entries(dynamicFunction)) {
-        const functionCall = function(){
-            webpage.getElementById(key).addEventListener("click", function () {imageFilter(value);});
+        const functionCall = function () {
+            webpage.getElementById(key).addEventListener("click", function () {
+                imageFilter(value);
+            });
         }
         functionCall();
     }
