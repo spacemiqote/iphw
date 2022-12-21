@@ -4,6 +4,7 @@
 /*global objects, objects*/
 /*global Tesseract, Tesseract*/
 /*eslint no-undef: "error"*/
+"use strict";
 const userImage = document.getElementById("userImage");
 const originalImage = document.getElementById("originalImage");
 const models = document.getElementById("models");
@@ -122,6 +123,7 @@ let revertCheck = 0;
 let index = 0;
 let fuck = 0;
 let loaded = false;
+let objects = [];
 let cobjectDetector = 1;
 let yobjectDetector = 1;
 let cmodelCheck = false;
@@ -495,8 +497,8 @@ async function imageFilter(filter) {
     let tempW = 0;
     let tempH = 0;
 
-    filterResult.width = originalImage.width;
-    filterResult.height = originalImage.height;
+    //filterResult.width = originalImage.width;
+    //filterResult.height = originalImage.height;
     filterResult = filter2D.getImageData(0, 0, originalImage.width, originalImage.height);
 
     if (enableMultipleFilter && stepCount > 0 && filter !== "cancelFilter") {
