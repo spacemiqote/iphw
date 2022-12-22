@@ -1144,79 +1144,78 @@ function initFunctions() {
         'customB': 'colorbalance'
     };
     const webpage = document;
+    const init_savepoint = () => savepoint;
+    const init_imageFilter = () => imageFilter;
+    const init_openFullscreen = () => openFullscreen;
+    const init_fuckCAPTCHA = () => fuckCAPTCHA;
+    const init_focusEditing = () => focusEditing;
+    const init_closeFullscreen = () => closeFullscreen;
+    const init_download = () => download;
     for (const element of filterFunction) {
         const el = webpage.getElementById(element);
         const staticTemp1 = element;
-        const staticTemp2 = imageFilter();
         const functionCall = () => {
             el.addEventListener("click", () => {
-                staticTemp2(staticTemp1);
+                init_imageFilter(staticTemp1);
             });
         };
         functionCall();
     }
     for (const element of uiFunction) {
         if (element === 'fullscreenCanvas') {
-            const staticTemp1 = openFullscreen();
             const functionCall = () => {
                 const el = webpage.getElementById(element);
                 el.addEventListener("click", () => {
-                    staticTemp1(webpage.getElementById("filterResult"));
+                    init_openFullscreen(webpage.getElementById("filterResult"));
                 });
             };
             functionCall();
         } else if (element === 'fullscreen') {
-            const staticTemp1 = openFullscreen();
             const functionCall = () => {
                 const el = webpage.getElementById(element);
                 el.addEventListener("click", () => {
-                    staticTemp1(webpage.documentElement);
+                    init_openFullscreen(webpage.documentElement);
                 });
             };
             functionCall();
         } else {
             switch (element) {
-                case "savepoint": {
-                    const staticTemp1 = savepoint();
+                 case "savepoint": {
                     const functionCall = () => {
                         const el = webpage.getElementById(element);
-                        el.addEventListener("click", staticTemp1);
+                        el.addEventListener("click", init_savepoint);
                     };
                     functionCall();
                     break;
                 }
                 case "fuckCAPTCHA": {
-                    const staticTemp1 = fuckCAPTCHA();
                     const functionCall = () => {
                         const el = webpage.getElementById(element);
-                        el.addEventListener("click", staticTemp1);
+                        el.addEventListener("click", init_fuckCAPTCHA);
                     };
                     functionCall();
                     break;
                 }
                 case "focusEditing": {
-                    const staticTemp1 = focusEditing();
                     const functionCall = () => {
                         const el = webpage.getElementById(element);
-                        el.addEventListener("click", staticTemp1);
+                        el.addEventListener("click", init_focusEditing);
                     };
                     functionCall();
                     break;
                 }
                 case "closeFullscreen": {
-                    const staticTemp1 = closeFullscreen();
                     const functionCall = () => {
                         const el = webpage.getElementById(element);
-                        el.addEventListener("click", staticTemp1);
+                        el.addEventListener("click", init_closeFullscreen);
                     };
                     functionCall();
                     break;
                 }
                 case "download": {
-                    const staticTemp1 = download();
                     const functionCall = () => {
                         const el = webpage.getElementById(element);
-                        el.addEventListener("click", staticTemp1);
+                        el.addEventListener("click", init_download);
                     };
                     functionCall();
                     break;
