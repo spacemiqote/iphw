@@ -1145,8 +1145,8 @@ function initFunctions() {
     };
     const webpage = document;
     const init_savepoint = () => savepoint;
-    const init_imageFilter = () => imageFilter;
-    const init_openFullscreen = () => openFullscreen;
+    const init_imageFilter = (filter) => imageFilter(filter);
+    const init_openFullscreen = (elem) => openFullscreen(elem);
     const init_fuckCAPTCHA = () => fuckCAPTCHA;
     const init_focusEditing = () => focusEditing;
     const init_closeFullscreen = () => closeFullscreen;
