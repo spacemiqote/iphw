@@ -1225,12 +1225,11 @@ function initFunctions() {
             }
         }
     }
-    for (const [key, value] of Object.entries(dynamicFunction)) {
-        const staticTemp1 = imageFilter();
+      for (const [key, value] of Object.entries(dynamicFunction)) {
         const functionCall = () => {
             const el = webpage.getElementById(key);
             el.addEventListener("click", () => {
-                staticTemp1(value);
+                init_imageFilter(value);
             });
         };
         functionCall();
