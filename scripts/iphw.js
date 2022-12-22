@@ -234,12 +234,12 @@ function valueSync(value) {
         if (value === true) {
             const staticTemp1 = i;
             const functionCall = function () {
-                range[staticTemp1].addEventListener("input", function (e) {
+              range[staticTemp1].addEventListener("input", (e) => {
                     field[staticTemp1].value = e.target.value;
-                });
-                field[staticTemp1].addEventListener("input", function (e) {
+                 });
+              field[staticTemp1].addEventListener("input", (e) => { 
                     range[staticTemp1].value = e.target.value;
-                });
+								});
             };
             functionCall();
         } else if (!range[i].classList.contains("noSync")) {
@@ -1118,6 +1118,7 @@ async function fuckCAPTCHA() {
 }
 
 valueSync(true);
+
 userImage.addEventListener("change", readImage);
 fileReader.addEventListener("load", loadImage);
 
