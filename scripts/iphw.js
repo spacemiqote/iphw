@@ -1147,7 +1147,7 @@ function initFunctions() {
     const init_savepoint = () => savepoint;
     const init_imageFilter = (filter) => imageFilter(filter);
     const init_openFullscreen = (elem) => openFullscreen(elem);
-    const init_fuckCAPTCHA = async() => { fuckCAPTCHA();};
+    const init_fuckCAPTCHA = async() => {await fuckCAPTCHA();};
     const init_focusEditing = () => focusEditing;
     const init_closeFullscreen = () => closeFullscreen;
     const init_download = () => download;
