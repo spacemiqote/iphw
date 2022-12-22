@@ -1,8 +1,11 @@
-/*jshint esversion: 6 */
+/*jshint esversion: 8 */
+/*jshint globalstrict: true*/
+/*jslint bitwise: true */
 /*global ml5, ml5*/
 /*global EXIF, EXIF*/
 /*global Tesseract, Tesseract*/
 /*eslint no-undef: "error"*/
+
 "use strict";
 const userImage = document.getElementById("userImage");
 const originalImage = document.getElementById("originalImage");
@@ -44,11 +47,11 @@ const laplacianEdge = [
 const robertsX = [
     [1, 0],
     [0, -1],
-]
+];
 const robertsY = [
     [0, 1],
     [-1, 0],
-]
+];
 const extendLaplacian = [
     [-1, -1, -1],
     [-1, 9, -1],
@@ -211,10 +214,10 @@ function mulberry32(a) {
         t = Math.imul(t ^ t >>> 15, t | 1);
         t ^= t + Math.imul(t ^ t >>> 7, t | 61);
         return ((t ^ t >>> 14) >>> 0) / 4294967296;
-    }
+    };
 }
 
-const currentDate = new Date;
+const currentDate = new Date();
 const seed = cyrb128(currentDate.getTime());
 const rand = mulberry32(seed[0]);
 
@@ -229,14 +232,15 @@ function checkFocusMode() {
 function valueSync(value) {
     for (let i = 0; i < range.length; i++) {
         if (value === true) {
+            const staticTemp1 = i;
             const functionCall = function () {
-                range[i].addEventListener("input", function (e) {
-                    field[i].value = e.target.value;
+                range[staticTemp1].addEventListener("input", function (e) {
+                    field[staticTemp1].value = e.target.value;
                 });
-                field[i].addEventListener("input", function (e) {
-                    range[i].value = e.target.value;
+                field[staticTemp1].addEventListener("input", function (e) {
+                    range[staticTemp1].value = e.target.value;
                 });
-            }
+            };
             functionCall();
         } else if (!range[i].classList.contains("noSync")) {
             field[i].value = 0;
@@ -291,7 +295,7 @@ function readImage() {
     if (userImage.files[0] && userImage.files.length && userImage) {
         const image = userImage.files[0];
         if (!passFileType.test(image.type)) {
-            return
+            return;
         }
         imageType = image.type;
         imageFilename = image.name;
@@ -646,9 +650,9 @@ async function imageFilter(filter) {
                 break;
             }
             case "histogramEq" : {
-                const freq = new Array(256).fill(0)
-                const cdf = new Array(256).fill(0)
-                const he = new Array(256).fill(0)
+                const freq = new Array(256).fill(0);
+                const cdf = new Array(256).fill(0);
+                const he = new Array(256).fill(0);
                 for (let len = 0; len < pixel.length; len += 4) {
                     freq[pixel[len]]++;
                     freq[pixel[len + 1]]++;
@@ -1114,7 +1118,6 @@ async function fuckCAPTCHA() {
 }
 
 valueSync(true);
-
 userImage.addEventListener("change", readImage);
 fileReader.addEventListener("load", loadImage);
 
@@ -1142,68 +1145,77 @@ function initFunctions() {
     const webpage = document;
     for (const element of filterFunction) {
         const el = webpage.getElementById(element);
+        const staticTemp1 = element;
+        const staticTemp2 = imageFilter();
         const functionCall = () => {
             el.addEventListener("click", () => {
-                imageFilter(element);
+                staticTemp2(staticTemp1);
             });
         };
         functionCall();
     }
     for (const element of uiFunction) {
         if (element === 'fullscreenCanvas') {
+            const staticTemp1 = openFullscreen();
             const functionCall = () => {
                 const el = webpage.getElementById(element);
                 el.addEventListener("click", () => {
-                    openFullscreen(webpage.getElementById("filterResult"));
+                    staticTemp1(webpage.getElementById("filterResult"));
                 });
             };
             functionCall();
         } else if (element === 'fullscreen') {
-            const el = webpage.getElementById(element);
+            const staticTemp1 = openFullscreen();
             const functionCall = () => {
+                const el = webpage.getElementById(element);
                 el.addEventListener("click", () => {
-                    openFullscreen(webpage.documentElement);
+                    staticTemp1(webpage.documentElement);
                 });
             };
             functionCall();
         } else {
             switch (element) {
                 case "savepoint": {
+                    const staticTemp1 = savepoint();
                     const functionCall = () => {
                         const el = webpage.getElementById(element);
-                        el.addEventListener("click", savepoint);
+                        el.addEventListener("click", staticTemp1);
                     };
                     functionCall();
                     break;
                 }
                 case "fuckCAPTCHA": {
+                    const staticTemp1 = fuckCAPTCHA();
                     const functionCall = () => {
                         const el = webpage.getElementById(element);
-                        el.addEventListener("click", fuckCAPTCHA);
+                        el.addEventListener("click", staticTemp1);
                     };
                     functionCall();
                     break;
                 }
                 case "focusEditing": {
+                    const staticTemp1 = focusEditing();
                     const functionCall = () => {
                         const el = webpage.getElementById(element);
-                        el.addEventListener("click", focusEditing);
+                        el.addEventListener("click", staticTemp1);
                     };
                     functionCall();
                     break;
                 }
                 case "closeFullscreen": {
+                    const staticTemp1 = closeFullscreen();
                     const functionCall = () => {
                         const el = webpage.getElementById(element);
-                        el.addEventListener("click", closeFullscreen);
+                        el.addEventListener("click", staticTemp1);
                     };
                     functionCall();
                     break;
                 }
                 case "download": {
+                    const staticTemp1 = download();
                     const functionCall = () => {
                         const el = webpage.getElementById(element);
-                        el.addEventListener("click", download);
+                        el.addEventListener("click", staticTemp1);
                     };
                     functionCall();
                     break;
@@ -1214,10 +1226,11 @@ function initFunctions() {
         }
     }
     for (const [key, value] of Object.entries(dynamicFunction)) {
+        const staticTemp1 = imageFilter();
         const functionCall = () => {
             const el = webpage.getElementById(key);
             el.addEventListener("click", () => {
-                imageFilter(value);
+                staticTemp1(value);
             });
         };
         functionCall();
