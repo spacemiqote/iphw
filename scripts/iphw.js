@@ -164,9 +164,11 @@ function openFullscreen(element) {
     } else if (element.mozRequestFullScreen) element.mozRequestFullScreen();
 }
 
-async function closeFullscreen() {
+function closeFullscreen() {
     if (document.exitFullscreen) {
-        await document.exitFullscreen();
+        document.exitFullscreen().then(() => {}).catch(() => {
+            // Failed to exit fullscreen
+        });
     } else if (document.webkitExitFullscreen) {
         document.webkitExitFullscreen();
     } else if (document.msExitFullscreen) {
@@ -1090,8 +1092,8 @@ function initFunctions() {
         await fuckCAPTCHA();
     };
     const init_focusEditing = () => focusEditing;
-    const init_closeFullscreen = () => closeFullscreen;
-    const init_download = () => download;
+    const init_closeFullscreen = () => closeFullscreen();
+    const init_download = () => download();
     for (const element of filterFunction) {
         const el = webpage.getElementById(element);
         const staticTemp1 = element;
@@ -1110,8 +1112,8 @@ function initFunctions() {
         "savepoint": init_savepoint,
         "fuckCAPTCHA": init_fuckCAPTCHA,
         "focusEditing": init_focusEditing,
-        "closeFullscreen": init_closeFullscreen,
-        "download": init_download
+        "closeFullscreen": () => init_closeFullscreen(webpage.documentElement),
+        "download": () => init_download(webpage.documentElement)
     };
     for (const element of uiFunction) {
         const el = webpage.getElementById(element);
