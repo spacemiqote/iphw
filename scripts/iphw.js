@@ -1097,7 +1097,9 @@ function initFunctions() {
         const staticTemp1 = element;
         const functionCall = () => {
             el.addEventListener("click", () => {
-                init_imageFilter(staticTemp1).then(() => {}).catch(() => {});
+                init_imageFilter(staticTemp1).then(() => {}).catch(() => {
+                    // intentionally empty.
+                });
             });
         };
         functionCall();
@@ -1122,7 +1124,9 @@ function initFunctions() {
         const functionCall = () => {
             const el = webpage.getElementById(key);
             el.addEventListener("click", () => {
-                init_imageFilter(value).then(() => {}).catch(() => {});
+                init_imageFilter(value).then(() => {}).catch(() => {
+                    // intentionally empty.
+                });
             });
         };
         functionCall();
