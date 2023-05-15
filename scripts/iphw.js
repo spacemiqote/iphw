@@ -1112,8 +1112,8 @@ function initFunctions() {
         "savepoint": init_savepoint,
         "fuckCAPTCHA": init_fuckCAPTCHA,
         "focusEditing": init_focusEditing,
-        "closeFullscreen": () => init_closeFullscreen(webpage.documentElement),
-        "download": () => init_download(webpage.documentElement)
+        "closeFullscreen": () => init_closeFullscreen(),
+        "download": () => init_download()
     };
     for (const element of uiFunction) {
         const el = webpage.getElementById(element);
