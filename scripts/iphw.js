@@ -234,12 +234,12 @@ function valueSync(value) {
         if (value === true) {
             const staticTemp1 = i;
             const functionCall = function () {
-              range[staticTemp1].addEventListener("input", (e) => {
+                range[staticTemp1].addEventListener("input", (e) => {
                     field[staticTemp1].value = e.target.value;
-                 });
-              field[staticTemp1].addEventListener("input", (e) => { 
+                });
+                field[staticTemp1].addEventListener("input", (e) => {
                     range[staticTemp1].value = e.target.value;
-								});
+                });
             };
             functionCall();
         } else if (!range[i].classList.contains("noSync")) {
@@ -342,7 +342,6 @@ function saveSteps(canvas) {
     fuck = 0;
 }
 
-
 function revertImage(filter) {
     switch (filter) {
         case "revertImage": {
@@ -391,8 +390,10 @@ function RGBHSIConversion(command, x, y, z) {
             green = y / sum;
             blue = z / sum;
         }
-        if (blue <= green) Hue = Math.acos((red - green / 2 - blue / 2) / Math.sqrt(red ** 2 + green ** 2 + blue ** 2 - red * green - red * blue - green * blue));
-        else Hue = 2 * Math.PI - Math.acos((red - green / 2 - blue / 2) / Math.sqrt(red ** 2 + green ** 2 + blue ** 2 - red * green - red * blue - green * blue));
+        let denominator = Math.sqrt(red ** 2 + green ** 2 + blue ** 2 - red * green - red * blue - green * blue);
+        if (denominator === 0) denominator = 1;
+        if (blue <= green) Hue = Math.acos((red - green / 2 - blue / 2) / denominator);
+        else Hue = 2 * Math.PI - Math.acos((red - green / 2 - blue / 2) / denominator);
         if (Number.isNaN(Hue)) Hue = 0;
         Hue = (Hue * 180) / Math.PI;
         Saturation = (1 - 3 * Math.min(red, green, blue)) * 100;
@@ -566,18 +567,7 @@ async function imageFilter(filter) {
         const height = filterResult.height;
         const width = filterResult.width;
         const pixel = filterResult.data;
-        let filterX = 0;
-        let filterY = 0;
         let lum = 0;
-        let convR = 0;
-        let convG = 0;
-        let convB = 0;
-        let R_Gx = 0;
-        let R_Gy = 0;
-        let G_Gx = 0;
-        let G_Gy = 0;
-        let B_Gx = 0;
-        let B_Gy = 0;
         let preCalcX = 0;
         let preCalcY = 0;
         switch (filter) {
@@ -808,142 +798,91 @@ async function imageFilter(filter) {
                         if (down > height - 1) down = height - 1;
                         const currentPixel = y * 4 * width + 4 * x;
                         if (filter === "medianBlurFilter") {
-                            let medianMask = new Int32Array([graph[up][left], graph[up][x], graph[up][right], graph[y][left], graph[y][x], graph[y][right], graph[down][left], graph[down][x], graph[down][right]]);
-                            medianMask = medianMask.sort();
+                            const positions = [[up, left], [up, x], [up, right], [y, left], [y, x], [y, right], [down, left], [down, x], [down, right]];
+                            let medianMask = new Int32Array(9);
+                            for (let i = 0; i < positions.length; i++) {
+                                medianMask[i] = graph[positions[i][0]][positions[i][1]];
+                            }
+                            medianMask.sort((a, b) => a - b);
                             let ypos = 0;
                             let xpos = 0;
                             const mMask = medianMask[4];
-                            if (mMask === graph[up][left]) {
-                                ypos = up;
-                                xpos = left;
-                            } else if (mMask === graph[up][x]) {
-                                ypos = up;
-                                xpos = x;
-                            } else if (mMask === graph[up][right]) {
-                                ypos = up;
-                                xpos = right;
-                            } else if (mMask === graph[y][left]) {
-                                ypos = y;
-                                xpos = left;
-                            } else if (mMask === graph[y][x]) {
-                                ypos = y;
-                                xpos = x;
-                            } else if (mMask === graph[y][right]) {
-                                ypos = y;
-                                xpos = right;
-                            } else if (mMask === graph[down][left]) {
-                                ypos = down;
-                                xpos = left;
-                            } else if (mMask === graph[down][x]) {
-                                ypos = down;
-                                xpos = x;
-                            } else if (mMask === graph[down][right]) {
-                                ypos = down;
-                                xpos = right;
+                            for (const element of positions) {
+                                if (graph[element[0]][element[1]] === mMask) {
+                                    [ypos, xpos] = element;
+                                    break;
+                                }
                             }
                             pixel[currentPixel] = Red[ypos][xpos];
                             pixel[currentPixel + 1] = Green[ypos][xpos];
                             pixel[currentPixel + 2] = Blue[ypos][xpos];
                         } else if (filter === "sobelFilter" || filter === "prewittFilter" || filter === "robertFilter") {
+                            let filterX, filterY, Gx, Gy;
                             if (filter === "robertFilter") {
                                 filterX = robertsX;
                                 filterY = robertsY;
-                                R_Gx = Red[y][x] * filterX[0][0] + Red[y][left] * filterX[0][1] + Red[down][x] * filterX[1][0] + Red[down][left] * filterX[1][1];
-                                R_Gy = Red[y][x] * filterY[0][0] + Red[y][left] * filterY[0][1] + Red[down][x] * filterY[1][0] + Red[down][left] * filterY[1][1];
-                                G_Gx = Green[y][x] * filterX[0][0] + Green[y][left] * filterX[0][1] + Green[down][x] * filterX[1][0] + Green[down][left] * filterX[1][1];
-                                G_Gy = Green[y][x] * filterY[0][0] + Green[y][left] * filterY[0][1] + Green[down][x] * filterY[1][0] + Green[down][left] * filterY[1][1];
-                                B_Gx = Blue[y][x] * filterX[0][0] + Blue[y][left] * filterX[0][1] + Blue[down][x] * filterX[1][0] + Blue[down][left] * filterX[1][1];
-                                B_Gy = Blue[y][x] * filterY[0][0] + Blue[y][left] * filterY[0][1] + Blue[down][x] * filterY[1][0] + Blue[down][left] * filterY[1][1];
                             } else {
-                                filterX = prewittFilterX;
-                                filterY = prewittFilterY;
-                                if (filter === "sobelFilter") {
-                                    filterX = sobelFilterX;
-                                    filterY = sobelFilterY;
-                                }
-                                R_Gx = (filterX[0][0] * Red[up][left] + Red[up][x] * filterX[0][1] + Red[up][right] * filterX[0][2] +
-                                    Red[y][left] * filterX[1][0] + Red[y][x] * filterX[1][1] + Red[y][right] * filterX[1][2] +
-                                    Red[down][left] * filterX[2][0] + Red[down][x] * filterX[2][1] + Red[down][right] * filterX[2][2]);
-                                R_Gy = (filterY[0][0] * Red[up][left] + Red[up][x] * filterY[0][1] + Red[up][right] * filterY[0][2] +
-                                    Red[y][left] * filterY[1][0] + Red[y][x] * filterY[1][1] + Red[y][right] * filterY[1][2] +
-                                    Red[down][left] * filterY[2][0] + Red[down][x] * filterY[2][1] + Red[down][right] * filterY[2][2]);
-                                G_Gx = (filterX[0][0] * Green[up][left] + Green[up][x] * filterX[0][1] + Green[up][right] * filterX[0][2] +
-                                    Green[y][left] * filterX[1][0] + Green[y][x] * filterX[1][1] + Green[y][right] * filterX[1][2] +
-                                    Green[down][left] * filterX[2][0] + Green[down][x] * filterX[2][1] + Green[down][right] * filterX[2][2]);
-                                G_Gy = (filterY[0][0] * Green[up][left] + Green[up][x] * filterY[0][1] + Green[up][right] * filterY[0][2] +
-                                    Green[y][left] * filterY[1][0] + Green[y][x] * filterY[1][1] + Green[y][right] * filterY[1][2] +
-                                    Green[down][left] * filterY[2][0] + Green[down][x] * filterY[2][1] + Green[down][right] * filterY[2][2]);
-                                B_Gx = (filterX[0][0] * Blue[up][left] + Blue[up][x] * filterX[0][1] + Blue[up][right] * filterX[0][2] +
-                                    Blue[y][left] * filterX[1][0] + Blue[y][x] * filterX[1][1] + Blue[y][right] * filterX[1][2] +
-                                    Blue[down][left] * filterX[2][0] + Blue[down][x] * filterX[2][1] + Blue[down][right] * filterX[2][2]);
-                                B_Gy = (filterY[0][0] * Blue[up][left] + Blue[up][x] * filterY[0][1] + Blue[up][right] * filterY[0][2] +
-                                    Blue[y][left] * filterY[1][0] + Blue[y][x] * filterY[1][1] + Blue[y][right] * filterY[1][2] +
-                                    Blue[down][left] * filterY[2][0] + Blue[down][x] * filterY[2][1] + Blue[down][right] * filterY[2][2]);
+                                filterX = (filter === "sobelFilter") ? sobelFilterX : prewittFilterX;
+                                filterY = (filter === "sobelFilter") ? sobelFilterY : prewittFilterY;
                             }
-                            convR = Math.sqrt(R_Gx ** 2 + R_Gy ** 2);
-                            if (convR < 0)
-                                convR = 0;
-                            if (convR > 255)
-                                convR = 255;
-                            convG = Math.sqrt(G_Gx ** 2 + G_Gy ** 2);
-                            if (convG < 0)
-                                convG = 0;
-                            if (convG > 255)
-                                convG = 255;
-                            convB = Math.sqrt(B_Gx ** 2 + B_Gy ** 2);
-                            if (convB < 0)
-                                convB = 0;
-                            if (convB > 255)
-                                convB = 255;
-                            lum = 0.2126 * convR + 0.7152 * convG + 0.0722 * convB;
+                            const channels = [Red, Green, Blue];
+                            const results = [];
+                            for (const element of channels) {
+                                let channel = element;
+                                if (filter === "robertFilter") {
+                                    Gx = channel[y][x] * filterX[0][0] + channel[y][left] * filterX[0][1] + channel[down][x] * filterX[1][0] + channel[down][left] * filterX[1][1];
+                                    Gy = channel[y][x] * filterY[0][0] + channel[y][left] * filterY[0][1] + channel[down][x] * filterY[1][0] + channel[down][left] * filterY[1][1];
+                                } else {
+                                    const positions = [[up, left], [up, x], [up, right], [y, left], [y, x], [y, right], [down, left], [down, x], [down, right]];
+                                    Gx = Gy = 0;
+                                    for (let j = 0; j < positions.length; j++) {
+                                        Gx += channel[positions[j][0]][positions[j][1]] * filterX[Math.floor(j / 3)][j % 3];
+                                        Gy += channel[positions[j][0]][positions[j][1]] * filterY[Math.floor(j / 3)][j % 3];
+                                    }
+                                }
+                                let result = Math.sqrt(Gx ** 2 + Gy ** 2);
+                                if (result < 0) {
+                                    results.push(result > 255 ? 255 : 0);
+                                } else {
+                                    results.push(result > 255 ? 255 : result);
+                                }
+                            }
+                            let [convR, convG, convB] = results;
+                            let lum = 0.2126 * convR + 0.7152 * convG + 0.0722 * convB;
                             switch (edgeDetection) {
                                 case "filterValue":
-                                case "grayFilterValue" : {
+                                case "grayFilterValue":
                                     const preCalcLum = 255 - lum;
-                                    pixel[currentPixel] = checkGray ? preCalcLum : convR;
+                                    pixel[currentPixel] = pixel[currentPixel + 1] = pixel[currentPixel + 2] = checkGray ? preCalcLum : convR;
                                     pixel[currentPixel + 1] = checkGray ? preCalcLum : convG;
                                     pixel[currentPixel + 2] = checkGray ? preCalcLum : convB;
                                     break;
-                                }
-                                default : {
+                                default:
                                     const preCalcAbs = Math.abs(255 - Math.abs(lum)) > 127 ? 255 : 0;
-                                    pixel[currentPixel] = preCalcAbs;
-                                    pixel[currentPixel + 1] = preCalcAbs;
-                                    pixel[currentPixel + 2] = preCalcAbs;
+                                    pixel[currentPixel] = pixel[currentPixel + 1] = pixel[currentPixel + 2] = preCalcAbs;
                                     break;
-                                }
                             }
                         } else {
-                            let filterKernel = boxBlur;
-                            let extraValue = 0;
-                            if (filter === "gaussianBlurFilter")
-                                filterKernel = gaussianBlur;
-                            else if (filter === "sharpenFilter")
-                                filterKernel = sharpen;
-                            else if (filter === "embossFilter") {
-                                filterKernel = emboss;
-                                extraValue = 128;
-                            } else if (filter === "unsharpFilter")
-                                filterKernel = unsharp;
-                            else if (filter === "laplacianFilter")
-                                filterKernel = laplacian;
-                            else if (filter === "laplacianEdgeFilter")
-                                filterKernel = laplacianEdge;
-                            else if (filter === "extendLaplacianFilter")
-                                filterKernel = extendLaplacian;
-                            else if (filter === "highBoxBlurFilter")
-                                filterKernel = highBoxBlur;
-                            else if (filter === "reliefFilter")
-                                filterKernel = relief;
-                            pixel[currentPixel] = Red[up][left] * filterKernel[0][0] + Red[up][x] * filterKernel[0][1] + Red[up][right] * filterKernel[0][2] +
-                                Red[y][left] * filterKernel[1][0] + Red[y][x] * filterKernel[1][1] + Red[y][right] * filterKernel[1][2] +
-                                Red[down][left] * filterKernel[2][0] + Red[down][x] * filterKernel[2][1] + Red[down][right] * filterKernel[2][2] + extraValue;
-                            pixel[currentPixel + 1] = Green[up][left] * filterKernel[0][0] + Green[up][x] * filterKernel[0][1] + Green[up][right] * filterKernel[0][2] +
-                                Green[y][left] * filterKernel[1][0] + Green[y][x] * filterKernel[1][1] + Green[y][right] * filterKernel[1][2] +
-                                Green[down][left] * filterKernel[2][0] + Green[down][x] * filterKernel[2][1] + Green[down][right] * filterKernel[2][2] + extraValue;
-                            pixel[currentPixel + 2] = Blue[up][left] * filterKernel[0][0] + Blue[up][x] * filterKernel[0][1] + Blue[up][right] * filterKernel[0][2] +
-                                Blue[y][left] * filterKernel[1][0] + Blue[y][x] * filterKernel[1][1] + Blue[y][right] * filterKernel[1][2] +
-                                Blue[down][left] * filterKernel[2][0] + Blue[down][x] * filterKernel[2][1] + Blue[down][right] * filterKernel[2][2] + extraValue;
+                            const filterKernelMap = {
+                                "gaussianBlurFilter": {kernel: gaussianBlur, extraValue: 0},
+                                "sharpenFilter": {kernel: sharpen, extraValue: 0},
+                                "embossFilter": {kernel: emboss, extraValue: 128},
+                                "unsharpFilter": {kernel: unsharp, extraValue: 0},
+                                "laplacianFilter": {kernel: laplacian, extraValue: 0},
+                                "laplacianEdgeFilter": {kernel: laplacianEdge, extraValue: 0},
+                                "extendLaplacianFilter": {kernel: extendLaplacian, extraValue: 0},
+                                "highBoxBlurFilter": {kernel: highBoxBlur, extraValue: 0},
+                                "reliefFilter": {kernel: relief, extraValue: 0},
+                                "default": {kernel: boxBlur, extraValue: 0}
+                            };
+                            let filterKernel = filterKernelMap[filter]?.kernel || filterKernelMap["default"].kernel;
+                            let extraValue = filterKernelMap[filter]?.extraValue || filterKernelMap["default"].extraValue;
+                            for (let i = 0; i < 3; i++) {
+                                let color = [Red, Green, Blue][i];
+                                pixel[currentPixel + i] = color[up][left] * filterKernel[0][0] + color[up][x] * filterKernel[0][1] + color[up][right] * filterKernel[0][2] +
+                                    color[y][left] * filterKernel[1][0] + color[y][x] * filterKernel[1][1] + color[y][right] * filterKernel[1][2] +
+                                    color[down][left] * filterKernel[2][0] + color[down][x] * filterKernel[2][1] + color[down][right] * filterKernel[2][2] + extraValue;
+                            }
                             if (filter === "laplacianEdgeFilter") {
                                 lum = 0.2126 * pixel[currentPixel] + 0.7152 * pixel[currentPixel + 1] + 0.0722 * pixel[currentPixel + 2];
                                 if (!checkEdge && !checkGray) {
@@ -1147,7 +1086,9 @@ function initFunctions() {
     const init_savepoint = () => savepoint;
     const init_imageFilter = (filter) => imageFilter(filter);
     const init_openFullscreen = (elem) => openFullscreen(elem);
-    const init_fuckCAPTCHA = async() => {await fuckCAPTCHA();};
+    const init_fuckCAPTCHA = async () => {
+        await fuckCAPTCHA();
+    };
     const init_focusEditing = () => focusEditing;
     const init_closeFullscreen = () => closeFullscreen;
     const init_download = () => download;
@@ -1161,71 +1102,23 @@ function initFunctions() {
         };
         functionCall();
     }
+    const uiFunctionMap = {
+        "fullscreenCanvas": () => init_openFullscreen(webpage.getElementById("filterResult")),
+        "fullscreen": () => init_openFullscreen(webpage.documentElement),
+        "savepoint": init_savepoint,
+        "fuckCAPTCHA": init_fuckCAPTCHA,
+        "focusEditing": init_focusEditing,
+        "closeFullscreen": init_closeFullscreen,
+        "download": init_download
+    };
     for (const element of uiFunction) {
-        if (element === 'fullscreenCanvas') {
-            const functionCall = () => {
-                const el = webpage.getElementById(element);
-                el.addEventListener("click", () => {
-                    init_openFullscreen(webpage.getElementById("filterResult"));
-                });
-            };
-            functionCall();
-        } else if (element === 'fullscreen') {
-            const functionCall = () => {
-                const el = webpage.getElementById(element);
-                el.addEventListener("click", () => {
-                    init_openFullscreen(webpage.documentElement);
-                });
-            };
-            functionCall();
-        } else {
-            switch (element) {
-                 case "savepoint": {
-                    const functionCall = () => {
-                        const el = webpage.getElementById(element);
-                        el.addEventListener("click", init_savepoint);
-                    };
-                    functionCall();
-                    break;
-                }
-                case "fuckCAPTCHA": {
-                    const functionCall = () => {
-                        const el = webpage.getElementById(element);
-                        el.addEventListener("click", init_fuckCAPTCHA);
-                    };
-                    functionCall();
-                    break;
-                }
-                case "focusEditing": {
-                    const functionCall = () => {
-                        const el = webpage.getElementById(element);
-                        el.addEventListener("click", init_focusEditing);
-                    };
-                    functionCall();
-                    break;
-                }
-                case "closeFullscreen": {
-                    const functionCall = () => {
-                        const el = webpage.getElementById(element);
-                        el.addEventListener("click", init_closeFullscreen);
-                    };
-                    functionCall();
-                    break;
-                }
-                case "download": {
-                    const functionCall = () => {
-                        const el = webpage.getElementById(element);
-                        el.addEventListener("click", init_download);
-                    };
-                    functionCall();
-                    break;
-                }
-                default:
-                    break;
-            }
+        const el = webpage.getElementById(element);
+        const functionCall = uiFunctionMap[element];
+        if (functionCall && el) {
+            el.addEventListener("click", functionCall);
         }
     }
-      for (const [key, value] of Object.entries(dynamicFunction)) {
+    for (const [key, value] of Object.entries(dynamicFunction)) {
         const functionCall = () => {
             const el = webpage.getElementById(key);
             el.addEventListener("click", () => {
