@@ -954,13 +954,13 @@ async function imageFilter(filter) {
                         cobjectDetector = ml5.objectDetector('cocossd', detect);
                         cmodelCheck = true;
                     } else
-                        detect();
+                        await detect();
                 } else if (models.value === "YOLO") {
                     if (!ymodelCheck) {
                         yobjectDetector = ml5.objectDetector('yolo', detect);
                         ymodelCheck = true;
                     } else
-                        await detect();
+                        detect();
                 }
                 exitOperation = true;
                 break;
@@ -1040,18 +1040,18 @@ async function fuckCAPTCHA() {
         await loadScript("scripts/tesseract.min.js");
     if (special) {
         document.getElementById("allowMultipleFilterOn").checked = true;
-        imageFilter("grayscale");
-        imageFilter("medianBlurFilter");
-        imageFilter("gaussianBlurFilter");
-        imageFilter("sharpenFilter");
+        await imageFilter("grayscale");
+        await imageFilter("medianBlurFilter");
+        await imageFilter("gaussianBlurFilter");
+        await imageFilter("sharpenFilter");
         document.getElementById("customH").value = 0;
         document.getElementById("customS").value = 0;
         document.getElementById("customI").value = -81;
-        imageFilter("hsi");
+        await imageFilter("hsi");
         document.getElementById("customI").value = 82;
-        imageFilter("hsi");
+        await imageFilter("hsi");
         document.getElementById("customI").value = 18;
-        imageFilter("hsi");
+        await imageFilter("hsi");
     }
     await getCaptcha(document.getElementById("filterResult").toDataURL());
 }
@@ -1097,7 +1097,7 @@ function initFunctions() {
         const staticTemp1 = element;
         const functionCall = () => {
             el.addEventListener("click", () => {
-                init_imageFilter(staticTemp1);
+                init_imageFilter(staticTemp1).then();
             });
         };
         functionCall();
@@ -1122,7 +1122,7 @@ function initFunctions() {
         const functionCall = () => {
             const el = webpage.getElementById(key);
             el.addEventListener("click", () => {
-                init_imageFilter(value);
+                init_imageFilter(value).then();
             });
         };
         functionCall();
