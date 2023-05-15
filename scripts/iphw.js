@@ -166,7 +166,7 @@ function openFullscreen(element) {
 
 function closeFullscreen() {
     if (document.exitFullscreen) {
-        document.exitFullscreen();
+        document.exitFullscreen().then();
     } else if (document.webkitExitFullscreen) {
         document.webkitExitFullscreen();
     } else if (document.msExitFullscreen) {
@@ -960,7 +960,7 @@ async function imageFilter(filter) {
                         yobjectDetector = ml5.objectDetector('yolo', detect);
                         ymodelCheck = true;
                     } else
-                        detect();
+                        await detect();
                 }
                 exitOperation = true;
                 break;
@@ -1096,8 +1096,8 @@ function initFunctions() {
         const el = webpage.getElementById(element);
         const staticTemp1 = element;
         const functionCall = () => {
-            el.addEventListener("click", () => {
-                init_imageFilter(staticTemp1).then();
+            el.addEventListener("click", async () => {
+                await init_imageFilter(staticTemp1);
             });
         };
         functionCall();
@@ -1121,8 +1121,8 @@ function initFunctions() {
     for (const [key, value] of Object.entries(dynamicFunction)) {
         const functionCall = () => {
             const el = webpage.getElementById(key);
-            el.addEventListener("click", () => {
-                init_imageFilter(value).then();
+            el.addEventListener("click", async () => {
+                await init_imageFilter(value);
             });
         };
         functionCall();
