@@ -164,9 +164,9 @@ function openFullscreen(element) {
     } else if (element.mozRequestFullScreen) element.mozRequestFullScreen();
 }
 
-function closeFullscreen() {
+async function closeFullscreen() {
     if (document.exitFullscreen) {
-        document.exitFullscreen().then();
+        await document.exitFullscreen();
     } else if (document.webkitExitFullscreen) {
         document.webkitExitFullscreen();
     } else if (document.msExitFullscreen) {
@@ -1096,8 +1096,8 @@ function initFunctions() {
         const el = webpage.getElementById(element);
         const staticTemp1 = element;
         const functionCall = () => {
-            el.addEventListener("click", async () => {
-                await init_imageFilter(staticTemp1);
+            el.addEventListener("click", () => {
+                init_imageFilter(staticTemp1).then(() => {}).catch((error) => {});
             });
         };
         functionCall();
@@ -1121,8 +1121,8 @@ function initFunctions() {
     for (const [key, value] of Object.entries(dynamicFunction)) {
         const functionCall = () => {
             const el = webpage.getElementById(key);
-            el.addEventListener("click", async () => {
-                await init_imageFilter(value);
+            el.addEventListener("click", () => {
+                init_imageFilter(value).then(() => {}).catch((error) => {});;
             });
         };
         functionCall();
