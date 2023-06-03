@@ -2,6 +2,7 @@
 /*jshint globalstrict: true*/
 /*jslint bitwise: true */
 /*global ml5, ml5*/
+/*global tf, tf*/
 /*global EXIF, EXIF*/
 /*global Tesseract, Tesseract*/
 /*eslint no-undef: "error"*/
@@ -17,6 +18,7 @@ const flipDirectionHV = document.getElementById("flipDirection");
 const displayOriginalImage = document.getElementById("displayOriginalImage");
 const focusMode = document.getElementById("focusMode");
 const specialShit = document.getElementById("specialShit");
+const loadCustomModel = document.getElementById("loadCustomModel");
 const filterBox = document.getElementById("filterBox");
 const originalBox = document.getElementById("originalBox");
 const fileReader = new FileReader(),
@@ -131,6 +133,7 @@ let cmodelCheck = false;
 let ymodelCheck = false;
 let loadedTesseract = false;
 let loadedMl5 = false;
+let loadedTfjs = false;
 let imageFilename = "None";
 let imageType = "None";
 
@@ -1038,8 +1041,15 @@ async function getCaptcha(canv) {
 
 async function fuckCAPTCHA() {
     const special = specialShit.checked;
-    if (!loadedTesseract)
+    const customModel = loadCustomModel.checked;
+    if (!loadedTesseract) {
         await loadScript("scripts/tesseract.min.js");
+        loadedTesseract=true;
+    }
+    if (!loadedTfjs) {
+        await loadScript("scripts/tf.min.js")
+        loadedTfjs=true;
+    }
     if (special) {
         document.getElementById("allowMultipleFilterOn").checked = true;
         await imageFilter("grayscale");
@@ -1054,8 +1064,29 @@ async function fuckCAPTCHA() {
         await imageFilter("hsi");
         document.getElementById("customI").value = 18;
         await imageFilter("hsi");
+        await getCaptcha(document.getElementById("filterResult").toDataURL());
     }
-    await getCaptcha(document.getElementById("filterResult").toDataURL());
+    if (customModel){
+        const characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+        const model = await tf.loadLayersModel('models/school_captcha/model.json');
+        const captchaImageElement = document.getElementById("originalImage");
+        const img = new Image();
+        img.src = captchaImageElement.toDataURL();
+        img.onload = async () => {
+            const tensor = tf.browser.fromPixels(img, 1)
+                .resizeNearestNeighbor([30, 90])
+                .expandDims()
+                .toFloat()
+                .div(255.0);
+            const prediction = model.predict(tensor);
+            const output = await Promise.all(prediction.map(async (p) => {
+                let array = await p.data();
+                return Array.from(array);
+            }));
+            const captcha = output.map(array => characters[array.indexOf(Math.max(...array))]).join('');
+            document.getElementById("captchaCustom").textContent =  `${captcha}`;
+        };
+    }
 }
 
 valueSync(true);

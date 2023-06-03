@@ -88,7 +88,10 @@
         <fieldset>
             <legend class="collapsible">Extended:</legend>
             <div class="content">
-                Captcha : <span id="captcha" class="output">Not Detected</span>
+                Captcha(filter+OCR): <span id="captcha" class="output">Not Detected</span>
+                <br>
+                Captcha(Custom Model): <span id="captchaCustom" class="output">Not Detected</span>
+                <br>
                 <button id="fuckCAPTCHA">Crack Captcha</button>
                 <br>
                 Model Status: <span class="output" id="modelLoadStatus">Not Loaded</span>
@@ -126,7 +129,11 @@
                 </div>
                 <div>
                     <input type="checkbox" id="specialShit"/>
-                    <label for="specialShit">School Captcha</label>
+                    <label for="specialShit">School Captcha(filter+OCR)</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="loadCustomModel"/>
+                    <label for="loadCustomModel">School Captcha(self train)</label>
                 </div>
                 <label for="edgeDetectionCheck">E.D Setup :</label>
                 <select id="edgeDetectionCheck" class="option">
