@@ -1042,14 +1042,12 @@ async function getCaptcha(canv) {
 async function fuckCAPTCHA() {
     const special = specialShit.checked;
     const customModel = loadCustomModel.checked;
-    if (!loadedTesseract) {
+    if (!loadedTesseract || !loadedTfjs) {
         await loadScript("scripts/tesseract.min.js");
-        loadedTesseract=true;
+        await loadScript("scripts/tf.min.js");
     }
-    if (!loadedTfjs) {
-        await loadScript("scripts/tf.min.js")
-        loadedTfjs=true;
-    }
+    loadedTesseract=true;
+    loadedTfjs=true;
     if (special) {
         document.getElementById("allowMultipleFilterOn").checked = true;
         await imageFilter("grayscale");
@@ -1066,12 +1064,11 @@ async function fuckCAPTCHA() {
         await imageFilter("hsi");
         await getCaptcha(document.getElementById("filterResult").toDataURL());
     }
-    if (customModel){
+    if (customModel) {
         const characters = '0123456789abcdefghijklmnopqrstuvwxyz';
         const model = await tf.loadLayersModel('models/school_captcha/model.json');
         const captchaImageElement = document.getElementById("originalImage");
         const img = new Image();
-        img.src = captchaImageElement.toDataURL();
         img.onload = async () => {
             const tensor = tf.browser.fromPixels(img, 1)
                 .resizeNearestNeighbor([30, 90])
@@ -1079,13 +1076,17 @@ async function fuckCAPTCHA() {
                 .toFloat()
                 .div(255.0);
             const prediction = model.predict(tensor);
-            const output = await Promise.all(prediction.map(async (p) => {
-                let array = await p.data();
-                return Array.from(array);
-            }));
+            const output = [];
+            const promises = prediction.map(p =>
+                p.data().then(array => {
+                    output.push(Array.from(array));
+                })
+            );
+            await Promise.all(promises);
             const captcha = output.map(array => characters[array.indexOf(Math.max(...array))]).join('');
-            document.getElementById("captchaCustom").textContent =  `${captcha}`;
+            document.getElementById("captchaCustom").textContent = `${captcha}`;
         };
+        img.src = captchaImageElement.toDataURL();
     }
 }
 
