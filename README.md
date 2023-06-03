@@ -1,5 +1,6 @@
 ## 2D Image Processing Web App
-### Live Version: [bsod.me](https://bsod.me/)    
+### Live Version: [bsod.me](https://bsod.me/)  
+Simple and easy to use 2D image processing website written in JS.  
 [![latest version](https://img.shields.io/github/v/release/spacemiqote/spacemiqote.github.io?color=rgb%28143%2C%20252%2C%20158%29&style=flat-square)](https://github.com/spacemiqote/spacemiqote.github.io/releases/latest)  
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)
