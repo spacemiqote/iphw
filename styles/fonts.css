@@ -2,6 +2,6 @@
     font-family: 'FantasqueSansMono NF';
     font-style: normal;
     font-weight: 400;
-    src: local("FantasqueSansMono NF"), url('../fonts/FantasqueSansMono-Regular.woff2') format('woff2');
+    src: local("Victor Mono"), url('../fonts/VictorMono-Regular.woff2') format('woff2');
     font-display: swap;
 }
