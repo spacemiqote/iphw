@@ -2,7 +2,6 @@
 /*jshint globalstrict: true*/
 /*jslint bitwise: true */
 /*global ml5, ml5*/
-/*global tf, tf*/
 /*global EXIF, EXIF*/
 /*global Tesseract, Tesseract*/
 /*eslint no-undef: "error"*/
@@ -561,6 +560,8 @@ async function imageFilter(filter) {
             }
         }
     } else if (filter === "objectDetection") {
+        if (loadedTfjs)
+            location.reload();
         if (!loadedMl5)
             await loadScript("scripts/ml5.min.js").then().catch();
     }
@@ -1065,8 +1066,10 @@ async function fuckCAPTCHA() {
         await getCaptcha(document.getElementById("filterResult").toDataURL());
     }
     if (customModel) {
+        if (loadedMl5)
+            location.reload();
         const characters = '0123456789abcdefghijklmnopqrstuvwxyz';
-        const model = await tf.loadLayersModel('models/school_captcha/model.json');
+        const tfmodel = await tf.loadLayersModel('models/school_captcha/model.json');
         const captchaImageElement = document.getElementById("originalImage");
         const img = new Image();
         img.onload = async () => {
@@ -1075,7 +1078,7 @@ async function fuckCAPTCHA() {
                 .expandDims()
                 .toFloat()
                 .div(255.0);
-            const prediction = model.predict(tensor);
+            const prediction = tfmodel.predict(tensor);
             const output = [];
             const promises = prediction.map(p =>
                 p.data().then(array => {
