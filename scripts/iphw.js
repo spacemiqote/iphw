@@ -560,8 +560,10 @@ async function imageFilter(filter) {
             }
         }
     } else if (filter === "objectDetection") {
-        if (loadedTfjs)
+        if (loadedTfjs) {
+            alert("Object Detection function is not compatible with Captcha function.");
             location.reload();
+        }
         if (!loadedMl5)
             await loadScript("scripts/ml5.min.js").then().catch();
     }
@@ -1066,9 +1068,10 @@ async function fuckCAPTCHA() {
         await getCaptcha(document.getElementById("filterResult").toDataURL());
     }
     if (customModel) {
-        if (loadedMl5)
+        if (loadedMl5) {
+            alert("Captcha function is not compatible with Object Detection function.");
             location.reload();
-        const characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+        }const characters = '0123456789abcdefghijklmnopqrstuvwxyz';
         const tfmodel = await tf.loadLayersModel('models/school_captcha/model.json');
         const captchaImageElement = document.getElementById("originalImage");
         const img = new Image();
