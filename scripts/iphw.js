@@ -1071,17 +1071,18 @@ async function fuckCAPTCHA() {
         if (loadedMl5) {
             alert("Captcha function is not compatible with Object Detection function.");
             location.reload();
-        }const characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+        }
+        const characters = '0123456789abcdefghijklmnopqrstuvwxyz';
         const tfmodel = await tf.loadLayersModel('models/school_captcha/model.json');
         const captchaImageElement = document.getElementById("originalImage");
         const img = new Image();
         img.onload = async () => {
-            const tensor = tf.browser.fromPixels(img, 1)
+            let tensor = tf.browser.fromPixels(img)
                 .resizeNearestNeighbor([30, 90])
-                .expandDims()
                 .toFloat()
                 .div(255.0);
-            const prediction = tfmodel.predict(tensor);
+            tensor = tensor.mul([0.2989, 0.5870, 0.1140]).sum(-1).expandDims(-1);
+            const prediction = tfmodel.predict(tensor.expandDims());
             const output = [];
             const promises = prediction.map(p =>
                 p.data().then(array => {
