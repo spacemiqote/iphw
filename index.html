@@ -39,6 +39,10 @@
                 <button id="dither">Dither</button>
                 <button id="floyd">Floyd-Steinberg</button>
                 <button id="histogramEq">Histogram Equalization</button>
+                <button id="flip">Flip</button>
+                <button id="fish">Fish</button>
+                <button id="panning">Panning</button>
+                <button id="sheer">Sheer</button>
             </div>
         </fieldset>
         <fieldset>
@@ -99,17 +103,6 @@
                 Model Status: <span class="output" id="modelLoadStatus">Not Loaded</span>
                 <button id="objectDetection">Launch Object Detection
                 </button>
-                <br>
-                <label for="flipDirection">Flip/Sheer Direction:</label>
-                <select id="flipDirection" class="option">
-                    <option value="horizontal">Horizontal/Y</option>
-                    <option value="vertical">Vertical/X</option>
-                </select>
-                <button id="flip">Flip</button>
-                <br>
-                <button id="fish">Fish</button>
-                <button id="panning">Panning</button>
-                <button id="sheer">Sheer</button>
             </div>
         </fieldset>
     </div>
@@ -150,6 +143,11 @@
                     <option value="YOLO">YOLO-Tiny</option>
                 </select>
                 <br>
+                <label for="flipDirection">Flip/Sheer Direction:</label>
+                <select id="flipDirection" class="option">
+                    <option value="horizontal">Horizontal/Y</option>
+                    <option value="vertical">Vertical/X</option>
+                </select>
                 <div>
                     <label for="exifInfo">EXIF Details: </label><br>
                     <textarea id="exifInfo" class="c" readonly></textarea>
