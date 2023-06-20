@@ -19,5 +19,8 @@ For the smoothest experience, I would suggest using the local version as it typi
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=bugs)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)  
+[![CodeScene Code Health](https://codescene.io/projects/40815/status-badges/code-health)](https://codescene.io/projects/40815)  
+[![CodeScene System Mastery](https://codescene.io/projects/40815/status-badges/system-mastery)](https://codescene.io/projects/40815)  
+[![CodeScene general](https://codescene.io/images/analyzed-by-codescene-badge.svg)](https://codescene.io/projects/40815)  
 [![Creative Commons Attribution-ShareAlike 4.0 International License](https://img.shields.io/github/license/spacemiqote/spacemiqote.github.io?color=rgb%28143%2C%20252%2C%20158%29&style=flat-square)](http://creativecommons.org/licenses/by-sa/4.0/)  
 [GDPR-compliant privacy notice ](https://bsod.me/Privacy-Policy.pdf)
