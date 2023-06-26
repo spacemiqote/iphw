@@ -1072,7 +1072,7 @@ async function fuckCAPTCHA() {
             alert("Captcha function is not compatible with Object Detection function.");
             location.reload();
         }
-        const characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+        const characters = '123456789abcdefghijkmnopqrstuvwxyz';
         const tfmodel = await tf.loadLayersModel('models/school_captcha/model.json');
         const captchaImageElement = document.getElementById("originalImage");
         const img = new Image();
