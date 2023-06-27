@@ -1067,33 +1067,64 @@ async function fuckCAPTCHA() {
         await imageFilter("hsi");
         await getCaptcha(document.getElementById("filterResult").toDataURL());
     }
-    if (customModel) {
-        if (loadedMl5) {
-            alert("Captcha function is not compatible with Object Detection function.");
-            location.reload();
+if (customModel) {
+    if (loadedMl5) {
+        alert("Captcha function is not compatible with Object Detection function.");
+        location.reload();
+    }
+    const characters = '123456789abcdefghijkmnopqrstuvwxyz';
+    const tfmodel = await tf.loadLayersModel('models/school_captcha/model.json');
+    const captchaImageElement = document.getElementById("originalImage");
+    const img = new Image();
+    img.onload = async () => {
+        let tensor = tf.browser.fromPixels(img)
+            .resizeNearestNeighbor([30, 90])
+            .toFloat()
+            .div(255.0);
+        tensor = tensor.mul([0.2989, 0.5870, 0.1140]).sum(-1).expandDims(-1);
+        const prediction = tfmodel.predict(tensor.expandDims());
+        const output = [];
+        const promises = prediction.map(p =>
+            p.data().then(array => {
+                output.push(Array.from(array));
+            })
+        );
+        await Promise.all(promises);
+        let charactersOutput = output.map((array, index) => {
+            return {char: characters[array.indexOf(Math.max(...array))], confidences: array};
+        });
+        for (let i = 0; i < charactersOutput.length - 1; i++) {
+            if (charactersOutput[i].char === charactersOutput[i + 1].char) {
+                const confidences1 = charactersOutput[i].confidences.slice().sort((a, b) => b - a);
+                const confidences2 = charactersOutput[i + 1].confidences.slice().sort((a, b) => b - a);
+                if (confidences1[0] > confidences2[0]) {
+                    charactersOutput[i + 1].char = characters[charactersOutput[i + 1].confidences.indexOf(confidences2[1])];
+                } else {
+                    charactersOutput[i].char = characters[charactersOutput[i].confidences.indexOf(confidences1[1])];
+                }
+            }
         }
-        const characters = '123456789abcdefghijkmnopqrstuvwxyz';
-        const tfmodel = await tf.loadLayersModel('models/school_captcha/model.json');
-        const captchaImageElement = document.getElementById("originalImage");
-        const img = new Image();
-        img.onload = async () => {
-            let tensor = tf.browser.fromPixels(img)
-                .resizeNearestNeighbor([30, 90])
-                .toFloat()
-                .div(255.0);
-            tensor = tensor.mul([0.2989, 0.5870, 0.1140]).sum(-1).expandDims(-1);
-            const prediction = tfmodel.predict(tensor.expandDims());
-            const output = [];
-            const promises = prediction.map(p =>
-                p.data().then(array => {
-                    output.push(Array.from(array));
-                })
-            );
-            await Promise.all(promises);
-            const captcha = output.map(array => characters[array.indexOf(Math.max(...array))]).join('');
-            document.getElementById("captchaCustom").textContent = `${captcha}`;
-        };
-        img.src = captchaImageElement.toDataURL();
+        for (let i = 0; i < charactersOutput.length - 1; i++) {
+            if (charactersOutput[i].char === charactersOutput[i + 1].char) {
+                const confidences1 = charactersOutput[i].confidences.slice().sort((a, b) => b - a);
+                const confidences2 = charactersOutput[i + 1].confidences.slice().sort((a, b) => b - a);
+                let alternativeIndex = 2;
+                let newChar;
+                do {
+                    newChar = characters[charactersOutput[i + 1].confidences.indexOf(confidences2[alternativeIndex])];
+                    alternativeIndex++;
+                } while (newChar === charactersOutput[i + 1].char && alternativeIndex < confidences2.length);
+                if (confidences1[0] > confidences2[0]) {
+                    charactersOutput[i + 1].char = newChar;
+                } else {
+                    charactersOutput[i].char = newChar;
+                }
+            }
+        }
+        const captcha = charactersOutput.map(c => c.char).join('');
+        document.getElementById("captchaCustom").textContent = `${captcha}`;
+    };
+    img.src = captchaImageElement.toDataURL();
     }
 }
 
