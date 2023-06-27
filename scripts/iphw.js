@@ -1090,7 +1090,7 @@ if (customModel) {
             })
         );
         await Promise.all(promises);
-        let charactersOutput = output.map((array, index) => {
+        const charactersOutput = output.map(array => {
             return {char: characters[array.indexOf(Math.max(...array))], confidences: array};
         });
         for (let i = 0; i < charactersOutput.length - 1; i++) {
@@ -1109,7 +1109,7 @@ if (customModel) {
                 const confidences1 = charactersOutput[i].confidences.slice().sort((a, b) => b - a);
                 const confidences2 = charactersOutput[i + 1].confidences.slice().sort((a, b) => b - a);
                 let alternativeIndex = 2;
-                let newChar;
+                let newChar = '';
                 do {
                     newChar = characters[charactersOutput[i + 1].confidences.indexOf(confidences2[alternativeIndex])];
                     alternativeIndex++;
