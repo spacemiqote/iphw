@@ -1090,7 +1090,7 @@ if (customModel) {
             })
         );
         await Promise.all(promises);
-        const charactersOutput = output.map(array => {
+        const charactersOutput = output.map((array, _) => {
             return {char: characters[array.indexOf(Math.max(...array))], confidences: array};
         });
         for (let i = 0; i < charactersOutput.length - 1; i++) {
