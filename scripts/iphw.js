@@ -5,6 +5,7 @@
 /*global EXIF, EXIF*/
 /*global Tesseract, Tesseract*/
 /*eslint no-undef: "error"*/
+/* Imperative Programming All the Way! */
 
 "use strict";
 const userImage = document.getElementById("userImage");
@@ -123,7 +124,7 @@ let wtfBackup = filterResult;
 let savepointImage = filterResult;
 let stepCount = 0;
 let index = 0;
-let fuck = 0;
+let opcount = 0;
 let loaded = false;
 let objects = [];
 let cobjectDetector = 1;
@@ -291,7 +292,7 @@ function savepoint() {
 
 function cleanup() {
     operationHistory.length = 0;
-    fuck = 0;
+    opcount = 0;
     index = 0;
 }
 
@@ -339,11 +340,11 @@ function loadImage() {
 }
 
 function saveSteps(canvas) {
-    if (fuck > 0)
-        operationHistory = operationHistory.slice(0, operationHistory.length - (fuck));
+    if (opcount > 0)
+        operationHistory = operationHistory.slice(0, operationHistory.length - (opcount));
     operationHistory.push(canvas);
     index++;
-    fuck = 0;
+    opcount = 0;
 }
 
 function revertImage(filter) {
@@ -352,7 +353,7 @@ function revertImage(filter) {
             if (index - 1 > 0) {
                 index--;
                 wtfBackup = operationHistory[index - 1];
-                fuck++;
+                opcount++;
             } else {
                 wtfBackup = operationHistory[0];
                 index = 0;
@@ -363,12 +364,12 @@ function revertImage(filter) {
             if (index < operationHistory.length - 1) {
                 wtfBackup = operationHistory[index];
                 index++;
-                fuck = 0;
+                opcount = 0;
             } else {
                 if (operationHistory.length > 0) {
                     wtfBackup = operationHistory[operationHistory.length - 1];
                     index = operationHistory.length;
-                    fuck = 0;
+                    opcount = 0;
                 } else
                     wtfBackup = original2D.getImageData(0, 0, originalImage.width, originalImage.height);
             }
@@ -1042,7 +1043,7 @@ async function getCaptcha(canv) {
     await worker.terminate();
 }
 
-async function fuckCAPTCHA() {
+async function solveCaptcha() {
     const special = specialShit.checked;
     const customModel = loadCustomModel.checked;
     if (!loadedTesseract || !loadedTfjs) {
@@ -1139,7 +1140,7 @@ function initFunctions() {
         'gaussianBlurFilter', 'medianBlurFilter', 'sharpenFilter', 'unsharpFilter', 'embossFilter', 'reliefFilter', 'sobelFilter', 'prewittFilter',
         'robertFilter', 'laplacianEdgeFilter', 'revertImage', 'redoImage', 'cancelFilter', 'loadSave', 'flip', 'fish', 'panning', 'sheer', 'showSkinArea', 'skinWhitening',
         'validateYCbCr', 'objectDetection'];
-    const uiFunction = ['savepoint', 'download', 'fullscreenCanvas', 'fullscreen', 'closeFullscreen', 'fuckCAPTCHA', 'focusEditing'];
+    const uiFunction = ['savepoint', 'download', 'fullscreenCanvas', 'fullscreen', 'closeFullscreen', 'solveCaptcha', 'focusEditing'];
     const dynamicFunction = {
         'hue': 'hsi',
         'customH': 'hsi',
@@ -1155,11 +1156,11 @@ function initFunctions() {
         'customB': 'colorbalance'
     };
     const webpage = document;
-    const init_savepoint = () => savepoint;
+    const init_savepoint = () => savepoint();
     const init_imageFilter = (filter) => imageFilter(filter);
     const init_openFullscreen = (elem) => openFullscreen(elem);
-    const init_fuckCAPTCHA = async () => {
-        await fuckCAPTCHA();
+    const init_solveCaptcha = async () => {
+        await solveCaptcha();
     };
     const init_focusEditing = () => focusEditing;
     const init_closeFullscreen = () => closeFullscreen();
@@ -1179,8 +1180,8 @@ function initFunctions() {
     const uiFunctionMap = {
         "fullscreenCanvas": () => init_openFullscreen(webpage.getElementById("filterResult")),
         "fullscreen": () => init_openFullscreen(webpage.documentElement),
-        "savepoint": init_savepoint,
-        "fuckCAPTCHA": init_fuckCAPTCHA,
+        "savepoint": () => init_savepoint(),
+        "solveCAPTCHA": init_solveCaptcha,
         "focusEditing": init_focusEditing,
         "closeFullscreen": () => init_closeFullscreen(),
         "download": () => init_download()
