@@ -1181,7 +1181,7 @@ function initFunctions() {
         "fullscreenCanvas": () => init_openFullscreen(webpage.getElementById("filterResult")),
         "fullscreen": () => init_openFullscreen(webpage.documentElement),
         "savepoint": () => init_savepoint(),
-        "solveCAPTCHA": init_solveCaptcha,
+        "solveCaptcha": init_solveCaptcha,
         "focusEditing": init_focusEditing,
         "closeFullscreen": () => init_closeFullscreen(),
         "download": () => init_download()
