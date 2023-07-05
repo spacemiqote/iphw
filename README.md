@@ -1,7 +1,7 @@
 ## 2D圖像處理雲APP (2D Image Processing Web App)
 ### 線上版本(Live Version): [bsod.me](https://bsod.me/)  
-簡單易用的2D圖像處理網站，使用JavaScript編寫。  
-Simple and easy to use 2D image processing website written in JavaScript.  
+簡單易用的2D圖像處理網站，使用原生JS編寫。  
+Simple and easy to use 2D image processing website written in Vanilla JavaScript.  
 首次訪問線上版本會因為瀏覽器尚未快取的因素而較慢(模型偵測部分)  
 The first time you visit the online version, it may be slower because the browser has not yet cached the model detection component.  
 推薦使用本地版本，速度最快。  
