@@ -1,12 +1,9 @@
-## 2D圖像處理雲APP (2D Image Processing Web App)
-### 線上版本(Live Version): [bsod.me](https://bsod.me/)  
-簡單易用的2D圖像處理網站，使用原生JS編寫。  
-Simple and easy to use 2D image processing website written in Vanilla JavaScript.  
-首次訪問線上版本會因為瀏覽器尚未快取的因素而較慢(模型偵測部分)  
+## Image Processing Web App)
+### Live Version: [bsod.me](https://bsod.me/)  
+Simple and easy-to-use 2D image processing website written in Vanilla JavaScript.  
 The first time you visit the online version, it may be slower because the browser has not yet cached the model detection component.  
-推薦使用本地版本，速度最快。  
 For the smoothest experience, I would suggest using the local version as it typically offers better performance and responsiveness compared to the online version.  
-使用者手冊(User Manual) [English](BSOD.me%20User%20Manual.pdf) | [中文](BSOD.me%20使用者手冊.pdf)
+User Manual [English](BSOD.me%20User%20Manual.pdf)  
 
 [![latest version](https://img.shields.io/github/v/release/spacemiqote/spacemiqote.github.io?color=rgb%28143%2C%20252%2C%20158%29&style=flat-square)](https://github.com/spacemiqote/spacemiqote.github.io/releases/latest)  
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=spacemiqote_spacemiqote.github.io&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=spacemiqote_spacemiqote.github.io)
