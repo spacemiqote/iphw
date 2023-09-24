@@ -1,4 +1,4 @@
-## Image Processing Web App)
+## Image Processing Web App
 ### Live Version: [bsod.me](https://bsod.me/)  
 Simple and easy-to-use 2D image processing website written in Vanilla JavaScript.  
 The first time you visit the online version, it may be slower because the browser has not yet cached the model detection component.  
