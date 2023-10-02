@@ -12,7 +12,7 @@
     <link rel="stylesheet" type="text/css" href="styles/fonts.css"/>
     <script defer src="scripts/exif-js.js"></script>
 </head>
-<body>
+<body style="opacity: 0">
 <span>
     <a href="Privacy-Policy.pdf" target="_blank" referrerpolicy="strict-origin-when-cross-origin">|Privacy Policy|</a>
     <a href="BSOD.me%20User%20Manual.pdf" target="_blank" referrerpolicy="strict-origin-when-cross-origin">|User Manual|</a>
@@ -291,5 +291,11 @@
     </div>
 </div>
 <script defer src="scripts/iphw.js"></script>
+<style>
+    body {
+        opacity: 1 !important;
+        transition: opacity 1000ms ease-in;
+    }
+</style>
 </body>
 </html>
