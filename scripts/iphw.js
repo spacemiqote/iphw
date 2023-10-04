@@ -38,7 +38,7 @@ const dmatrix = [
 ];
 const laplacian = [
     [0, -1, 0],
-    [-1, 5, -1],
+    [-1, 4, -1],
     [0, -1, 0],
 ];
 const laplacianEdge = [

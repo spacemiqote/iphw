@@ -1,10 +1,9 @@
 * + * {
     color: rgb(143, 252, 158);
-    background: #2E3440 !important;
-    background-color: rgb(37, 42, 51) !important;
+    background-color: rgb(37, 42, 51);
     box-sizing: border-box;
     margin: .4em 0;
-    font-family: "Victor Mono", sans-serif !important;
+    font-family: "Victor Mono", sans-serif
 }
 
 @media (min-width: 35em) {
@@ -48,12 +47,15 @@
 
 .card:focus, hr {
     outline: 0;
-    border: solid #fa0
+    border: solid #fa0;
 }
 
 .card, pre {
     padding: 1em;
-    border: solid rgb(115 124 129)
+    border: solid rgb(115 124 129);
+    resize: both;
+    overflow: hidden;
+
 }
 
 button:hover, a:hover {
@@ -67,30 +69,12 @@ button:hover, a:hover {
     font: 1em/1.6 "Victor Mono", sans-serif;
 }
 
-h6 {
-    font: 300 1em "Victor Mono", sans-serif;
-}
-
-h5 {
-    font: 300 1.2em "Victor Mono", sans-serif;
-}
-
-h3 {
-    font: 300 2em "Victor Mono", sans-serif;
-    text-align: center;
-}
-
-h4 {
-    font: 300 1.5em "Victor Mono", sans-serif;
-}
-
-h2 {
-    font: 300 2.2em "Victor Mono", sans-serif;
-}
-
-h1 {
-    font: 300 2.5em "Victor Mono", sans-serif;
-}
+h1 { font-size: 2.5em; }
+h2 { font-size: 2.2em; }
+h3 { font-size: 2em; text-align: center; }
+h4 { font-size: 1.5em; }
+h5 { font-size: 1.2em; }
+h6 { font-size: 1em; }
 
 a {
     float: right;
@@ -123,7 +107,6 @@ button {
     border-color: rgb(91 99 102) !important;
     color: rgb(141, 255, 26) !important;
     font-size: 12px;
-    font-family: "Victor Mono", sans-serif;
 }
 
 .container {
@@ -190,36 +173,42 @@ input[type=text]:focus {
 }
 
 #hue {
-    width: 260px;
-    background: linear-gradient(to right, hsl(0, 100%, 50%), hsl(60, 100%, 50%), hsl(120, 100%, 50%), hsl(180, 100%, 50%), hsl(240, 100%, 50%), hsl(300, 100%, 50%), hsl(360, 100%, 50%)) !important;
+    background: linear-gradient(
+        to right, 
+        hsl(0, 100%, 50%), 
+        hsl(60, 100%, 50%), 
+        hsl(120, 100%, 50%), 
+        hsl(180, 100%, 50%), 
+        hsl(240, 100%, 50%), 
+        hsl(300, 100%, 50%), 
+        hsl(0, 100%, 50%)
+    ) !important;
 }
 
 #saturation {
-    width: 260px;
     background: linear-gradient(to right, hsl(90, 0%, 50%), hsl(90, 100%, 50%)) !important;
 }
 
 #intensity {
-    width: 260px;
     background: linear-gradient(to right, hsl(0, 50%, 0%), aqua) !important;
 }
 
 #Red {
-    width: 260px;
     background: linear-gradient(to right, cyan, red) !important;
 }
 
 #Green {
-    width: 260px;
     background: linear-gradient(to right, magenta, green) !important;
 }
 
 #Blue {
-    width: 260px;
     background: linear-gradient(to right,#FCE205, blue) !important;
 }
 
-#Gamma, #Power, #Scale, #whiteningRange, #transformXr, #transformYr, #sheerAngler{
+#whiteningRange, #transformXr, #transformYr, #sheerAngler, #Gamma, #Power, #Scale {
+    background: linear-gradient(to right, #000000, #ffffff) !important;
+}
+#hue, #saturation, #intensity, #Red, #Green, #Blue, #Gamma, #Power, #Scale, #whiteningRange, #transformXr, #transformYr, #sheerAngler, form {
     width: 260px;
 }
 
@@ -229,10 +218,6 @@ input[type=text]:focus {
 
 .output {
     color: #B0E0E6;
-}
-
-.noSync {
-    background: linear-gradient(to right, black, #6c3594) !important;
 }
 
 form {
@@ -281,7 +266,6 @@ p {
 }
 
 .collapse:after {
-    font-family: "Victor Mono", sans-serif;
     content: ">";
     color: #FFFFFF;
     font-weight: bold;
@@ -350,7 +334,6 @@ select {
     color: #fff;
     cursor: pointer;
     font-size: 1em;
-    font-family: "Victor Mono", sans-serif;
 }
 
 select::-ms-expand {
