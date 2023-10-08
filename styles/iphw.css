@@ -53,9 +53,7 @@
 .card, pre {
     padding: 1em;
     border: solid rgb(115 124 129);
-    resize: both;
     overflow: hidden;
-
 }
 
 button:hover, a:hover {
@@ -170,6 +168,10 @@ input[type=text] {
 input[type=text]:focus {
     border-color: dodgerBlue;
     box-shadow: 0 0 8px 0 dodgerBlue;
+}
+
+#filterBox {
+    resize: both;
 }
 
 #hue {
