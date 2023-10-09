@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>2D Image Processing</title>
     <meta name="description" content="2D Image Processing Web App"/>
-    <link rel="icon" href="heart-fill.svg">
-    <link rel="stylesheet" type="text/css" href="styles/iphw.css"/>
-    <link rel="stylesheet" type="text/css" href="styles/fonts.css"/>
+    <link rel="icon" href="heart-fill.svg" />
+    <link rel="preload" href="styles/fonts.css"as="style" />
+    <link rel="stylesheet" href="styles/iphw.css" />
+    <link rel="stylesheet" href="styles/fonts.css" />
 </head>
-<body style="opacity: 0">
+<body>
 <span>
     <a href="Privacy-Policy.pdf" target="_blank" referrerpolicy="strict-origin-when-cross-origin">|Privacy Policy|</a>
     <a href="BSOD.me%20User%20Manual.pdf" target="_blank" referrerpolicy="strict-origin-when-cross-origin">|User Manual|</a>
@@ -259,11 +260,5 @@
 </div>
 <script defer src="scripts/exif-js.js"></script>
 <script defer src="scripts/iphw.js"></script>
-<style>
-    body {
-        opacity: 1 !important;
-        transition: opacity 1000ms ease-in;
-    }
-</style>
 </body>
 </html>
