@@ -104,7 +104,7 @@ button {
     border: solid;
     border-color: rgb(91 99 102) !important;
     color: rgb(141, 255, 26) !important;
-    font-size: 12px;
+    font: 12px "Iosevka", sans-serif;
 }
 
 .container {
