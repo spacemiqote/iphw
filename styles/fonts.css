@@ -1,7 +1,7 @@
 @font-face {
-    font-family: "Iosevka";
+    font-family: "Victor Mono";
     font-style: normal;
     font-weight: 400;
-    src: local("Iosevka"), url('../fonts/iosevka-regular.woff2') format('woff2');
+    src: local("Victor Mono"), url('../fonts/VictorMono-Regular.woff2') format('woff2');
     font-display: swap;
 }

@@ -3,7 +3,7 @@
     background-color: rgb(37, 42, 51);
     box-sizing: border-box;
     margin: .4em 0;
-    font-family: "Iosevka", sans-serif;
+    font-family: "Victor Mono", sans-serif;
 }
 
 @media (min-width: 35em) {
@@ -64,7 +64,7 @@ button:hover, a:hover {
     max-width: 60em;
     padding: 1em;
     margin: auto;
-    font: 1em/1.6 "Iosevka", sans-serif;
+    font: 1em/1.6 "Victor Mono", sans-serif;
 }
 
 h1 { font-size: 2.5em; }
@@ -104,7 +104,7 @@ button {
     border: solid;
     border-color: rgb(91 99 102) !important;
     color: rgb(141, 255, 26) !important;
-    font: 12px "Iosevka", sans-serif;
+    font: 12px "Victor Mono", sans-serif;
 }
 
 .container {
@@ -278,7 +278,7 @@ p {
 #exifInfo {
     color: lawngreen;
     background-color: black !important;
-    font: 1em/1.6 "Iosevka", sans-serif;
+    font: 1em/1.6 "Victor Mono", sans-serif;
 }
 
 .collapsible {
