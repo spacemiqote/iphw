@@ -1134,7 +1134,7 @@ valueSync(true);
 userImage.addEventListener("change", readImage);
 fileReader.addEventListener("load", loadImage);
 document.addEventListener('DOMContentLoaded', function() {
-    var css = document.querySelector('link[href="styles/iphw.css"]');
+    const css = document.querySelector('link[href="styles/iphw.css"]');
     if (css) {
         css.media = 'all';
     }
