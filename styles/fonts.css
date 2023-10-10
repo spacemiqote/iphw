@@ -1,7 +1,0 @@
-@font-face {
-    font-family: "Space Mono";
-    font-style: normal;
-    font-weight: 400;
-    src: local("Space Mono"), url('../fonts/SpaceMono-Regular.woff2') format('woff2');
-    font-display: swap;
-}
