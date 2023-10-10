@@ -1,7 +1,7 @@
 @font-face {
-    font-family: "Victor Mono";
+    font-family: "Space Mono";
     font-style: normal;
     font-weight: 400;
-    src: local("Victor Mono"), url('../fonts/VictorMono-Regular.woff2') format('woff2');
+    src: local("Space Mono"), url('../fonts/SpaceMono-Regular.woff2') format('woff2');
     font-display: swap;
 }
