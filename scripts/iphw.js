@@ -1133,12 +1133,6 @@ valueSync(true);
 
 userImage.addEventListener("change", readImage);
 fileReader.addEventListener("load", loadImage);
-document.addEventListener('DOMContentLoaded', function() {
-    const css = document.querySelector('link[href="styles/iphw.css"]');
-    if (css) {
-        css.media = 'all';
-    }
-});
 
 function initFunctions() {
     const filterFunction = ['inverse', 'grayscale', 'sepia', 'binary', 'dither', 'floyd', 'histogramEq', 'adjustGamma',
