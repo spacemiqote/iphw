@@ -1134,7 +1134,7 @@ if (customModel) {
 
 valueSync(true);
 
-userImage.addEventListener("change", function () { readImage() });
+userImage.addEventListener("change", () => { readImage(); });
 fileReader.addEventListener("load", loadImage);
 
 function initFunctions() {
