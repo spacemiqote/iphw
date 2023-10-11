@@ -134,6 +134,7 @@ let ymodelCheck = false;
 let loadedTesseract = false;
 let loadedMl5 = false;
 let loadedTfjs = false;
+let loadedExif = false;
 let imageFilename = "None";
 let imageType = "None";
 
@@ -302,6 +303,12 @@ function readImage() {
         if (!passFileType.test(image.type)) {
             return;
         }
+        if (!loadedExif) {
+            (async () => {
+                await loadScript("scripts/exif-js.js").then().catch()
+            })();
+        }
+        loadedExif = true;
         imageType = image.type;
         imageFilename = image.name;
         fileReader.readAsDataURL(image);
