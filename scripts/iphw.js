@@ -297,21 +297,17 @@ function cleanup() {
     index = 0;
 }
 
-function readImage() {
+async function readImage() {
     if (userImage.files[0] && userImage.files.length && userImage) {
         const image = userImage.files[0];
         if (!passFileType.test(image.type)) {
             return;
         }
-        if (!loadedExif) {
-            (async () => {
-                await loadScript("scripts/exif-js.js").then().catch()
-            })();
-        }
-        loadedExif = true;
         imageType = image.type;
         imageFilename = image.name;
         fileReader.readAsDataURL(image);
+        if (!loadedExif) await loadScript("scripts/exif-js.js").then().catch();
+        loadedExif = true;
         EXIF.getData(image, function () {
             document.getElementById("exifInfo").textContent = EXIF.pretty(this);
         }.bind(image));
@@ -1138,7 +1134,7 @@ if (customModel) {
 
 valueSync(true);
 
-userImage.addEventListener("change", readImage);
+userImage.addEventListener("change", function () { readImage() });
 fileReader.addEventListener("load", loadImage);
 
 function initFunctions() {
