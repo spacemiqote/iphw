@@ -216,6 +216,7 @@ input[type=text]:focus {
 
 .option {
     color: mediumaquamarine;
+    background-color: inherit;
 }
 
 .output {

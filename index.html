@@ -12,17 +12,17 @@
 </head>
 <body>
 <span>
-    <a href="Privacy-Policy.pdf" target="_blank" referrerpolicy="strict-origin-when-cross-origin">|Privacy Policy|</a>
-    <a href="BSOD.me%20User%20Manual.pdf" target="_blank" referrerpolicy="strict-origin-when-cross-origin">|User Manual|</a>
-    <a href="BSOD.me%20使用者手冊.pdf" target="_blank" referrerpolicy="strict-origin-when-cross-origin">|使用者手冊|</a>
+    <a href="Privacy-Policy.pdf" target="_blank" referrerpolicy="strict-origin-when-cross-origin">Privacy Policy(PDF)</a>
+    <a href="BSOD.me%20User%20Manual.pdf" target="_blank" referrerpolicy="strict-origin-when-cross-origin">|User Manual(PDF)|</a>
+    <a href="BSOD.me%20使用者手冊.pdf" target="_blank" referrerpolicy="strict-origin-when-cross-origin">使用者手冊(PDF)</a>
 </span>
-<div class="banner">
-    <h3 class="typewriter">2D Image Processing</h3>
+<div class="banner" role="banner">
+    <h1 class="typewriter">2D Image Processing</h1>
 </div>
 <div class="card w-100">
     <div class="button-wrap">
         <label class="new-button" for="userImage">Choose Image(JPG/PNG)</label>
-        <input type="file" id="userImage" name="userImage" accept="image/png, image/jpeg, image/bmp">
+        <input type="file" id="userImage" name="userImage" accept="image/png, image/jpeg">
     </div>
 </div>
 <div class="row">
@@ -160,60 +160,60 @@
             <div class="3 row">
                 <button class="collapsible">HSI</button>
                 <div class="content">
-                    <label for="hue"></label>
+                    <label for="hue">H</label>
                     <input type="range" id="hue" class="inputRange" value="0" min="0" max="360">
                     <br>
                     <label for="customH">Hue</label>
-                    <input type="text" id="customH" class="inputNumber" value="0">
+                    <input type="text" id="customH" class="inputNumber" value="0" readonly>
                     <br>
-                    <label for="saturation"></label>
+                    <label for="saturation">S</label>
                     <input type="range" id="saturation" class="inputRange" value="0" min="-100" max="100">
                     <br>
                     <label for="customS">Saturation</label>
-                    <input type="text" id="customS" class="inputNumber" value="0">
+                    <input type="text" id="customS" class="inputNumber" value="0" readonly>
                     <br>
-                    <label for="intensity"></label>
+                    <label for="intensity">I</label>
                     <input type="range" id="intensity" class="inputRange" value="0" min="-100" max="100">
                     <br>
                     <label for="customI">Intensity</label>
-                    <input type="text" id="customI" class="inputNumber" value="0">
+                    <input type="text" id="customI" class="inputNumber" value="0" readonly>
                     <br>
                 </div>
                 <button class="collapsible">Color Balance</button>
                 <div class="content">
-                    <label for="Red"></label>
+                    <label for="Red">C/R</label>
                     <input type="range" id="Red" class="inputRange" value="0" min="-100" max="100">
                     <br>
                     <label for="customR">Cyan / Red</label>
-                    <input type="text" id="customR" class="inputNumber" value="0">
+                    <input type="text" id="customR" class="inputNumber" value="0" readonly>
                     <br>
-                    <label for="Green"></label>
+                    <label for="Green">M/G</label>
                     <input type="range" id="Green" class="inputRange" value="0" min="-100" max="100">
                     <br>
                     <label for="customG">Magenta / Green</label>
-                    <input type="text" id="customG" class="inputNumber" value="0">
+                    <input type="text" id="customG" class="inputNumber" value="0" readonly>
                     <br>
-                    <label for="Blue"></label>
+                    <label for="Blue">Y/B</label>
                     <input type="range" id="Blue" class="inputRange" value="0" min="-100" max="100">
                     <br>
                     <label for="customB">Yellow / Blue</label>
-                    <input type="text" id="customB" class="inputNumber" value="0">
+                    <input type="text" id="customB" class="inputNumber" value="0" readonly>
                     <br>
                 </div>
                 <button class="collapsible">Gamma/Noises</button>
                 <div class="content">
-                    <label for="Gamma"></label>
+                    <label for="Gamma">G</label>
                     <input type="range" id="Gamma" class="inputRange noSync" value="2" min="0.1" max="10" step="0.1">
                     <br>
                     <label for="customGamma">Gamma</label>
                     <input type="text" id="customGamma" class="inputNumber noSync" value="2">
                     <br>
-                    <label for="Scale"></label>
+                    <label for="Scale">S</label>
                     <input type="range" id="Scale" class="inputRange noSync" value="40" min="1" max="255">
                     <br>
                     <label for="customScale">Scale</label>
                     <input type="text" id="customScale" class="inputNumber noSync" value="40">
-                    <label for="Power"></label>
+                    <label for="Power">P</label>
                     <input type="range" id="Power" class="inputRange noSync" value="0.05" min="0.01" max="1" step="0.01">
                     <br>
                     <label for="Pps">Power</label>
@@ -226,7 +226,7 @@
                     <input type="range" id="whiteningRange" class="inputRange noSync" value="1.26" min="0.1" max="2" step="0.01">
                     <br>
                     <label for="customWhitening">Strength</label>
-                    <input type="text" id="customWhitening" class="inputNumber" value="1.26">
+                    <input type="text" id="customWhitening" class="inputNumber" value="1.26" readonly>
                     <br>
                     <button id="validateYCbCr">Validate YCbCr</button>
                     <br>
@@ -236,22 +236,22 @@
                 </div>
                 <button class="collapsible">Transform</button>
                 <div class="content">
-                    <label for="transformXr"></label>
+                    <label for="transformXr">X</label>
                     <input type="range" id="transformXr" class="inputRange noSync" value="0" min="0" max="10">
                     <br>
-                    <label for="transformXt">X</label>
-                    <input type="text" id="transformXt" class="inputNumber noSync" value="0">
-                    <label for="transformYr"></label>
+                    <label for="transformXt">X Axis:</label>
+                    <input type="text" id="transformXt" class="inputNumber noSync" value="0" readonly>
+                    <label for="transformYr">Y</label>
                     <input type="range" id="transformYr" class="inputRange noSync" value="0" min="0" max="10">
                     <br>
-                    <label for="transformYt">Y</label>
-                    <input type="text" id="transformYt" class="inputNumber noSync" value="0">
+                    <label for="transformYt">Y Axis:</label>
+                    <input type="text" id="transformYt" class="inputNumber noSync" value="0" readonly>
                     <br>
-                    <label for="sheerAngler"></label>
+                    <label for="sheerAngler">S</label>
                     <input type="range" id="sheerAngler" class="inputRange noSync" value="30" min="1" max="360">
                     <br>
                     <label for="sheerAnglet">Sheer Angle:</label>
-                    <input type="text" id="sheerAnglet" class="inputNumber noSync" value="30">
+                    <input type="text" id="sheerAnglet" class="inputNumber noSync" value="30" readonly>
                 </div>
             </div>
         </fieldset>
