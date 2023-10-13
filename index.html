@@ -388,33 +388,31 @@
             font-weight: bold;
         }
         
-        .funnyRotate {
+        .breathing {
             position: relative;
-            perspective: 1000px;
-            animation: spin 15s infinite linear, colorChange 5s infinite alternate;
-        }
-
-        .funnyRotate > div {
-            position: absolute;
             transform-style: preserve-3d;
-            animation: flip 7.5s alternate infinite;
-            backface-visibility: hidden;
-            transform-origin: center;
-        }
-
-        @keyframes spin {
-            0%, 70%, 100% { transform: rotateX(-0.1turn) rotateY(0turn); }
-            50% { transform: rotateX(-0.1turn) rotateY(1turn); }
-        }
-
-        @keyframes colorChange {
-            0%, 100% { color: inherit; }
-            50% { color: #33ff57; }
+            animation: breathe 5s ease-in-out infinite, glow 5s ease-in-out infinite;
+            text-shadow: 0 0 10px rgba(37, 42, 51, 0.8), 0 0 20px rgba(37, 42, 51, 0.6);
         }
         
-        @keyframes flip {
-            0%, 70%, 100% { transform: rotateY(0); }
-            50% { transform: rotateY(180deg); }
+        @keyframes breathe {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        @keyframes glow {
+            0%, 100% {
+                text-shadow: 0 0 10px rgba(37, 42, 51, 0.8), 0 0 20px rgba(37, 42, 51, 0.6);
+                opacity: 0.95;
+            }
+            50% {
+                text-shadow: 0 0 15px rgba(37, 42, 51, 0.9), 0 0 25px rgba(37, 42, 51, 0.7);
+                opacity: 1;
+            }
         }
         
         #originalBox{
@@ -429,7 +427,7 @@
     <a href="BSOD.me%20使用者手冊.pdf" target="_blank" referrerpolicy="strict-origin-when-cross-origin">使用者手冊(PDF)</a>
 </span>
 <div class="banner" role="banner">
-    <h1 class="funnyRotate">2D Image Processing</h1>
+    <h1 class="breathing">2D Image Processing</h1>
 </div>
 <div class="card w-100">
     <div class="button-wrap">
