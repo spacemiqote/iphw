@@ -389,26 +389,39 @@
         }
         
         .typewriter {
-            width: 21.5ch;
+            display: inline-block;
+            font-size: 24px;
             white-space: nowrap;
             overflow: hidden;
-            border-right: 4px solid #212121;
-            animation: cursor 1s step-start infinite,
-            text 5s steps(18) alternate infinite;
+            position: relative;
+            animation: textWidth 5s steps(18) alternate infinite;
         }
         
-        @keyframes cursor {
-            0%, 100% {
-                border-color: #212121;
-            }
-        }
-        
-        @keyframes text {
+        @keyframes textWidth {
             0% {
-                width: 0;
+                width: 0ch;
             }
             100% {
-                width: 21.5ch;
+                width: 22ch;
+            }
+        }
+        
+        .typewriter::after {
+            content: "|";
+            position: absolute;
+            top: 0;
+            right: -0.5ch;
+            font-size: 24px;
+            animation: cursorBlink 1s infinite;
+            z-index: 2;
+        }
+        
+        @keyframes cursorBlink {
+            0%, 100% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
             }
         }
         
