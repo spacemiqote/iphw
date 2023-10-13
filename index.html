@@ -394,25 +394,27 @@
             white-space: nowrap;
             overflow: hidden;
             position: relative;
-            animation: textWidth 5s steps(18) alternate infinite;
+            animation: typingEffect 4s steps(20) alternate infinite;
         }
         
-        @keyframes textWidth {
+        @keyframes typingEffect {
             0% {
-                width: 0ch;
+                clip-path: polygon(0 0, 0 100%, 0% 100%, 0% 0%);
             }
             100% {
-                width: 22ch;
+                clip-path: polygon(0 0, 0 100%, 105% 100%, 105% 0%);
             }
         }
         
         .typewriter::after {
             content: "|";
             position: absolute;
-            top: 0;
-            right: -0.5ch;
+            top: 50%;
+            left: 0;
+            right: calc(100%);
+            transform: translateY(-50%);
             font-size: 24px;
-            animation: cursorBlink 1s infinite;
+            animation: cursorBlink 0.2s infinite, cursorMove 4s steps(24) alternate infinite;
             z-index: 2;
         }
         
@@ -422,6 +424,15 @@
             }
             50% {
                 opacity: 1;
+            }
+        }
+        
+        @keyframes cursorMove {
+            0% {
+                left: 0;
+            }
+            100% {
+                left: calc(100% + 0.5ch);
             }
         }
         
