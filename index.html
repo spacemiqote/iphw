@@ -390,9 +390,9 @@
         
         .breathing {
             position: relative;
-            transform-style: preserve-3d;
-            animation: breathe 5s ease-in-out infinite, glow 5s ease-in-out infinite;
-            text-shadow: 0 0 10px rgba(37, 42, 51, 0.8), 0 0 20px rgba(37, 42, 51, 0.6);
+            transform: scale(1);
+            will-change: transform, opacity;
+            animation: breathe 5s ease-in-out infinite, opacityGlow 5s ease-in-out infinite;
         }
         
         @keyframes breathe {
@@ -404,13 +404,11 @@
             }
         }
         
-        @keyframes glow {
+        @keyframes opacityGlow {
             0%, 100% {
-                text-shadow: 0 0 10px rgba(37, 42, 51, 0.8), 0 0 20px rgba(37, 42, 51, 0.6);
                 opacity: 0.95;
             }
             50% {
-                text-shadow: 0 0 15px rgba(37, 42, 51, 0.9), 0 0 25px rgba(37, 42, 51, 0.7);
                 opacity: 1;
             }
         }
