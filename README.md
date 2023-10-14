@@ -1,8 +1,8 @@
 ## Image Processing Web App
 ### Live Version: [bsod.me](https://bsod.me/)  
-Simple and easy-to-use 2D image processing website written in Vanilla Vanilla HTML/JS/CSS.  
+Simple and easy-to-use 2D image processing website written in Vanilla HTML/JS/CSS.  
 The first time you visit the online version, it may be slower because the browser has not yet cached the model detection component.  
-For the smoothest experience, I would suggest using the local version as it typically offers better performance and responsiveness compared to the online version.  
+For the smoothest experience, I would suggest using the local version, as it typically offers better performance and responsiveness than the online version.  
 User Manual [English](BSOD.me%20User%20Manual.pdf)  
 
 [![latest version](https://img.shields.io/github/v/release/spacemiqote/spacemiqote.github.io?color=rgb%28143%2C%20252%2C%20158%29&style=flat-square)](https://github.com/spacemiqote/spacemiqote.github.io/releases/latest)  
