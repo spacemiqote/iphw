@@ -1,5 +1,6 @@
 ## JavaScript Image Processing Web App
-### Live Version: [bsod.me](https://bsod.me/) will be changed to iphw.js.org if my PR is accepted!
+### Live Version: [iphw.js.org](https://iphw.js.org/)
+#### We would like to extend our sincere gratitude to the esteemed [JS.ORG](https://github.com/js-org/js.org) for their generous provision of this domain. Thank you for your invaluable support.  
 Simple and easy-to-use JavaScript image processing website written in Vanilla HTML/JS/CSS.  
 The first time you visit the online version, it may be slower because the browser has not yet cached the model detection component.  
 For the smoothest experience, I would suggest using the local version, as it typically offers better performance and responsiveness than the online version.  
