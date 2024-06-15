@@ -389,6 +389,10 @@
             animation: breathe 5s ease-in-out infinite, opacityGlow 5s ease-in-out infinite;
         }
         
+        .touch-target {
+            font-size: 24px;
+        }
+        
         @keyframes breathe {
             0%, 100% {
                 transform: scale(1);
@@ -414,9 +418,9 @@
 </head>
 <body>
 <span>
-    <a href="Privacy-Policy.pdf" target="_blank" referrerpolicy="strict-origin-when-cross-origin">Privacy Policy(PDF)</a>
-    <a href="BSOD.me%20User%20Manual.pdf" target="_blank" referrerpolicy="strict-origin-when-cross-origin">|User Manual(PDF)|</a>
-    <a href="BSOD.me%20使用者手冊.pdf" target="_blank" referrerpolicy="strict-origin-when-cross-origin">使用者手冊(PDF)</a>
+    <a href="Privacy-Policy.pdf" target="_blank" referrerpolicy="strict-origin-when-cross-origin" class="touch-target">Privacy Policy(PDF)</a>
+    <a href="BSOD.me%20User%20Manual.pdf" target="_blank" referrerpolicy="strict-origin-when-cross-origin" class="touch-target">|User Manual(PDF)|</a>
+    <a href="BSOD.me%20使用者手冊.pdf" target="_blank" referrerpolicy="strict-origin-when-cross-origin" class="touch-target">使用者手冊(PDF)</a>
 </span>
 <div class="banner" role="banner">
     <h1 class="breathing">JavaScript Image Processing</h1>
@@ -424,7 +428,7 @@
 <div class="card w-100">
     <div class="button-wrap">
         <label class="new-button" for="userImage">Choose Image(JPG/PNG)</label>
-        <input type="file" id="userImage" name="userImage" accept="image/png, image/jpeg">
+        <input type="file" id="userImage" name="userImage" accept="image/png, image/jpeg" class="touch-target">
     </div>
 </div>
 <div class="row">
